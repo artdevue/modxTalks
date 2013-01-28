@@ -17,7 +17,7 @@
 </li>
 <li class="big_button yesrss">
 	<div class="out_border"><div class="button_wrapper"><div class="in_border">
-		<a target="_blank" href="/comments-[[+conversation]].rss" title="RSS feed" class="the_button">
+		<a target="_blank" href="[[++base_url]]comments-[[+conversation]].rss" title="RSS feed" class="the_button">
 			<span class="i_32_support mtrss"></span>
 			<span class="rss_mt">RSS</span>
 		</a>
