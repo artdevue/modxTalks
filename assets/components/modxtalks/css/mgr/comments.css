@@ -1,0 +1,90 @@
+/*.icon-commentsmodxtalks .x-tree-node-icon {
+background-image: url(../../img/mrg/modxTalks_s_16.png) !important;
+}
+.icon-commentsmodxtalks.haschildren .x-tree-node-icon {
+background-image: url(../../img/mrg/forum.gif) !important;
+}*/
+.alert-mt {padding-left: 20px; background: url(../../img/mrg/16-Alert-b.png) no-repeat 0 center;}
+a.link-mt:hover {background: url(../../img/mrg/16-Link-z.png) no-repeat right center; color: #658F1A}
+a.link-mt {padding-right: 20px;background: url(../../img/mrg/16-Link-b.png) no-repeat right center; color: #666666; text-decoration: none}
+a.helpmodxtalks {background: url(../../img/mrg/16-Computer_iMac-z.png) no-repeat right center;}
+a.helpmodxtalks:hover {background: url(../../img/mrg/16-Computer_iMac-b.png) no-repeat right center;}
+.modtalks_desc {position: relative;min-height: 70px;}
+.headmodxtalks {padding-left: 44px; background: url('../../img/mrg/logo_modxTalks_32.png') no-repeat 0 0 transparent;}
+.desc_comment {float: left;
+display: inline-block;
+position: relative;
+padding: 5px;
+padding-right: 380px;}
+.infortalks { position: absolute; top: -8px; right: 5px;height: }
+.modxtalkstab .informer {
+	float: right;
+display: inline-block;
+position: relative;
+padding: 5px;
+margin-right: 10px;
+margin-bottom: 10px;
+background: #FCFCFC;
+background: -moz-linear-gradient(top, white 0%, #FAFAFA 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,white), color-stop(100%,#FAFAFA));
+background: -webkit-linear-gradient(top, white 0%,#FAFAFA 100%);
+background: -o-linear-gradient(top, white 0%,#FAFAFA 100%);
+background: -ms-linear-gradient(top, white 0%,#FAFAFA 100%);
+background: linear-gradient(top, white 0%,#FAFAFA 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#FAFAFA',GradientType=0);
+-moz-box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.2), inset 0px 1px 3px rgba(255, 255, 255, 0.5);
+-webkit-box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.2), inset 0px 1px 3px rgba(255, 255, 255, 0.5);
+box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.2), inset 0px 1px 3px rgba(255, 255, 255, 0.5);
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.modxtalkstab .informer > a {
+border: 1px solid #DDD;
+padding: 10px;
+display: block;
+float: left;
+text-align: center;
+text-decoration: none;
+background: #E5E5E5;
+background: -moz-linear-gradient(top, #F9F9F9 0%, #E5E5E5 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F9F9F9), color-stop(100%,#E5E5E5));
+background: -webkit-linear-gradient(top, #F9F9F9 0%,#E5E5E5 100%);
+background: -o-linear-gradient(top, #F9F9F9 0%,#E5E5E5 100%);
+background: -ms-linear-gradient(top, #F9F9F9 0%,#E5E5E5 100%);
+background: linear-gradient(top, #F9F9F9 0%,#E5E5E5 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F9F9F9', endColorstr='#E5E5E5',GradientType=0 );
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.modxtalkstab .informer > a > span, .modxtalkstab .informer > a > div {
+display: block;
+}
+.modxtalkstab .informer > a > span.text, .modxtalkstab .informer > a > span.title {
+color: #333;
+font-family: 'Helvetica Neue','Helvetica',Arial,sans-serif;
+font-size: 12px;
+text-shadow: 0 1px white;
+line-height: 16px;
+}
+.modxtalkstab .informer > a > span.text, .modxtalkstab .informer > a > span.title {
+color: #333;
+font-family: 'Helvetica Neue','Helvetica',Arial,sans-serif;
+font-size: 12px;
+text-shadow: 0 1px white;
+line-height: 16px;
+}
+.modxtalkstab .informer > a > span.title {
+font-size: 24px;
+line-height: 30px;
+color: #FF6D1F;
+text-shadow: 0px 1px 0px white;
+font-weight: bold;
+}
+.modxtalkstab .informer > a > span.totaltalks {color: #658F1A;}
+.modxtalkstab .informer > a > span.delet {color: #931111;}
+
+input.commentsPerPage, .ext-strict .x-form-field-trigger-wrap .commentsPerPage {padding-left: 30px !important; background: url('../../img/mrg/16-mt-List-Images.png') no-repeat 5px 8px transparent;}
+input.moderators, .ext-strict .moderators {padding-left: 30px !important; background: url('../../img/mrg/16-mt-Group.png') no-repeat 5px 8px transparent;}
+input.commentTpl, .ext-strict .commentTpl {padding-left: 30px !important; background: url('../../img/mrg/16-mt-Applications.png') no-repeat 5px 8px transparent;}

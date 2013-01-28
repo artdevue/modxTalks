@@ -1,0 +1,1 @@
+<div class="nocomments">[[+nobody_leave_comment]]</div>

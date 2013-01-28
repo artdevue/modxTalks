@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="modxTalks" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" version="1.1">
+	<object class="Like" table="like" extends="xPDOObject">
+		<field key="id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="postId" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="memberId" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="postId" length="" collation="A" null="false" />
+			<column key="memberId" length="" collation="A" null="false" />
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="Memberconversation" table="memberconversation" extends="xPDOObject">
+		<field key="conversationId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="type" dbtype="enum" precision="'member','group'" phptype="string" null="false" default="member" index="pk" />
+		<field key="id" dbtype="int" precision="11" phptype="integer" null="false" index="pk" />
+		<field key="allowed" dbtype="tinyint" precision="1" phptype="integer" null="true" default="0" />
+		<field key="starred" dbtype="tinyint" precision="1" phptype="integer" null="true" default="0" />
+		<field key="lastRead" dbtype="smallint" precision="5" phptype="integer" null="true" default="0" />
+		<field key="draft" dbtype="text" phptype="string" null="true" />
+		<field key="muted" dbtype="tinyint" precision="1" phptype="integer" null="true" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="conversationId" length="" collation="A" null="false" />
+			<column key="type" length="" collation="A" null="false" />
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="member_conversation_type_id" name="member_conversation_type_id" primary="false" unique="false" type="BTREE" >
+			<column key="type" length="" collation="A" null="false" />
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="Post" table="post" extends="xPDOSimpleObject">
+		<field key="conversationId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="idx" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="memberId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="time" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" />
+		<field key="date" dbtype="int" precision="6" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="editMemberId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
+		<field key="editTime" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
+		<field key="deleteMemberId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
+		<field key="deleteTime" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
+		<field key="title" dbtype="varchar" precision="63" phptype="string" null="false" index="index" />
+		<field key="content" dbtype="text" phptype="string" null="false" />
+		<field key="attributes" dbtype="mediumblob" phptype="binary" null="true" />
+
+		<index alias="idx" name="idx" primary="false" unique="false" type="BTREE" >
+			<column key="idx" length="" collation="A" null="false" />
+		</index>
+		<index alias="post_memberId" name="post_memberId" primary="false" unique="false" type="BTREE" >
+			<column key="memberId" length="" collation="A" null="false" />
+		</index>
+		<index alias="date" name="date" primary="false" unique="false" type="BTREE" >
+			<column key="date" length="" collation="A" null="false" />
+		</index>
+		<index alias="post_conversationId_time" name="post_conversationId_time" primary="false" unique="false" type="BTREE" >
+			<column key="conversationId" length="" collation="A" null="false" />
+			<column key="time" length="" collation="A" null="false" />
+		</index>
+		<index alias="post_title_content" name="post_title_content" primary="false" unique="false" type="FULLTEXT" >
+			<column key="title" length="" collation="" null="false" />
+			<column key="content" length="" collation="" null="false" />
+		</index>
+	</object>
+</model>

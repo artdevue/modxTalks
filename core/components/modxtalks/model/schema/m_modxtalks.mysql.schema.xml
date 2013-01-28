@@ -1,0 +1,1652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="modx_Talks" baseClass="track_modxtalks_" platform="mysql" defaultEngine="MyISAM" version="1.1">
+	<object class="TrackAccessActiondom" table="track_access_actiondom" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="target" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+		<field key="principal_class" dbtype="varchar" precision="100" phptype="string" null="false" default="modPrincipal" index="index" />
+		<field key="principal" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="authority" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="9999" index="index" />
+		<field key="policy" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target" name="target" primary="false" unique="false" type="BTREE" >
+			<column key="target" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal_class" name="principal_class" primary="false" unique="false" type="BTREE" >
+			<column key="principal_class" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal" name="principal" primary="false" unique="false" type="BTREE" >
+			<column key="principal" length="" collation="A" null="false" />
+		</index>
+		<index alias="authority" name="authority" primary="false" unique="false" type="BTREE" >
+			<column key="authority" length="" collation="A" null="false" />
+		</index>
+		<index alias="policy" name="policy" primary="false" unique="false" type="BTREE" >
+			<column key="policy" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessActions" table="track_access_actions" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="target" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+		<field key="principal_class" dbtype="varchar" precision="100" phptype="string" null="false" default="modPrincipal" index="index" />
+		<field key="principal" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="authority" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="9999" index="index" />
+		<field key="policy" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target" name="target" primary="false" unique="false" type="BTREE" >
+			<column key="target" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal_class" name="principal_class" primary="false" unique="false" type="BTREE" >
+			<column key="principal_class" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal" name="principal" primary="false" unique="false" type="BTREE" >
+			<column key="principal" length="" collation="A" null="false" />
+		</index>
+		<index alias="authority" name="authority" primary="false" unique="false" type="BTREE" >
+			<column key="authority" length="" collation="A" null="false" />
+		</index>
+		<index alias="policy" name="policy" primary="false" unique="false" type="BTREE" >
+			<column key="policy" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessCategory" table="track_access_category" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="target" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+		<field key="principal_class" dbtype="varchar" precision="100" phptype="string" null="false" default="modPrincipal" index="index" />
+		<field key="principal" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="authority" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="9999" index="index" />
+		<field key="policy" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="context_key" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target" name="target" primary="false" unique="false" type="BTREE" >
+			<column key="target" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal_class" name="principal_class" primary="false" unique="false" type="BTREE" >
+			<column key="principal_class" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal" name="principal" primary="false" unique="false" type="BTREE" >
+			<column key="principal" length="" collation="A" null="false" />
+		</index>
+		<index alias="authority" name="authority" primary="false" unique="false" type="BTREE" >
+			<column key="authority" length="" collation="A" null="false" />
+		</index>
+		<index alias="policy" name="policy" primary="false" unique="false" type="BTREE" >
+			<column key="policy" length="" collation="A" null="false" />
+		</index>
+		<index alias="context_key" name="context_key" primary="false" unique="false" type="BTREE" >
+			<column key="context_key" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessContext" table="track_access_context" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="target" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+		<field key="principal_class" dbtype="varchar" precision="100" phptype="string" null="false" default="modPrincipal" index="index" />
+		<field key="principal" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="authority" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="9999" index="index" />
+		<field key="policy" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target" name="target" primary="false" unique="false" type="BTREE" >
+			<column key="target" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal_class" name="principal_class" primary="false" unique="false" type="BTREE" >
+			<column key="principal_class" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal" name="principal" primary="false" unique="false" type="BTREE" >
+			<column key="principal" length="" collation="A" null="false" />
+		</index>
+		<index alias="authority" name="authority" primary="false" unique="false" type="BTREE" >
+			<column key="authority" length="" collation="A" null="false" />
+		</index>
+		<index alias="policy" name="policy" primary="false" unique="false" type="BTREE" >
+			<column key="policy" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessElements" table="track_access_elements" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="target" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+		<field key="principal_class" dbtype="varchar" precision="100" phptype="string" null="false" default="modPrincipal" index="index" />
+		<field key="principal" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="authority" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="9999" index="index" />
+		<field key="policy" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="context_key" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target" name="target" primary="false" unique="false" type="BTREE" >
+			<column key="target" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal_class" name="principal_class" primary="false" unique="false" type="BTREE" >
+			<column key="principal_class" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal" name="principal" primary="false" unique="false" type="BTREE" >
+			<column key="principal" length="" collation="A" null="false" />
+		</index>
+		<index alias="authority" name="authority" primary="false" unique="false" type="BTREE" >
+			<column key="authority" length="" collation="A" null="false" />
+		</index>
+		<index alias="policy" name="policy" primary="false" unique="false" type="BTREE" >
+			<column key="policy" length="" collation="A" null="false" />
+		</index>
+		<index alias="context_key" name="context_key" primary="false" unique="false" type="BTREE" >
+			<column key="context_key" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessMediaSource" table="track_access_media_source" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="target" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+		<field key="principal_class" dbtype="varchar" precision="100" phptype="string" null="false" default="modPrincipal" index="index" />
+		<field key="principal" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="authority" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="9999" index="index" />
+		<field key="policy" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="context_key" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target" name="target" primary="false" unique="false" type="BTREE" >
+			<column key="target" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal_class" name="principal_class" primary="false" unique="false" type="BTREE" >
+			<column key="principal_class" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal" name="principal" primary="false" unique="false" type="BTREE" >
+			<column key="principal" length="" collation="A" null="false" />
+		</index>
+		<index alias="authority" name="authority" primary="false" unique="false" type="BTREE" >
+			<column key="authority" length="" collation="A" null="false" />
+		</index>
+		<index alias="policy" name="policy" primary="false" unique="false" type="BTREE" >
+			<column key="policy" length="" collation="A" null="false" />
+		</index>
+		<index alias="context_key" name="context_key" primary="false" unique="false" type="BTREE" >
+			<column key="context_key" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessMenus" table="track_access_menus" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="target" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+		<field key="principal_class" dbtype="varchar" precision="100" phptype="string" null="false" default="modPrincipal" index="index" />
+		<field key="principal" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="authority" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="9999" index="index" />
+		<field key="policy" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target" name="target" primary="false" unique="false" type="BTREE" >
+			<column key="target" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal_class" name="principal_class" primary="false" unique="false" type="BTREE" >
+			<column key="principal_class" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal" name="principal" primary="false" unique="false" type="BTREE" >
+			<column key="principal" length="" collation="A" null="false" />
+		</index>
+		<index alias="authority" name="authority" primary="false" unique="false" type="BTREE" >
+			<column key="authority" length="" collation="A" null="false" />
+		</index>
+		<index alias="policy" name="policy" primary="false" unique="false" type="BTREE" >
+			<column key="policy" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessPermissions" table="track_access_permissions" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="template" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="description" dbtype="text" phptype="string" null="false" />
+		<field key="value" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="1" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="template" name="template" primary="false" unique="false" type="BTREE" >
+			<column key="template" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="false" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessPolicies" table="track_access_policies" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" index="unique" />
+		<field key="description" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="parent" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="template" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="class" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="data" dbtype="text" phptype="string" null="true" />
+		<field key="lexicon" dbtype="varchar" precision="255" phptype="string" null="false" default="permissions" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="parent" name="parent" primary="false" unique="false" type="BTREE" >
+			<column key="parent" length="" collation="A" null="false" />
+		</index>
+		<index alias="class" name="class" primary="false" unique="false" type="BTREE" >
+			<column key="class" length="" collation="A" null="false" />
+		</index>
+		<index alias="template" name="template" primary="false" unique="false" type="BTREE" >
+			<column key="template" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessPolicyTemplateGroups" table="track_access_policy_template_groups" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="description" dbtype="mediumtext" phptype="string" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessPolicyTemplates" table="track_access_policy_templates" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="template_group" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="description" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="lexicon" dbtype="varchar" precision="255" phptype="string" null="false" default="permissions" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessResourceGroups" table="track_access_resource_groups" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="target" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+		<field key="principal_class" dbtype="varchar" precision="100" phptype="string" null="false" default="modPrincipal" index="index" />
+		<field key="principal" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="authority" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="9999" index="index" />
+		<field key="policy" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="context_key" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target" name="target" primary="false" unique="false" type="BTREE" >
+			<column key="target" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal_class" name="principal_class" primary="false" unique="false" type="BTREE" >
+			<column key="principal_class" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal" name="principal" primary="false" unique="false" type="BTREE" >
+			<column key="principal" length="" collation="A" null="false" />
+		</index>
+		<index alias="authority" name="authority" primary="false" unique="false" type="BTREE" >
+			<column key="authority" length="" collation="A" null="false" />
+		</index>
+		<index alias="policy" name="policy" primary="false" unique="false" type="BTREE" >
+			<column key="policy" length="" collation="A" null="false" />
+		</index>
+		<index alias="context_key" name="context_key" primary="false" unique="false" type="BTREE" >
+			<column key="context_key" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessResources" table="track_access_resources" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="target" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+		<field key="principal_class" dbtype="varchar" precision="100" phptype="string" null="false" default="modPrincipal" index="index" />
+		<field key="principal" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="authority" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="9999" index="index" />
+		<field key="policy" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="context_key" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target" name="target" primary="false" unique="false" type="BTREE" >
+			<column key="target" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal_class" name="principal_class" primary="false" unique="false" type="BTREE" >
+			<column key="principal_class" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal" name="principal" primary="false" unique="false" type="BTREE" >
+			<column key="principal" length="" collation="A" null="false" />
+		</index>
+		<index alias="authority" name="authority" primary="false" unique="false" type="BTREE" >
+			<column key="authority" length="" collation="A" null="false" />
+		</index>
+		<index alias="policy" name="policy" primary="false" unique="false" type="BTREE" >
+			<column key="policy" length="" collation="A" null="false" />
+		</index>
+		<index alias="context_key" name="context_key" primary="false" unique="false" type="BTREE" >
+			<column key="context_key" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackAccessTemplatevars" table="track_access_templatevars" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="target" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+		<field key="principal_class" dbtype="varchar" precision="100" phptype="string" null="false" default="modPrincipal" index="index" />
+		<field key="principal" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="authority" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="9999" index="index" />
+		<field key="policy" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="context_key" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target" name="target" primary="false" unique="false" type="BTREE" >
+			<column key="target" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal_class" name="principal_class" primary="false" unique="false" type="BTREE" >
+			<column key="principal_class" length="" collation="A" null="false" />
+		</index>
+		<index alias="principal" name="principal" primary="false" unique="false" type="BTREE" >
+			<column key="principal" length="" collation="A" null="false" />
+		</index>
+		<index alias="authority" name="authority" primary="false" unique="false" type="BTREE" >
+			<column key="authority" length="" collation="A" null="false" />
+		</index>
+		<index alias="policy" name="policy" primary="false" unique="false" type="BTREE" >
+			<column key="policy" length="" collation="A" null="false" />
+		</index>
+		<index alias="context_key" name="context_key" primary="false" unique="false" type="BTREE" >
+			<column key="context_key" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackActiondom" table="track_actiondom" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="set" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="action" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="description" dbtype="text" phptype="string" null="true" />
+		<field key="xtype" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="container" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="rule" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="value" dbtype="text" phptype="string" null="false" />
+		<field key="constraint" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="constraint_field" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="constraint_class" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="active" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="1" index="index" />
+		<field key="for_parent" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="rank" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="set" name="set" primary="false" unique="false" type="BTREE" >
+			<column key="set" length="" collation="A" null="false" />
+		</index>
+		<index alias="action" name="action" primary="false" unique="false" type="BTREE" >
+			<column key="action" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="false" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="active" name="active" primary="false" unique="false" type="BTREE" >
+			<column key="active" length="" collation="A" null="false" />
+		</index>
+		<index alias="for_parent" name="for_parent" primary="false" unique="false" type="BTREE" >
+			<column key="for_parent" length="" collation="A" null="false" />
+		</index>
+		<index alias="rank" name="rank" primary="false" unique="false" type="BTREE" >
+			<column key="rank" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackActions" table="track_actions" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="namespace" dbtype="varchar" precision="100" phptype="string" null="false" default="core" index="index" />
+		<field key="controller" dbtype="varchar" precision="255" phptype="string" null="false" index="index" />
+		<field key="haslayout" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="1" />
+		<field key="lang_topics" dbtype="text" phptype="string" null="false" />
+		<field key="assets" dbtype="text" phptype="string" null="false" />
+		<field key="help_url" dbtype="text" phptype="string" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="namespace" name="namespace" primary="false" unique="false" type="BTREE" >
+			<column key="namespace" length="" collation="A" null="false" />
+		</index>
+		<index alias="controller" name="controller" primary="false" unique="false" type="BTREE" >
+			<column key="controller" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackActionsFields" table="track_actions_fields" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="action" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="type" dbtype="varchar" precision="100" phptype="string" null="false" default="field" index="index" />
+		<field key="tab" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="form" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="other" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="rank" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="action" name="action" primary="false" unique="false" type="BTREE" >
+			<column key="action" length="" collation="A" null="false" />
+		</index>
+		<index alias="type" name="type" primary="false" unique="false" type="BTREE" >
+			<column key="type" length="" collation="A" null="false" />
+		</index>
+		<index alias="tab" name="tab" primary="false" unique="false" type="BTREE" >
+			<column key="tab" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackActiveUsers" table="track_active_users" extends="track_modxtalks_">
+		<field key="internalKey" dbtype="int" precision="9" phptype="integer" null="false" default="0" index="pk" />
+		<field key="username" dbtype="varchar" precision="50" phptype="string" null="false" default="" />
+		<field key="lasthit" dbtype="int" precision="20" phptype="integer" null="false" default="0" />
+		<field key="id" dbtype="int" precision="10" phptype="integer" null="true" />
+		<field key="action" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="ip" dbtype="varchar" precision="20" phptype="string" null="false" default="" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="internalKey" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackCategories" table="track_categories" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="parent" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" default="0" index="index" />
+		<field key="category" dbtype="varchar" precision="45" phptype="string" null="false" default="" index="unique" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="category" name="category" primary="false" unique="true" type="BTREE" >
+			<column key="category" length="" collation="A" null="false" />
+		</index>
+		<index alias="parent" name="parent" primary="false" unique="false" type="BTREE" >
+			<column key="parent" length="" collation="A" null="true" />
+		</index>
+	</object>
+	<object class="TrackCategoriesClosure" table="track_categories_closure" extends="track_modxtalks_">
+		<field key="ancestor" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+		<field key="descendant" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+		<field key="depth" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="ancestor" length="" collation="A" null="false" />
+			<column key="descendant" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackClassMap" table="track_class_map" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="class" dbtype="varchar" precision="120" phptype="string" null="false" default="" index="unique" />
+		<field key="parent_class" dbtype="varchar" precision="120" phptype="string" null="false" default="" index="index" />
+		<field key="name_field" dbtype="varchar" precision="255" phptype="string" null="false" default="name" index="index" />
+		<field key="path" dbtype="tinytext" phptype="string" null="true" />
+		<field key="lexicon" dbtype="varchar" precision="255" phptype="string" null="false" default="core:resource" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="class" name="class" primary="false" unique="true" type="BTREE" >
+			<column key="class" length="" collation="A" null="false" />
+		</index>
+		<index alias="parent_class" name="parent_class" primary="false" unique="false" type="BTREE" >
+			<column key="parent_class" length="" collation="A" null="false" />
+		</index>
+		<index alias="name_field" name="name_field" primary="false" unique="false" type="BTREE" >
+			<column key="name_field" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackClicheAlbums" table="track_cliche_albums" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" index="index" />
+		<field key="description" dbtype="text" phptype="string" null="false" />
+		<field key="createdon" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="createdby" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="cover_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="total" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="type" dbtype="varchar" precision="50" phptype="string" null="false" default="default" />
+		<field key="options" dbtype="text" phptype="string" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="false" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="createdby" name="createdby" primary="false" unique="false" type="BTREE" >
+			<column key="createdby" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackClicheItems" table="track_cliche_items" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="filename" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="description" dbtype="text" phptype="string" null="false" />
+		<field key="createdon" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="createdby" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="album_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="type" dbtype="varchar" precision="50" phptype="string" null="false" default="image" />
+		<field key="metas" dbtype="text" phptype="string" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="createdby" name="createdby" primary="false" unique="false" type="BTREE" >
+			<column key="createdby" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackContentType" table="track_content_type" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" index="unique" />
+		<field key="description" dbtype="tinytext" phptype="string" null="true" />
+		<field key="mime_type" dbtype="tinytext" phptype="string" null="true" />
+		<field key="file_extensions" dbtype="tinytext" phptype="string" null="true" />
+		<field key="headers" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="binary" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackContext" table="track_context" extends="track_modxtalks_">
+		<field key="key" dbtype="varchar" precision="100" phptype="string" null="false" index="pk" />
+		<field key="description" dbtype="tinytext" phptype="string" null="true" />
+		<field key="rank" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="key" length="" collation="A" null="false" />
+		</index>
+		<index alias="rank" name="rank" primary="false" unique="false" type="BTREE" >
+			<column key="rank" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackContextResource" table="track_context_resource" extends="track_modxtalks_">
+		<field key="context_key" dbtype="varchar" precision="255" phptype="string" null="false" index="pk" />
+		<field key="resource" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="context_key" length="" collation="A" null="false" />
+			<column key="resource" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackContextSetting" table="track_context_setting" extends="track_modxtalks_">
+		<field key="context_key" dbtype="varchar" precision="255" phptype="string" null="false" index="pk" />
+		<field key="key" dbtype="varchar" precision="50" phptype="string" null="false" index="pk" />
+		<field key="value" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="xtype" dbtype="varchar" precision="75" phptype="string" null="false" default="textfield" />
+		<field key="namespace" dbtype="varchar" precision="40" phptype="string" null="false" default="core" />
+		<field key="area" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="editedon" dbtype="timestamp" phptype="timestamp" null="false" default="0000-00-00 00:00:00"  extra="on update current_timestamp" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="context_key" length="" collation="A" null="false" />
+			<column key="key" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackDashboard" table="track_dashboard" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="description" dbtype="text" phptype="string" null="true" />
+		<field key="hide_trees" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="false" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="hide_trees" name="hide_trees" primary="false" unique="false" type="BTREE" >
+			<column key="hide_trees" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackDashboardWidget" table="track_dashboard_widget" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="description" dbtype="text" phptype="string" null="true" />
+		<field key="type" dbtype="varchar" precision="100" phptype="string" null="false" index="index" />
+		<field key="content" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="namespace" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="lexicon" dbtype="varchar" precision="255" phptype="string" null="false" default="core:dashboards" index="index" />
+		<field key="size" dbtype="varchar" precision="255" phptype="string" null="false" default="half" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="false" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="type" name="type" primary="false" unique="false" type="BTREE" >
+			<column key="type" length="" collation="A" null="false" />
+		</index>
+		<index alias="namespace" name="namespace" primary="false" unique="false" type="BTREE" >
+			<column key="namespace" length="" collation="A" null="false" />
+		</index>
+		<index alias="lexicon" name="lexicon" primary="false" unique="false" type="BTREE" >
+			<column key="lexicon" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackDashboardWidgetPlacement" table="track_dashboard_widget_placement" extends="track_modxtalks_">
+		<field key="dashboard" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+		<field key="widget" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+		<field key="rank" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="dashboard" length="" collation="A" null="false" />
+			<column key="widget" length="" collation="A" null="false" />
+		</index>
+		<index alias="rank" name="rank" primary="false" unique="false" type="BTREE" >
+			<column key="rank" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackDocumentGroups" table="track_document_groups" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="document_group" dbtype="int" precision="10" phptype="integer" null="false" default="0" index="index" />
+		<field key="document" dbtype="int" precision="10" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="document_group" name="document_group" primary="false" unique="false" type="BTREE" >
+			<column key="document_group" length="" collation="A" null="false" />
+		</index>
+		<index alias="document" name="document" primary="false" unique="false" type="BTREE" >
+			<column key="document" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackDocumentgroupNames" table="track_documentgroup_names" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="unique" />
+		<field key="private_memgroup" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="private_webgroup" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackElementPropertySets" table="track_element_property_sets" extends="track_modxtalks_">
+		<field key="element" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+		<field key="element_class" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="pk" />
+		<field key="property_set" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="element" length="" collation="A" null="false" />
+			<column key="element_class" length="" collation="A" null="false" />
+			<column key="property_set" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackFcProfiles" table="track_fc_profiles" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="description" dbtype="text" phptype="string" null="false" />
+		<field key="active" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" index="index" />
+		<field key="rank" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="false" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="rank" name="rank" primary="false" unique="false" type="BTREE" >
+			<column key="rank" length="" collation="A" null="false" />
+		</index>
+		<index alias="active" name="active" primary="false" unique="false" type="BTREE" >
+			<column key="active" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackFcProfilesUsergroups" table="track_fc_profiles_usergroups" extends="track_modxtalks_">
+		<field key="usergroup" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="pk" />
+		<field key="profile" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="pk" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="usergroup" length="" collation="A" null="false" />
+			<column key="profile" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackFcSets" table="track_fc_sets" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="profile" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="action" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="description" dbtype="text" phptype="string" null="false" />
+		<field key="active" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" index="index" />
+		<field key="template" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="constraint" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="constraint_field" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="constraint_class" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="profile" name="profile" primary="false" unique="false" type="BTREE" >
+			<column key="profile" length="" collation="A" null="false" />
+		</index>
+		<index alias="action" name="action" primary="false" unique="false" type="BTREE" >
+			<column key="action" length="" collation="A" null="false" />
+		</index>
+		<index alias="active" name="active" primary="false" unique="false" type="BTREE" >
+			<column key="active" length="" collation="A" null="false" />
+		</index>
+		<index alias="template" name="template" primary="false" unique="false" type="BTREE" >
+			<column key="template" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackLexiconEntries" table="track_lexicon_entries" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="value" dbtype="text" phptype="string" null="false" />
+		<field key="topic" dbtype="varchar" precision="255" phptype="string" null="false" default="default" index="index" />
+		<field key="namespace" dbtype="varchar" precision="40" phptype="string" null="false" default="core" index="index" />
+		<field key="language" dbtype="varchar" precision="20" phptype="string" null="false" default="en" index="index" />
+		<field key="createdon" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="editedon" dbtype="timestamp" phptype="timestamp" null="false" default="0000-00-00 00:00:00"  extra="on update current_timestamp" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="false" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="topic" name="topic" primary="false" unique="false" type="BTREE" >
+			<column key="topic" length="" collation="A" null="false" />
+		</index>
+		<index alias="namespace" name="namespace" primary="false" unique="false" type="BTREE" >
+			<column key="namespace" length="" collation="A" null="false" />
+		</index>
+		<index alias="language" name="language" primary="false" unique="false" type="BTREE" >
+			<column key="language" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackManagerLog" table="track_manager_log" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="user" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="occurred" dbtype="datetime" phptype="datetime" null="true" default="0000-00-00 00:00:00" />
+		<field key="action" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="classKey" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="item" dbtype="varchar" precision="255" phptype="string" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackMediaSources" table="track_media_sources" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="description" dbtype="text" phptype="string" null="true" />
+		<field key="class_key" dbtype="varchar" precision="100" phptype="string" null="false" default="sources.modFileMediaSource" index="index" />
+		<field key="properties" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="is_stream" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="1" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="false" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="class_key" name="class_key" primary="false" unique="false" type="BTREE" >
+			<column key="class_key" length="" collation="A" null="false" />
+		</index>
+		<index alias="is_stream" name="is_stream" primary="false" unique="false" type="BTREE" >
+			<column key="is_stream" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackMediaSourcesContexts" table="track_media_sources_contexts" extends="track_modxtalks_">
+		<field key="source" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="pk" />
+		<field key="context_key" dbtype="varchar" precision="100" phptype="string" null="false" default="web" index="pk" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="source" length="" collation="A" null="false" />
+			<column key="context_key" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackMediaSourcesElements" table="track_media_sources_elements" extends="track_modxtalks_">
+		<field key="source" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+		<field key="object_class" dbtype="varchar" precision="100" phptype="string" null="false" default="modTemplateVar" index="pk" />
+		<field key="object" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+		<field key="context_key" dbtype="varchar" precision="100" phptype="string" null="false" default="web" index="pk" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="source" length="" collation="A" null="false" />
+			<column key="object" length="" collation="A" null="false" />
+			<column key="object_class" length="" collation="A" null="false" />
+			<column key="context_key" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackMemberGroups" table="track_member_groups" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="user_group" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="member" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="role" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="1" index="index" />
+		<field key="rank" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="role" name="role" primary="false" unique="false" type="BTREE" >
+			<column key="role" length="" collation="A" null="false" />
+		</index>
+		<index alias="rank" name="rank" primary="false" unique="false" type="BTREE" >
+			<column key="rank" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackMembergroupNames" table="track_membergroup_names" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="unique" />
+		<field key="description" dbtype="text" phptype="string" null="true" />
+		<field key="parent" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="rank" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="dashboard" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="1" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="parent" name="parent" primary="false" unique="false" type="BTREE" >
+			<column key="parent" length="" collation="A" null="false" />
+		</index>
+		<index alias="rank" name="rank" primary="false" unique="false" type="BTREE" >
+			<column key="rank" length="" collation="A" null="false" />
+		</index>
+		<index alias="dashboard" name="dashboard" primary="false" unique="false" type="BTREE" >
+			<column key="dashboard" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackMenus" table="track_menus" extends="track_modxtalks_">
+		<field key="text" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="pk" />
+		<field key="parent" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="action" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="description" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="icon" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="menuindex" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="params" dbtype="text" phptype="string" null="false" />
+		<field key="handler" dbtype="text" phptype="string" null="false" />
+		<field key="permissions" dbtype="text" phptype="string" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="text" length="" collation="A" null="false" />
+		</index>
+		<index alias="parent" name="parent" primary="false" unique="false" type="BTREE" >
+			<column key="parent" length="" collation="A" null="false" />
+		</index>
+		<index alias="action" name="action" primary="false" unique="false" type="BTREE" >
+			<column key="action" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackModxtalksConversation" table="track_modxtalks_conversation" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="11" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="conversation" dbtype="varchar" precision="63" phptype="string" null="false" index="unique" />
+		<field key="extra" dbtype="varchar" precision="255" phptype="string" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="conversation" name="conversation" primary="false" unique="true" type="BTREE" >
+			<column key="conversation" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackModxtalksLike" table="track_modxtalks_like" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="postId" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="userId" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="postId" length="" collation="A" null="false" />
+			<column key="userId" length="" collation="A" null="false" />
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackModxtalksMemberconversation" table="track_modxtalks_memberconversation" extends="track_modxtalks_">
+		<field key="conversationId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="type" dbtype="enum" precision="'member','group'" phptype="string" null="false" default="member" index="pk" />
+		<field key="id" dbtype="int" precision="11" phptype="integer" null="false" index="pk" />
+		<field key="allowed" dbtype="tinyint" precision="1" phptype="integer" null="true" default="0" />
+		<field key="starred" dbtype="tinyint" precision="1" phptype="integer" null="true" default="0" />
+		<field key="lastRead" dbtype="smallint" precision="5" phptype="integer" null="true" default="0" />
+		<field key="draft" dbtype="text" phptype="string" null="true" />
+		<field key="muted" dbtype="tinyint" precision="1" phptype="integer" null="true" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="conversationId" length="" collation="A" null="false" />
+			<column key="type" length="" collation="A" null="false" />
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="member_conversation_type_id" name="member_conversation_type_id" primary="false" unique="false" type="BTREE" >
+			<column key="type" length="" collation="A" null="false" />
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackModxtalksPost" table="track_modxtalks_post" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="conversationId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="idx" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="userId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="time" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" />
+		<field key="date" dbtype="int" precision="6" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="editUserId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
+		<field key="editTime" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
+		<field key="deleteUserId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
+		<field key="deleteTime" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
+		<field key="hash" dbtype="varchar" precision="32" phptype="string" null="false" />
+		<field key="content" dbtype="text" phptype="string" null="false" />
+		<field key="attributes" dbtype="mediumblob" phptype="binary" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="conversation" name="conversation" primary="false" unique="false" type="BTREE" >
+			<column key="conversationId" length="" collation="A" null="false" />
+		</index>
+		<index alias="date" name="date" primary="false" unique="false" type="BTREE" >
+			<column key="date" length="" collation="A" null="false" />
+		</index>
+		<index alias="userId" name="userId" primary="false" unique="false" type="BTREE" >
+			<column key="userId" length="" collation="A" null="false" />
+		</index>
+		<index alias="idx" name="idx" primary="false" unique="false" type="BTREE" >
+			<column key="idx" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackModxtalksTempPost" table="track_modxtalks_temp_post" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="content" dbtype="text" phptype="string" null="false" />
+		<field key="hash" dbtype="varchar" precision="32" phptype="string" null="true" />
+		<field key="token" dbtype="varchar" precision="32" phptype="string" null="false" />
+		<field key="username" dbtype="varchar" precision="63" phptype="string" null="false" />
+		<field key="useremail" dbtype="varchar" precision="63" phptype="string" null="false" />
+		<field key="conversationId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="ip" dbtype="varchar" precision="255" phptype="string" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="conversationId" name="conversationId" primary="false" unique="false" type="BTREE" >
+			<column key="conversationId" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackModxtalksUsers" table="track_modxtalks_users" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="63" phptype="string" null="false" />
+		<field key="email" dbtype="varchar" precision="63" phptype="string" null="false" index="index" />
+		<field key="post_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="ip" dbtype="varchar" precision="255" phptype="string" null="false" />
+		<field key="extra" dbtype="varchar" precision="255" phptype="string" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="email" name="email" primary="false" unique="false" type="BTREE" >
+			<column key="email" length="" collation="A" null="false" />
+		</index>
+		<index alias="post_id" name="post_id" primary="false" unique="false" type="BTREE" >
+			<column key="post_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackNamespaces" table="track_namespaces" extends="track_modxtalks_">
+		<field key="name" dbtype="varchar" precision="40" phptype="string" null="false" default="" index="pk" />
+		<field key="path" dbtype="text" phptype="string" null="true" />
+		<field key="assets_path" dbtype="text" phptype="string" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackPropertySet" table="track_property_set" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="50" phptype="string" null="false" default="" index="unique" />
+		<field key="category" dbtype="int" precision="10" phptype="integer" null="false" default="0" index="index" />
+		<field key="description" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="properties" dbtype="text" phptype="string" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="category" name="category" primary="false" unique="false" type="BTREE" >
+			<column key="category" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackRegisterMessages" table="track_register_messages" extends="track_modxtalks_">
+		<field key="topic" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="id" dbtype="varchar" precision="255" phptype="string" null="false" index="pk" />
+		<field key="created" dbtype="datetime" phptype="datetime" null="false" index="index" />
+		<field key="valid" dbtype="datetime" phptype="datetime" null="false" index="index" />
+		<field key="accessed" dbtype="timestamp" phptype="timestamp" null="true" index="index"  extra="on update current_timestamp" />
+		<field key="accesses" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="expires" dbtype="int" precision="20" phptype="integer" null="false" default="0" index="index" />
+		<field key="payload" dbtype="mediumtext" phptype="string" null="false" />
+		<field key="kill" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="topic" length="" collation="A" null="false" />
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="created" name="created" primary="false" unique="false" type="BTREE" >
+			<column key="created" length="" collation="A" null="false" />
+		</index>
+		<index alias="valid" name="valid" primary="false" unique="false" type="BTREE" >
+			<column key="valid" length="" collation="A" null="false" />
+		</index>
+		<index alias="accessed" name="accessed" primary="false" unique="false" type="BTREE" >
+			<column key="accessed" length="" collation="A" null="true" />
+		</index>
+		<index alias="accesses" name="accesses" primary="false" unique="false" type="BTREE" >
+			<column key="accesses" length="" collation="A" null="false" />
+		</index>
+		<index alias="expires" name="expires" primary="false" unique="false" type="BTREE" >
+			<column key="expires" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackRegisterQueues" table="track_register_queues" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" index="unique" />
+		<field key="options" dbtype="mediumtext" phptype="string" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackRegisterTopics" table="track_register_topics" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="queue" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" index="index" />
+		<field key="created" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="updated" dbtype="timestamp" phptype="timestamp" null="true"  extra="on update current_timestamp" />
+		<field key="options" dbtype="mediumtext" phptype="string" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="queue" name="queue" primary="false" unique="false" type="BTREE" >
+			<column key="queue" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="false" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSession" table="track_session" extends="track_modxtalks_">
+		<field key="id" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="pk" />
+		<field key="access" dbtype="int" precision="20" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="data" dbtype="mediumtext" phptype="string" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="access" name="access" primary="false" unique="false" type="BTREE" >
+			<column key="access" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSiteContent" table="track_site_content" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="type" dbtype="varchar" precision="20" phptype="string" null="false" default="document" />
+		<field key="contentType" dbtype="varchar" precision="50" phptype="string" null="false" default="text/html" />
+		<field key="pagetitle" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="longtitle" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="description" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="alias" dbtype="varchar" precision="255" phptype="string" null="true" default="" index="index" />
+		<field key="link_attributes" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="published" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="pub_date" dbtype="int" precision="20" phptype="integer" null="false" default="0" index="index" />
+		<field key="unpub_date" dbtype="int" precision="20" phptype="integer" null="false" default="0" index="index" />
+		<field key="parent" dbtype="int" precision="10" phptype="integer" null="false" default="0" index="index" />
+		<field key="isfolder" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="introtext" dbtype="text" phptype="string" null="true" />
+		<field key="content" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="richtext" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="1" />
+		<field key="template" dbtype="int" precision="10" phptype="integer" null="false" default="0" index="index" />
+		<field key="menuindex" dbtype="int" precision="10" phptype="integer" null="false" default="0" index="index" />
+		<field key="searchable" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="1" index="index" />
+		<field key="cacheable" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="1" index="index" />
+		<field key="createdby" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+		<field key="createdon" dbtype="int" precision="20" phptype="integer" null="false" default="0" />
+		<field key="editedby" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+		<field key="editedon" dbtype="int" precision="20" phptype="integer" null="false" default="0" />
+		<field key="deleted" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="deletedon" dbtype="int" precision="20" phptype="integer" null="false" default="0" />
+		<field key="deletedby" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+		<field key="publishedon" dbtype="int" precision="20" phptype="integer" null="false" default="0" />
+		<field key="publishedby" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+		<field key="menutitle" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="donthit" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="privateweb" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="privatemgr" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="content_dispo" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+		<field key="hidemenu" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="class_key" dbtype="varchar" precision="100" phptype="string" null="false" default="modDocument" index="index" />
+		<field key="context_key" dbtype="varchar" precision="100" phptype="string" null="false" default="web" index="index" />
+		<field key="content_type" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="1" />
+		<field key="uri" dbtype="text" phptype="string" null="true" index="index" />
+		<field key="uri_override" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" index="index" />
+		<field key="hide_children_in_tree" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" index="index" />
+		<field key="show_in_tree" dbtype="tinyint" precision="1" phptype="integer" null="false" default="1" index="index" />
+		<field key="properties" dbtype="mediumtext" phptype="string" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="alias" name="alias" primary="false" unique="false" type="BTREE" >
+			<column key="alias" length="" collation="A" null="true" />
+		</index>
+		<index alias="published" name="published" primary="false" unique="false" type="BTREE" >
+			<column key="published" length="" collation="A" null="false" />
+		</index>
+		<index alias="pub_date" name="pub_date" primary="false" unique="false" type="BTREE" >
+			<column key="pub_date" length="" collation="A" null="false" />
+		</index>
+		<index alias="unpub_date" name="unpub_date" primary="false" unique="false" type="BTREE" >
+			<column key="unpub_date" length="" collation="A" null="false" />
+		</index>
+		<index alias="parent" name="parent" primary="false" unique="false" type="BTREE" >
+			<column key="parent" length="" collation="A" null="false" />
+		</index>
+		<index alias="isfolder" name="isfolder" primary="false" unique="false" type="BTREE" >
+			<column key="isfolder" length="" collation="A" null="false" />
+		</index>
+		<index alias="template" name="template" primary="false" unique="false" type="BTREE" >
+			<column key="template" length="" collation="A" null="false" />
+		</index>
+		<index alias="menuindex" name="menuindex" primary="false" unique="false" type="BTREE" >
+			<column key="menuindex" length="" collation="A" null="false" />
+		</index>
+		<index alias="searchable" name="searchable" primary="false" unique="false" type="BTREE" >
+			<column key="searchable" length="" collation="A" null="false" />
+		</index>
+		<index alias="cacheable" name="cacheable" primary="false" unique="false" type="BTREE" >
+			<column key="cacheable" length="" collation="A" null="false" />
+		</index>
+		<index alias="hidemenu" name="hidemenu" primary="false" unique="false" type="BTREE" >
+			<column key="hidemenu" length="" collation="A" null="false" />
+		</index>
+		<index alias="class_key" name="class_key" primary="false" unique="false" type="BTREE" >
+			<column key="class_key" length="" collation="A" null="false" />
+		</index>
+		<index alias="context_key" name="context_key" primary="false" unique="false" type="BTREE" >
+			<column key="context_key" length="" collation="A" null="false" />
+		</index>
+		<index alias="uri" name="uri" primary="false" unique="false" type="BTREE" >
+			<column key="uri" length="333" collation="A" null="true" />
+		</index>
+		<index alias="uri_override" name="uri_override" primary="false" unique="false" type="BTREE" >
+			<column key="uri_override" length="" collation="A" null="false" />
+		</index>
+		<index alias="hide_children_in_tree" name="hide_children_in_tree" primary="false" unique="false" type="BTREE" >
+			<column key="hide_children_in_tree" length="" collation="A" null="false" />
+		</index>
+		<index alias="show_in_tree" name="show_in_tree" primary="false" unique="false" type="BTREE" >
+			<column key="show_in_tree" length="" collation="A" null="false" />
+		</index>
+		<index alias="cache_refresh_idx" name="cache_refresh_idx" primary="false" unique="false" type="BTREE" >
+			<column key="parent" length="" collation="A" null="false" />
+			<column key="menuindex" length="" collation="A" null="false" />
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="content_ft_idx" name="content_ft_idx" primary="false" unique="false" type="FULLTEXT" >
+			<column key="pagetitle" length="" collation="" null="false" />
+			<column key="longtitle" length="" collation="" null="false" />
+			<column key="description" length="" collation="" null="false" />
+			<column key="introtext" length="" collation="" null="true" />
+			<column key="content" length="" collation="" null="true" />
+		</index>
+	</object>
+	<object class="TrackSiteHtmlsnippets" table="track_site_htmlsnippets" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="source" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="property_preprocess" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="name" dbtype="varchar" precision="50" phptype="string" null="false" default="" index="unique" />
+		<field key="description" dbtype="varchar" precision="255" phptype="string" null="false" default="Chunk" />
+		<field key="editor_type" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="category" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="cache_type" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+		<field key="snippet" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="locked" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="properties" dbtype="text" phptype="string" null="true" />
+		<field key="static" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="static_file" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="category" name="category" primary="false" unique="false" type="BTREE" >
+			<column key="category" length="" collation="A" null="false" />
+		</index>
+		<index alias="locked" name="locked" primary="false" unique="false" type="BTREE" >
+			<column key="locked" length="" collation="A" null="false" />
+		</index>
+		<index alias="static" name="static" primary="false" unique="false" type="BTREE" >
+			<column key="static" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSitePluginEvents" table="track_site_plugin_events" extends="track_modxtalks_">
+		<field key="pluginid" dbtype="int" precision="10" phptype="integer" null="false" default="0" index="pk" />
+		<field key="event" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="pk" />
+		<field key="priority" dbtype="int" precision="10" phptype="integer" null="false" default="0" index="index" />
+		<field key="propertyset" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="pluginid" length="" collation="A" null="false" />
+			<column key="event" length="" collation="A" null="false" />
+		</index>
+		<index alias="priority" name="priority" primary="false" unique="false" type="BTREE" >
+			<column key="priority" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSitePlugins" table="track_site_plugins" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="source" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="property_preprocess" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="name" dbtype="varchar" precision="50" phptype="string" null="false" default="" index="unique" />
+		<field key="description" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="editor_type" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="category" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="cache_type" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+		<field key="plugincode" dbtype="mediumtext" phptype="string" null="false" />
+		<field key="locked" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="properties" dbtype="text" phptype="string" null="true" />
+		<field key="disabled" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="moduleguid" dbtype="varchar" precision="32" phptype="string" null="false" default="" />
+		<field key="static" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="static_file" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="category" name="category" primary="false" unique="false" type="BTREE" >
+			<column key="category" length="" collation="A" null="false" />
+		</index>
+		<index alias="locked" name="locked" primary="false" unique="false" type="BTREE" >
+			<column key="locked" length="" collation="A" null="false" />
+		</index>
+		<index alias="disabled" name="disabled" primary="false" unique="false" type="BTREE" >
+			<column key="disabled" length="" collation="A" null="false" />
+		</index>
+		<index alias="static" name="static" primary="false" unique="false" type="BTREE" >
+			<column key="static" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSiteSnippets" table="track_site_snippets" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="source" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="property_preprocess" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="name" dbtype="varchar" precision="50" phptype="string" null="false" default="" index="unique" />
+		<field key="description" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="editor_type" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="category" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="cache_type" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+		<field key="snippet" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="locked" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="properties" dbtype="text" phptype="string" null="true" />
+		<field key="moduleguid" dbtype="varchar" precision="32" phptype="string" null="false" default="" index="index" />
+		<field key="static" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="static_file" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="category" name="category" primary="false" unique="false" type="BTREE" >
+			<column key="category" length="" collation="A" null="false" />
+		</index>
+		<index alias="locked" name="locked" primary="false" unique="false" type="BTREE" >
+			<column key="locked" length="" collation="A" null="false" />
+		</index>
+		<index alias="moduleguid" name="moduleguid" primary="false" unique="false" type="BTREE" >
+			<column key="moduleguid" length="" collation="A" null="false" />
+		</index>
+		<index alias="static" name="static" primary="false" unique="false" type="BTREE" >
+			<column key="static" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSiteTemplates" table="track_site_templates" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="source" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="property_preprocess" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="templatename" dbtype="varchar" precision="50" phptype="string" null="false" default="" index="unique" />
+		<field key="description" dbtype="varchar" precision="255" phptype="string" null="false" default="Template" />
+		<field key="editor_type" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="category" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="icon" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="template_type" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="content" dbtype="mediumtext" phptype="string" null="false" />
+		<field key="locked" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="properties" dbtype="text" phptype="string" null="true" />
+		<field key="static" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="static_file" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="templatename" name="templatename" primary="false" unique="true" type="BTREE" >
+			<column key="templatename" length="" collation="A" null="false" />
+		</index>
+		<index alias="category" name="category" primary="false" unique="false" type="BTREE" >
+			<column key="category" length="" collation="A" null="false" />
+		</index>
+		<index alias="locked" name="locked" primary="false" unique="false" type="BTREE" >
+			<column key="locked" length="" collation="A" null="false" />
+		</index>
+		<index alias="static" name="static" primary="false" unique="false" type="BTREE" >
+			<column key="static" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSiteTmplvarAccess" table="track_site_tmplvar_access" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="tmplvarid" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+		<field key="documentgroup" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSiteTmplvarContentvalues" table="track_site_tmplvar_contentvalues" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="tmplvarid" dbtype="int" precision="10" phptype="integer" null="false" default="0" index="index" />
+		<field key="contentid" dbtype="int" precision="10" phptype="integer" null="false" default="0" index="index" />
+		<field key="value" dbtype="mediumtext" phptype="string" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="tmplvarid" name="tmplvarid" primary="false" unique="false" type="BTREE" >
+			<column key="tmplvarid" length="" collation="A" null="false" />
+		</index>
+		<index alias="contentid" name="contentid" primary="false" unique="false" type="BTREE" >
+			<column key="contentid" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSiteTmplvarTemplates" table="track_site_tmplvar_templates" extends="track_modxtalks_">
+		<field key="tmplvarid" dbtype="int" precision="10" phptype="integer" null="false" default="0" index="pk" />
+		<field key="templateid" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="pk" />
+		<field key="rank" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="tmplvarid" length="" collation="A" null="false" />
+			<column key="templateid" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSiteTmplvars" table="track_site_tmplvars" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="source" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="property_preprocess" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="type" dbtype="varchar" precision="20" phptype="string" null="false" default="" />
+		<field key="name" dbtype="varchar" precision="50" phptype="string" null="false" default="" index="unique" />
+		<field key="caption" dbtype="varchar" precision="80" phptype="string" null="false" default="" />
+		<field key="description" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="editor_type" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="category" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="locked" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="elements" dbtype="text" phptype="string" null="true" />
+		<field key="rank" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="display" dbtype="varchar" precision="20" phptype="string" null="false" default="" />
+		<field key="default_text" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="properties" dbtype="text" phptype="string" null="true" />
+		<field key="input_properties" dbtype="text" phptype="string" null="true" />
+		<field key="output_properties" dbtype="text" phptype="string" null="true" />
+		<field key="static" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="static_file" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="category" name="category" primary="false" unique="false" type="BTREE" >
+			<column key="category" length="" collation="A" null="false" />
+		</index>
+		<index alias="locked" name="locked" primary="false" unique="false" type="BTREE" >
+			<column key="locked" length="" collation="A" null="false" />
+		</index>
+		<index alias="rank" name="rank" primary="false" unique="false" type="BTREE" >
+			<column key="rank" length="" collation="A" null="false" />
+		</index>
+		<index alias="static" name="static" primary="false" unique="false" type="BTREE" >
+			<column key="static" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSystemEventnames" table="track_system_eventnames" extends="track_modxtalks_">
+		<field key="name" dbtype="varchar" precision="50" phptype="string" null="false" index="pk" />
+		<field key="service" dbtype="tinyint" precision="4" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="groupname" dbtype="varchar" precision="20" phptype="string" null="false" default="" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackSystemSettings" table="track_system_settings" extends="track_modxtalks_">
+		<field key="key" dbtype="varchar" precision="50" phptype="string" null="false" default="" index="pk" />
+		<field key="value" dbtype="text" phptype="string" null="false" />
+		<field key="xtype" dbtype="varchar" precision="75" phptype="string" null="false" default="textfield" />
+		<field key="namespace" dbtype="varchar" precision="40" phptype="string" null="false" default="core" />
+		<field key="area" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="editedon" dbtype="timestamp" phptype="timestamp" null="false" default="0000-00-00 00:00:00"  extra="on update current_timestamp" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="key" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackTransportPackages" table="track_transport_packages" extends="track_modxtalks_">
+		<field key="signature" dbtype="varchar" precision="255" phptype="string" null="false" index="pk" />
+		<field key="created" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="updated" dbtype="timestamp" phptype="timestamp" null="true"  extra="on update current_timestamp" />
+		<field key="installed" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="state" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="1" />
+		<field key="workspace" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="provider" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="disabled" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="source" dbtype="tinytext" phptype="string" null="true" />
+		<field key="manifest" dbtype="text" phptype="string" null="true" />
+		<field key="attributes" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="package_name" dbtype="varchar" precision="255" phptype="string" null="false" index="index" />
+		<field key="metadata" dbtype="text" phptype="string" null="true" />
+		<field key="version_major" dbtype="tinyint" precision="4" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="version_minor" dbtype="tinyint" precision="4" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="version_patch" dbtype="tinyint" precision="4" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="release" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="index" />
+		<field key="release_index" dbtype="tinyint" precision="4" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="signature" length="" collation="A" null="false" />
+		</index>
+		<index alias="workspace" name="workspace" primary="false" unique="false" type="BTREE" >
+			<column key="workspace" length="" collation="A" null="false" />
+		</index>
+		<index alias="provider" name="provider" primary="false" unique="false" type="BTREE" >
+			<column key="provider" length="" collation="A" null="false" />
+		</index>
+		<index alias="disabled" name="disabled" primary="false" unique="false" type="BTREE" >
+			<column key="disabled" length="" collation="A" null="false" />
+		</index>
+		<index alias="package_name" name="package_name" primary="false" unique="false" type="BTREE" >
+			<column key="package_name" length="" collation="A" null="false" />
+		</index>
+		<index alias="version_major" name="version_major" primary="false" unique="false" type="BTREE" >
+			<column key="version_major" length="" collation="A" null="false" />
+		</index>
+		<index alias="version_minor" name="version_minor" primary="false" unique="false" type="BTREE" >
+			<column key="version_minor" length="" collation="A" null="false" />
+		</index>
+		<index alias="version_patch" name="version_patch" primary="false" unique="false" type="BTREE" >
+			<column key="version_patch" length="" collation="A" null="false" />
+		</index>
+		<index alias="release" name="release" primary="false" unique="false" type="BTREE" >
+			<column key="release" length="" collation="A" null="false" />
+		</index>
+		<index alias="release_index" name="release_index" primary="false" unique="false" type="BTREE" >
+			<column key="release_index" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackTransportProviders" table="track_transport_providers" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" index="unique" />
+		<field key="description" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="service_url" dbtype="tinytext" phptype="string" null="true" />
+		<field key="username" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="api_key" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="created" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="updated" dbtype="timestamp" phptype="timestamp" null="true"  extra="on update current_timestamp" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="api_key" name="api_key" primary="false" unique="false" type="BTREE" >
+			<column key="api_key" length="" collation="A" null="false" />
+		</index>
+		<index alias="username" name="username" primary="false" unique="false" type="BTREE" >
+			<column key="username" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackUserAttributes" table="track_user_attributes" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="internalKey" dbtype="int" precision="10" phptype="integer" null="false" index="unique" />
+		<field key="fullname" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="email" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="phone" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="mobilephone" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="blocked" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="blockeduntil" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="blockedafter" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="logincount" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="lastlogin" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="thislogin" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="failedlogincount" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+		<field key="sessionid" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="dob" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+		<field key="gender" dbtype="int" precision="1" phptype="integer" null="false" default="0" />
+		<field key="address" dbtype="text" phptype="string" null="false" />
+		<field key="country" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="city" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="state" dbtype="varchar" precision="25" phptype="string" null="false" default="" />
+		<field key="zip" dbtype="varchar" precision="25" phptype="string" null="false" default="" />
+		<field key="fax" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="photo" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="comment" dbtype="text" phptype="string" null="false" />
+		<field key="website" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="extended" dbtype="text" phptype="string" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="internalKey" name="internalKey" primary="false" unique="true" type="BTREE" >
+			<column key="internalKey" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackUserGroupRoles" table="track_user_group_roles" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" index="unique" />
+		<field key="description" dbtype="mediumtext" phptype="string" null="true" />
+		<field key="authority" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="9999" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="true" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="authority" name="authority" primary="false" unique="false" type="BTREE" >
+			<column key="authority" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackUserMessages" table="track_user_messages" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="type" dbtype="varchar" precision="15" phptype="string" null="false" default="" />
+		<field key="subject" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="message" dbtype="text" phptype="string" null="false" />
+		<field key="sender" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+		<field key="recipient" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+		<field key="private" dbtype="tinyint" precision="4" phptype="integer" null="false" default="0" />
+		<field key="date_sent" dbtype="datetime" phptype="datetime" null="false" default="0000-00-00 00:00:00" />
+		<field key="read" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackUserSettings" table="track_user_settings" extends="track_modxtalks_">
+		<field key="user" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="pk" />
+		<field key="key" dbtype="varchar" precision="50" phptype="string" null="false" default="" index="pk" />
+		<field key="value" dbtype="text" phptype="string" null="true" />
+		<field key="xtype" dbtype="varchar" precision="75" phptype="string" null="false" default="textfield" />
+		<field key="namespace" dbtype="varchar" precision="40" phptype="string" null="false" default="core" />
+		<field key="area" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="editedon" dbtype="timestamp" phptype="timestamp" null="false" default="0000-00-00 00:00:00"  extra="on update current_timestamp" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="user" length="" collation="A" null="false" />
+			<column key="key" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackUsers" table="track_users" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="username" dbtype="varchar" precision="100" phptype="string" null="false" default="" index="unique" />
+		<field key="password" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="cachepwd" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="class_key" dbtype="varchar" precision="100" phptype="string" null="false" default="modUser" index="index" />
+		<field key="active" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="1" />
+		<field key="remote_key" dbtype="varchar" precision="255" phptype="string" null="true" index="index" />
+		<field key="remote_data" dbtype="text" phptype="string" null="true" />
+		<field key="hash_class" dbtype="varchar" precision="100" phptype="string" null="false" default="hashing.modPBKDF2" />
+		<field key="salt" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+		<field key="primary_group" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="session_stale" dbtype="text" phptype="string" null="true" />
+		<field key="sudo" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="username" name="username" primary="false" unique="true" type="BTREE" >
+			<column key="username" length="" collation="A" null="false" />
+		</index>
+		<index alias="class_key" name="class_key" primary="false" unique="false" type="BTREE" >
+			<column key="class_key" length="" collation="A" null="false" />
+		</index>
+		<index alias="remote_key" name="remote_key" primary="false" unique="false" type="BTREE" >
+			<column key="remote_key" length="" collation="A" null="true" />
+		</index>
+		<index alias="primary_group" name="primary_group" primary="false" unique="false" type="BTREE" >
+			<column key="primary_group" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TrackWorkspaces" table="track_workspaces" extends="track_modxtalks_">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="index" />
+		<field key="path" dbtype="varchar" precision="255" phptype="string" null="false" default="" index="unique" />
+		<field key="created" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="active" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="attributes" dbtype="mediumtext" phptype="string" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="id" length="" collation="A" null="false" />
+		</index>
+		<index alias="path" name="path" primary="false" unique="true" type="BTREE" >
+			<column key="path" length="" collation="A" null="false" />
+		</index>
+		<index alias="name" name="name" primary="false" unique="false" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="active" name="active" primary="false" unique="false" type="BTREE" >
+			<column key="active" length="" collation="A" null="false" />
+		</index>
+	</object>
+</model>
