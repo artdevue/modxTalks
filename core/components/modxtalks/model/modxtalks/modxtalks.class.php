@@ -333,7 +333,7 @@ class modxTalks {
         "time": "'.time().'",
         "mtconversation": {
             "conversationId": "'.$this->config['conversation'].'",
-            "slug": "'.$this->config['slug'].'",
+            "slug": "'.$this->modx->getOption('base_url').$this->config['slug'].'",
             "id": '.$this->config['conversationId'].',
             "countPosts": '.$this->config['commentsCount'].',
             "startFrom": '.$this->config['startFrom'].',

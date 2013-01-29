@@ -199,7 +199,7 @@ var MTConversation = {
 				else position = (""+index).substr(0, 4)+"-"+(""+index).substr(4, 2);
 				if((position.charAt ( position.length - 1 )) == '-') position = position.slice(0, -1);
 				//$.history.load(MTConversation.slug+"/"+position, true);
-				$.history.load(MTConversation.slug.replace("$$$",position), true);
+				$.history.load(MTConversation.slug.substr(1).replace("$$$",position), true);
 			}
 
 			// Initialize the scrubber.
