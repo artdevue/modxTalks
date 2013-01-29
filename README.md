@@ -15,6 +15,6 @@
 </table>
   <table>
    <tr>
-    <td><img src="http://www.gravatar.com/avatar/3318fa1e75c440aed0ed05d3aba6a768?s=60"></td><td valign="middle">"Ivan Brezhnev<br>artdevue.com<br><a href="http://artdevue.com">http://artdevue.com</a></td>
+    <td><img src="http://www.gravatar.com/avatar/3318fa1e75c440aed0ed05d3aba6a768?s=60"></td><td valign="middle">Ivan Brezhnev<br>artdevue.com<br><a href="http://artdevue.com">http://artdevue.com</a></td>
   </tr>
 </table>
