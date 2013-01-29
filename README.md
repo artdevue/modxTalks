@@ -1,7 +1,7 @@
 # modxTalks
 ========
 
-**modxTalks flexible extension of voting for MODX Revolution. This component allows you to install a fully AJAX commenting system on any webpage.**
+**modxTalks flexible MODX Revolution extension for make comment system on your site. This component allows you to install a fully AJAX commenting system on any webpage.**
 
 [Homepage](http://modxTalks.artdevue.com)
 
