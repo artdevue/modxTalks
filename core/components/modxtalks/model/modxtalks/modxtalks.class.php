@@ -814,11 +814,11 @@ class modxTalks {
      * @return boolean True if user is moderator of any groups
      */
     public function isModerator() {
-        if (!isset($this->mtConfig['moderatorArray'])) {
-            $this->moderatorArray = explode(',', $this->config['moderator']);
-            array_walk($this->moderatorArray, 'trim');
+        if (!isset($this->groups)) {
+            $this->groups = explode(',', $this->config['moderator']);
+            array_walk($this->groups, 'trim');
         }
-        return $this->modx->user->isMember($this->moderatorArray);
+        return $this->modx->user->isMember($this->groups);
     }
 
     /**
