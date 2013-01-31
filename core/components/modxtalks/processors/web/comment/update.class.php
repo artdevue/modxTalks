@@ -124,6 +124,7 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
             'userId'          => md5($this->object->userId.$email),
             'timeago'         => date('c',$this->object->time),
             'timeMarker'      => '',
+            'user_info'       => '<div class="user_info"><span class="user_ip">IP: '.$this->object->ip.'</span><span class="user_email">Email: '.$email.'</span></div>',
         );
 
         return $data;

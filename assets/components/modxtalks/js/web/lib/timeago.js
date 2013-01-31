@@ -80,7 +80,7 @@
       }
 
       var words = seconds < 60 && substitute($l.seconds, seconds) ||
-        minutes < 30 && substitute($l.minutes, minutes) ||
+        minutes < 45 && substitute($l.minutes, minutes) ||
         minutes < 60 && substitute($l.hour, 1) ||
         hours < 24 && substitute($l.hours, hours) ||
         days < 30 && substitute($l.days, days) ||

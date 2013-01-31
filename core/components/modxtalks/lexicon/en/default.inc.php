@@ -107,6 +107,7 @@ $_lang['modxtalks.post_update'] = 'Update modxTalk';
 $_lang['modxtalks.preview_checkbox'] = 'Preview';
 
 $_lang['modxtalks.quote'] = 'Quote';
+$_lang['modxtalks.quote_text'] = 'Comment';
 
 $_lang['modxtalks.resources_no'] = 'Resource not found';
 $_lang['modxtalks.resource_comments'] = 'Resource with comments';

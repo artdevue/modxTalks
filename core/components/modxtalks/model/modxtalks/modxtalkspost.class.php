@@ -17,6 +17,7 @@ class modxTalksPost extends xPDOSimpleObject {
     /**
      * Get user data
      *
+     * @access public
      * @return array User name and email
      */
     public function getUserData() {
@@ -40,19 +41,14 @@ class modxTalksPost extends xPDOSimpleObject {
         return array('name' => $name, 'email' => $email);
     }
 
-    public function getIp() {
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        }
-        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }
-        else {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        return $ip;
-    }
 
+    /**
+     * Validate Email address
+     *
+     * @access public
+     * @param string $email Email Address
+     * @return boolean True if Email Address is correct
+     */
     public function validateEmail($email) {
         $isValid = true;
         $atIndex = strrpos($email, "@");

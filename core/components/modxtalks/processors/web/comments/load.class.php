@@ -10,13 +10,12 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
         if ($this->modx->modxtalks->config['commentsPerPage'] != 0) {
             $this->limit = $this->modx->modxtalks->config['commentsPerPage'];
         }
-        $limit = intval($this->getProperty('limit'));
-        if ($limit < $this->limit && $limit > 0) {
-            $this->limit = $limit;
-        }
+
         $this->conversation = (string) $this->getProperty('conversation');
 
-        // Check Conversation
+        /**
+         * Check Conversation
+         */
         if (!$this->theme = $this->modx->modxtalks->getConversation($this->conversation)) {
             return $this->failure($this->modx->lexicon('modxtalks.empty_conversationId'));
         }
@@ -86,6 +85,8 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
         $guest_name = $this->modx->lexicon('modxtalks.guest');
         $del_by = $this->modx->lexicon('modxtalks.deleted_by');
         $restore = $this->modx->lexicon('modxtalks.restore');
+
+        $isModerator = $this->modx->modxtalks->isModerator();
 
         foreach ($data['results'] as $k => $comment) {
             $funny_date = $this->modx->modxtalks->date_format(array('date' => $comment['time']));
@@ -157,7 +158,11 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
                     'funny_edit_date' => '',
                     'edit_name'  => '',
                     'timeago'    => $timeago,
+                    'user_info'  => '',
                 );
+                if ($isModerator === true) {
+                    $tmp['user_info'] = '<div class="user_info"><span class="user_ip">IP: '.$comment['ip'].'</span><span class="user_email">Email: '.$email.'</span></div>';
+                }
                 if ($email != $hideAvatarEmail) {
                     $tmp['hideAvatar'] = '';
                     $hideAvatarEmail = $email;

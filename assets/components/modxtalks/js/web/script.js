@@ -130,56 +130,100 @@ var MTConversation = {
 			MTScrubber.startFrom = this.startFrom;
 			MTScrubber.lastRead = MT.mtconversation.lastRead;
 			MTConversation.slug = MT.mtconversation.slug;
-			
+
 			// If there's a post ID in the URL hash (eg. p1234), highlight that post, and scroll to it.
 			var wlh = window.location.hash;
 			var hash = window.location.hash.replace("#", "");
 			var idxcomm = wlh.substr(9).length > 0 ? $('*[data-idx="'+ wlh.substr(9) +'"]') : false;
-			if(wlh.substr(0, 9) == '#comment-' && idxcomm.length) {
+			if (wlh.substr(0, 9) == '#comment-' && idxcomm.length) {
 				MTConversation.highlightPost(idxcomm);
-				setTimeout(function(){
+				setTimeout(function() {
 					MTConversation.scrollTo(idxcomm.offset().top - 10);
 				}, 100);
 				$.history.load(window.location.pathname.substr(1), true); // window.location.pathname
 				//$.history.load(MTConversation.slug.replace("$$$",wlh.substr(9)), true);
-			} else {
-				if(window.location.pathname.indexOf('-last-mt') > 0){
+			}
+			else {
+				if (window.location.pathname.indexOf('-last-mt') > 0) {
 					lastIt = $('*[data-idx="'+ this.postCount +'"]');
 					$('html, body').animate({
 						scrollTop: lastIt.offset().top - MT.scrubberOffsetTop
 					});
 					MTConversation.highlightPost(lastIt);
 					//MTScrubber.scrollToIndex(this.postCount);
-				} else if (this.startFrom > 1) {
+				}
+				else if (this.startFrom > 1) {
 					MTScrubber.scrollToIndex(this.startFrom);
 					MTConversation.highlightPost($('*[data-idx="'+ this.startFrom +'"]'));
 				}
-			}	
+			}
+
+			// Process the text selection and display button quote
+			var $txt = '';
+			var node = '';
+		    $('.postBody').bind("mouseup", function(e){		    	
+		        if (window.getSelection){
+		            $txt = window.getSelection();
+		            node = $txt.anchorNode;
+		        }
+		        else if (document.getSelection){
+		            $txt = document.getSelection();
+		            node = $txt.anchorNode;
+		        }
+		        else if (document.selection){
+		            $txt = document.selection.createRange().text;
+		            var range = $txt.getRangeAt ? $txt.getRangeAt(0) : $txt.createRange();
+		            node = range.commonAncestorContainer ? range.commonAncestorContainer : range.parentElement ? range.parentElement() : range.item(0);
+		        }
+		        else return;
+		        if    ($txt!=''){
+		            $('#MTpopUpBox').css({'display':'block', 'left':e.pageX-60+'px', 'top':e.pageY+5+'px'});
+		        }
+		    });
+		     
+		    $(document).bind("mousedown", function(){
+		        $('#MTpopUpBox').css({'display':'none'});
+		    });
+		     
+		    $('#MTpopUpBox').bind("mousedown", function(){
+		        postq = $(this).parents(".post");
+				var postId = postq.data("id");
+				var postIdx = $(this).parents(".mtComment").data("idx");
+				parNod = $(node.parentNode).parents(".post");
+				var idNod = parNod.data("id") || null;
+				var idxNod = parNod.parents(".mtComment").data("idx") || null;
+				var nameNode = parNod.find('.info h3').text() || null;
+				MTConversation.quote("reply", $txt, nameNode, idNod, null, true, idxNod); 
+				$("#jumpToReply").click();
+				MTConversation.scrollTo(MTScrubber.converReply.offset().top - 10);
+				
+		    });
 
 			// Set a callback that will load new post data.
-			MTScrubber.loadItemsCallback = function(position,success, index) {
-				//lim = typeof lim !== 'undefined' ? lim : MTScrubber.perPage;
+			MTScrubber.loadItemsCallback = function(position,success,index) {
 				if (position == Infinity) {
 					position = (MTScrubber.count - MTScrubber.perPage) < MTScrubber.perPage ? 1 : MTScrubber.count - MTScrubber.perPage + 1;//"999999"; // Kind of hackish? Meh...
-					//index = null;
 				}
 				// If this "position" is an index in the timeline (eg. 201004), split it into year/month for the request.
 				if (index && position != 0) {
-					position = (""+position).substr(0, 4)+"-"+(""+position).substr(4, 2);
+					position = (''+position).substr(0, 4)+'-'+(''+position).substr(4, 2);
 				}
+				console.log(position);
 				$.MTAjax({
-					headers: {Action:'load'},
-					type: "post",
-					data: {start:position},
+					headers: { Action:'load' },
+					type: 'POST',
+					data: { start:position },
 					success: function(data) {
-						var addIt = new Object();
-						if (data.success != false){
+						var addIt = {};
+						if (data.success != false) {
 							$.each(data.results, function(i,item) {
-								if(i == 0)
+								if (i == 0) {
 									addIt.startFrom = item.idx;
+								}
 								if (item.delete_date) {
 									addIt.view += new EJS({url: MT.assetsPath + MT.deletedCommentTpl}).render(item);
-								} else {
+								}
+								else {
 									addIt.view += new EJS({url: MT.assetsPath + MT.commentTpl}).render(item);
 								}
 							});
@@ -196,9 +240,8 @@ var MTConversation = {
 			MTScrubber.scrollToIndexCallback = function(index) {
 				var position;
 				if (index == Infinity) position = "last";
-				else position = (""+index).substr(0, 4)+"-"+(""+index).substr(4, 2);
-				if((position.charAt ( position.length - 1 )) == '-') position = position.slice(0, -1);
-				//$.history.load(MTConversation.slug+"/"+position, true);
+				else position = (''+index).substr(0,4)+'-'+(""+index).substr(4,2);
+				if ((position.charAt( position.length - 1 )) == '-') position = position.slice(0,-1);
 				$.history.load(MTConversation.slug.substr(1).replace("$$$",position), true);
 			}
 
@@ -218,24 +261,22 @@ var MTConversation = {
 			// Start the automatic reload timeout.
 			this.updateInterval = new MTIntervalCallback(this.update, MT.conversation.updateInterval); //MT.mtconversation.updateInterval
 
-			// $('a.time').timeago();
-
 			function widthscr () {
 				$('.scrubberContent').width(MTScrubber.body.width());
 			}
 
-			if(MTScrubber.body.width() < 570) MTScrubber.body.addClass("scrubber-top");			
+			if (MTScrubber.body.width() < 570) MTScrubber.body.addClass("scrubber-top");
 
-			if(MTScrubber.body.hasClass('scrubber-top')){
+			if (MTScrubber.body.hasClass('scrubber-top')){
 				MTConversation.scrubberTopDef = 1;
 				widthscr();
-				$(window).resize(function () {
+				$(window).resize(function() {
 					widthscr();
 				});
 
 			}
 
-			$(window).resize(function () {
+			$(window).resize(function() {
 					if(MTScrubber.body.width() < 570 && MTConversation.scrubberTopDef == 0) {
 						MTScrubber.body.addClass("scrubber-top");
 					}else if (MTConversation.scrubberTopDef == 0) {
@@ -243,19 +284,11 @@ var MTConversation = {
 					}
 				});
 
-			/*$('#comments_container').on('click','a[rel="comment"]',function(){
-				var commentId = $(this).data('id');
-				var comment = $('#comment-'+commentId);
-				if (comment.lengh == 0) {};
-			});*/
-
 			 $('a[rel="comment"]').click(function(e) {
 				var idcom = $(this).attr('data-id');
 				var comment = $('*[data-idx="'+ idcom +'"]'); //'#comment-' + idcom;
 				if (comment.lengh != 0) {
 					MTConversation.scrollTo(comment.offset().top - 10);
-					//MTScrubber.scrollTo($(comment).offset().top+100);
-					//MTConversation.scrollElem(comment);
 					MTConversation.highlightPost(comment);
 					e.preventDefault();
 				};
@@ -279,7 +312,6 @@ var MTConversation = {
 		}
 		// If we're starting a new conversation...
 		else {}
-
 
 		// If there's a reply box, initilize it.
 		if ($("#reply").length) MTConversation.initReply();
@@ -308,24 +340,22 @@ var MTConversation = {
 		if (MTScrubber.loadedItems.indexOf(MTConversation.postCount - 1) == -1) return;
 		// Make the request for post data.
 		$.MTAjax({
-			headers: {Action:'load'},
-			type: "POST",
-			data: {
-				start: parseInt(MTConversation.postCount)+1
-			},
+			headers: { Action: 'load' },
+			type: 'POST',
+			data: { start: parseInt(MTConversation.postCount) + 1 },
 			success: function(data) {
-
 				// If there are new posts, add them.
 				if (MTConversation.postCount < data.total) {
 					$('.total_mt').text(data.total);
 					MTConversation.postCount = data.total;
-					var addIt = new Object();
+					var addIt = {};
 					$.each(data.results, function(i,item) {
 						MTConversation.itemsComment.push(item.id);
-							if(i == 0) addIt.startFrom = item.idx;
+							if (i == 0) addIt.startFrom = item.idx;
 							if (item.delete_date) {
 								addIt.view += new EJS({url: MT.assetsPath + MT.deletedCommentTpl}).render(item);
-							} else {
+							}
+							else {
 								addIt.view += new EJS({url: MT.assetsPath + MT.commentTpl}).render(item);
 							}
 						});
@@ -341,10 +371,10 @@ var MTConversation = {
 					//var interval = MT.conversationUpdateIntervalStart;
 				}
 				// Otherwise, multiply the update interval by our config setting.
-				else var interval = Math.min(MT.conversationUpdateIntervalLimit, MTConversation.updateInterval.interval * MT.conversationUpdateIntervalMultiplier);
-
+				else {
+					var interval = Math.min(MT.conversationUpdateIntervalLimit, MTConversation.updateInterval.interval * MT.conversationUpdateIntervalMultiplier);
+				}
 				MTConversation.updateInterval.reset(interval);
-
 			},
 			global: false
 		});
@@ -353,7 +383,6 @@ var MTConversation = {
 
 	// Initialize the posts.
 	initPosts: function() {
-
 		$("#conversationPosts .control-delete").live("click", function(e) {
 			var postId = $(this).parents(".post").data("id");
 			MTConversation.deletePost(postId);
@@ -806,7 +835,7 @@ var MTConversation = {
 	// Add a quote to a textarea.
 	quote: function(id, quote, name, postId, insert, hrzn, idx) {
 		var argument = postId || name ? (idx ? idx + " user=" : " ") + (name ? name : "Name") : " ";
-		var startTag = "[quote " + (argument ? "id=" + argument : "") + "]" + (quote ? quote+" " : " ");
+		var startTag = "[quote" + (argument && argument != " " ? " id=" + argument : "") + "]" + (quote ? quote+" " : " ");
 		var endTag = "[/quote]";
 
 		// If we're inserting the quote, add it to the end of the textarea.

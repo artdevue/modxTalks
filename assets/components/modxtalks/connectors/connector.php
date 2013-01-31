@@ -1,10 +1,10 @@
 <?php
+header('Content-Type: application/json; charset=UTF-8');
 
+/*
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
-
-
-header('Content-Type: application/json; charset=UTF-8');
+*/
 
 $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
@@ -89,10 +89,7 @@ if (!in_array($action,$allowedActions)) {
         $ip[0].'.'.$ip[1].'.'.$ip[2].'.'.$ip[3]
     );
     if ($modx->getCount('modxTalksIpBlock',array('ip:IN' => $ipArr))) {
-        echo $modx->toJSON(array(
-            'message' => 'Ваш IP адрес находится в черном списке! Если это ошибка свяжитеь с администрацией сайта!',
-            'success' => false,
-        ));
+        echo '{"message":"Ваш IP адрес находится в черном списке! Если это ошибка свяжитеь с администрацией сайта!","success":false}';
         die;
     }
 }

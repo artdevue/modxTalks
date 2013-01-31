@@ -44,7 +44,7 @@ class CommentsModxTalks extends modResource {
     }
 
     public function getContent(array $options = array()) {
-        $content = parent::getContent($options);
+        $content = '<div class="postBody">'.parent::getContent($options).'</div>';
         $conversation = $this->class_key.'-'.$this->id;
         $properties = $this->getProperties('modxtalks');
         $properties = array_merge(array('conversation' => $conversation), $properties);

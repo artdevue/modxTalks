@@ -18,6 +18,7 @@
 			<div class="postBody">
 				[[+content]]
 			</div>
+			[[+user_info]]
 		</div>
 	</div>
 </div>

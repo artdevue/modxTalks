@@ -334,6 +334,7 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
             'timeMarker'      => '',
             'funny_edit_date' => '',
             'edit_name'       => '',
+            'user_info'       => '<div class="user_info"><span class="user_ip">IP: '.$this->ip.'</span><span class="user_email">Email: '.$this->email.'</span></div>',
         );
 
         return $data;

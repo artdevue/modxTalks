@@ -93,6 +93,7 @@ $_lang['modxtalks.post_remove_confirm'] = 'Вы действительно хо�
 $_lang['modxtalks.post_update'] = 'Обновить modxTalk';
 $_lang['modxtalks.preview_checkbox'] = 'Предварительный просмотр';
 $_lang['modxtalks.quote'] = 'Цитата';
+$_lang['modxtalks.quote_text'] = 'Комментировать';
 $_lang['modxtalks.resources_no'] = 'Ресурс не найден';
 $_lang['modxtalks.resource_comments'] = 'Ресурс с комментариями';
 $_lang['modxtalks.resource_comments_here'] = 'Дочерний ресурс с комментариями';

@@ -328,7 +328,7 @@ addItems: function(startFrom, items, moreItem, animate) {
 		$(".scrubberPrevious").remove();
 
 	// If we have the very last item in the collection, remove the "newer" block.
-	if (Math.max.apply(Math, MTScrubber.loadedItems) >= MTScrubber.count - 1)
+	if (Math.max.apply(Math, MTScrubber.loadedItems) >= MTScrubber.count )
 		$(".scrubberNext").remove();
 
 	$('pre').each(function(i, e) {hljs.highlightBlock(e)});
