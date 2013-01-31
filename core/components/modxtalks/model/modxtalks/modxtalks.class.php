@@ -2334,7 +2334,7 @@ class modxTalks {
         $this->modx->regClientScript($this->config['jsUrl'].'web/ejs_production.js');
 
         // Add a button at quoting the resource allocation in the footer
-        $this->modx->regClientHTMLBlock('<div id="MTpopUpBox"><span class="">'.$this->modx->lexicon('modxtalks.quote_text').'</span></div>');
+        $this->modx->regClientHTMLBlock('<div id="MTpopUpBox"><span class="">'.$this->modx->lexicon('modxtalks.quote_text').'</span></div>'); 
 
         // Check the settings, turn BBCode
         if ($this->config['bbcode']) {
