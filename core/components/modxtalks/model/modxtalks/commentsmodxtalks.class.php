@@ -60,7 +60,6 @@ class CommentsModxTalks extends modResource {
 }
 
 class CommentsModxTalksUpdateProcessor extends modResourceUpdateProcessor {
-    public $classKey = 'CommentsModxTalks';
     public $class_key = 'CommentsModxTalks';
     public $languageTopics = array('modxtalks:default');
     protected $defaultText;

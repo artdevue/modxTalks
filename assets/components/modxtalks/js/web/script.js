@@ -193,6 +193,7 @@ var MTConversation = {
 				var idNod = parNod.data("id") || null;
 				var idxNod = parNod.parents(".mtComment").data("idx") || null;
 				var nameNode = parNod.find('.info h3').text() || null;
+				if(nameNode) nameNode = '"' + nameNode + '"';
 				MTConversation.quote("reply", $txt, nameNode, idNod, null, true, idxNod); 
 				$("#jumpToReply").click();
 				MTConversation.scrollTo(MTScrubber.converReply.offset().top - 10);
