@@ -384,25 +384,25 @@ var MTConversation = {
 
 	// Initialize the posts.
 	initPosts: function() {
-		$("#conversationPosts .control-delete").live("click", function(e) {
+		$(MTScrubber.body).on("click","#conversationPosts .control-delete", function(e) {
 			var postId = $(this).parents(".post").data("id");
 			MTConversation.deletePost(postId);
 			e.preventDefault();
 		});
 
-		$("#conversationPosts .control-restore").live("click", function(e) {
+		$(MTScrubber.body).on("click","#conversationPosts .control-restore", function(e) {
 			var postId = $(this).parents(".post").data("id");
 			MTConversation.restorePost(postId);
 			e.preventDefault();
 		});
 
-		$("#conversationPosts .control-edit").live("click", function(e) {
+		$(MTScrubber.body).on("click","#conversationPosts .control-edit", function(e) {
 			var postId = $(this).parents(".post").data("id");
 			MTConversation.editPost(postId);
 			e.preventDefault();
 		});
 
-		$(".mtComment .post:not(.edit) .control-quote").live("click", function(e) {
+		$(MTScrubber.body).on("click",".mtComment .post:not(.edit) .control-quote", function(e) {
 			postq = $(this).parents(".post");
 			var postId = postq.data("id");
 			var postIdx = $(this).parents(".mtComment").data("idx");
@@ -413,7 +413,7 @@ var MTConversation = {
 		});
 
 		// Add a click handler to any "post links" to scroll back up to the right post, if it's loaded.
-		$("#conversationPosts .postBody a[rel=post]").live("click", function(e) {
+		$(MTScrubber.body).on("click","#conversationPosts .postBody a[rel=post]", function(e) {
 			var id = $(this).data("id");
 
 			$("#conversationPosts .post").each(function() {
@@ -516,7 +516,6 @@ var MTConversation = {
 
 	// Delete a post.
 	deletePost: function(postId) {
-		//$.hideToolTip();
 		// Make the ajax request.
 		$.MTAjax({
 			headers: {Action:'delete'},
@@ -541,9 +540,6 @@ var MTConversation = {
 	},
 	// Restore a post.
 	restorePost: function(postId) {
-
-		//$.hideToolTip();
-
 		// Make the ajax request.
 		$.MTAjax({
 			headers: {Action:'restore'},
@@ -570,8 +566,6 @@ var MTConversation = {
 	},
 	// Edit a post.
 	editPost: function(postId) {
-
-		//$.hideToolTip();
 		var post = $("#comment-" + postId);
 
 		// Make the ajax request.
@@ -589,15 +583,6 @@ var MTConversation = {
 				if (data.success === false) return;
 				MTConversation.editingPosts++;
 				var startHeight = $(".postContent", post).height();
-
-				//data.object.link = MTConversation.slug.replace("$$$",postId);
-				//data.object.timeMarker = ''
-
-				//var formReply = $('#mt_cf_conversationReply').clone();
-				//formReply.find("textarea").text(data.object.content);
-				//formReply.find(".post").attr("id","comment-" + postId).removeClass('replyPlaceholder');
-				//formReply.find(".editButtons").html('<input type="submit" name="save" value="Сохранить изменения" class="big submit button"><input type="submit" name="cancel" value="Отмена" class="big cancel button">');
-
 				// Replace the post HTML with the new stuff we just got.
 				post.replaceWith($(data.object.html).find(".post"));
 				var newPost = $("#comment-" + postId);

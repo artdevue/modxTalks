@@ -216,7 +216,7 @@
 
     var self = $.extend({}, implementations.base);
 
-    if($.browser.msie && ($.browser.version < 8 || document.documentMode < 8)) {
+    if(navigator.userAgent.match(/msie/i) && ($.browser.version < 8 || document.documentMode < 8)) {
         self.type = 'iframeTimer';
     } else if (typeof window.history.pushState != "undefined") {
         self.type = 'historyEvent';
