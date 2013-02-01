@@ -9,13 +9,13 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
     public $context = '';
 
     public function beforeSet() {
-        $content = trim($this->getProperty('content'));
-        $userId = $this->object->userId;
-        $this->context = trim($this->getProperty('ctx'));
         if ($slug = $this->getProperty('slug')) {
             $this->modx->modxtalks->config['slug'] = $slug;
         }
-
+        /**
+         * Check context
+         */
+        $this->context = trim($this->getProperty('ctx'));
         if (empty($this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.empty_context'));
             return false;
@@ -24,7 +24,9 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
             $this->failure($this->modx->lexicon('modxtalks.bad_context'));
             return false;
         }
+
         // Check Comment Content
+        $content = trim($this->getProperty('content'));
         if (empty($content)) {
             $this->failure($this->modx->lexicon('modxtalks.empty_content'));
             return false;
@@ -38,27 +40,40 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
             return false;
         }
 
-        // Check user permission to edit comment
-        if ($this->modx->user->isAuthenticated($this->context) && !$this->modx->modxtalks->isModerator()) {
-            if ($this->modx->user->id != $userId) {
-                $this->failure($this->modx->lexicon('modxtalks.edit_permission'));
-                return false;
-            }
-            if ((time() - $this->object->time) > $this->modx->modxtalks->config['edit_time']) {
-                $this->failure($this->modx->lexicon('modxtalks.edit_timeout',array('seconds' => $this->modx->getOption('modxtalks.edit_time'))));
-                return false;
-            }
-        }
-        elseif (!$this->modx->modxtalks->isModerator()) {
-            $this->failure($this->modx->lexicon('modxtalks.edit_permission'));
-            return false;
-        }
-
+        /**
+         * Set comments data
+         */
         $this->properties = array(
             'editTime' => time(),
             'editUserId' => $this->modx->user->id,
             'content' => $content,
         );
+
+        /**
+         * If users is moderator
+         */
+        if ($this->modx->modxtalks->isModerator()) {
+            return parent::beforeSet();
+        }
+
+        /**
+         * Check user permission to edit comment
+         */
+        $userId = $this->object->userId;
+        if (!$this->modx->user->isAuthenticated($this->context)) {
+            $this->failure($this->modx->lexicon('modxtalks.edit_permission'));
+            return false;
+        }
+        // Check comment owner
+        if ($this->modx->user->id != $userId) {
+            $this->failure($this->modx->lexicon('modxtalks.edit_permission'));
+            return false;
+        }
+        // Check time for edit comment
+        if ((time() - $this->object->time) > $this->modx->modxtalks->config['edit_time']) {
+            $this->failure($this->modx->lexicon('modxtalks.edit_timeout',array('seconds' => $this->modx->getOption('modxtalks.edit_time'))));
+            return false;
+        }
 
         return parent::beforeSet();
     }

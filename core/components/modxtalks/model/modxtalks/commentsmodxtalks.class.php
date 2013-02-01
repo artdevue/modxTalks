@@ -5,6 +5,7 @@ require_once MODX_CORE_PATH.'model/modx/processors/resource/update.class.php';
 
 class CommentsModxTalks extends modResource {
     public $showInContextMenu = true;
+    public $allowListingInClassKeyDropdown = true;
     function __construct(xPDO & $xpdo) {
         parent::__construct($xpdo);
         /*
@@ -59,14 +60,18 @@ class CommentsModxTalks extends modResource {
 }
 
 class CommentsModxTalksUpdateProcessor extends modResourceUpdateProcessor {
-    protected $defaulText;
+    public $classKey = 'CommentsModxTalks';
+    public $class_key = 'CommentsModxTalks';
+    public $languageTopics = array('modxtalks:default');
+    protected $defaultText;
 
     public function beforeSave() {
-        $this->modx->lexicon->load('modxtalks:default');
-        $this->defaulText = $this->modx->lexicon('modxtalks.default');
+        $this->defaultText = $this->modx->lexicon('modxtalks.default');
         $properties = $this->getProperties();
-        $settings = $this->cleanArray($properties['modxtalks']);
-        $this->object->setProperties($settings,'modxtalks',false);
+        if (isset($properties['modxtalks'])) {
+            $settings = $this->cleanArray($properties['modxtalks']);
+            $this->object->setProperties($settings,'modxtalks',false);
+        }
 
         return parent::beforeSave();
     }
@@ -74,7 +79,7 @@ class CommentsModxTalksUpdateProcessor extends modResourceUpdateProcessor {
     private function cleanArray(array $array) {
         foreach ($array as $key => $value) {
             $value = trim($value);
-            if ($value === '' || $value === $this->defaulText) unset($array[$key]);
+            if ($value === '' || $value === $this->defaultText) unset($array[$key]);
         }
         return $array;
     }

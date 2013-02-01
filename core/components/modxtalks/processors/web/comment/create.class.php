@@ -102,7 +102,9 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
             $this->modx->modxtalks->config['slug'] = $slug;
         }
 
-        // Check Context
+        /**
+         * Check Context
+         */
         if (empty($this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.empty_context'));
             return false;
@@ -170,6 +172,13 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
             }
         }
 
+        /**
+         * Check if user email is banned
+         */
+        if ($this->modx->getCount('modxTalksEmailBlock',array('email' => $this->email))) {
+            $this->failure($this->modx->lexicon('modxtalks.email_banned'));
+            return false;
+        }
 
         if (!$this->hasErrors() && !$this->preview) {
             $conversationId = $this->theme->get('id');
