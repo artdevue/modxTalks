@@ -139,8 +139,14 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
             'userId'          => md5($this->object->userId.$email),
             'timeago'         => date('c',$this->object->time),
             'timeMarker'      => '',
-            'user_info'       => '<div class="user_info"><span class="user_ip">IP: '.$this->object->ip.'</span><span class="user_email">Email: '.$email.'</span></div>',
+            'user_info'       => '',
         );
+        if ($this->modx->modxtalks->isModerator() === true) {
+            $data['user_info'] = $this->modx->modxtalks->_parseTpl($this->modx->modxtalks->config['user_info'], array(
+                'email' => $email,
+                'ip' => $this->object->ip
+            ), true);
+        }
 
         return $data;
     }

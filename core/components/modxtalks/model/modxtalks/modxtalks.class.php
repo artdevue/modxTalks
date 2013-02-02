@@ -18,6 +18,10 @@ class modxTalks {
      */
     public $config = array();
     /**
+     * @var array An array of chunks
+     */
+    public $chunks = array();
+    /**
      * @var string Context key
      */
     private $context = 'web';
@@ -78,6 +82,8 @@ class modxTalks {
             'commentAddFormTpl' => 'commentform',
             'commentEditFormTpl' => 'edit_commentform',
             'commentAuthTpl' => $this->modx->getOption('modxtalks.commentAuthTpl',null,'comment_auth_tpl'),
+            'user_info' => 'user_info',
+            'useChunks' => (boolean) $this->modx->getOption('modxtalks.useChunks',null,false),
 
             // RSS Templates
             'rssItemTpl' => 'tpl_rss_item',
@@ -518,6 +524,9 @@ class modxTalks {
         $restore = $this->modx->lexicon('modxtalks.restore');
 
         $isModerator = $this->modx->modxtalks->isModerator();
+        if ($isModerator === true) {
+            $userInfoTpl = $this->_getTpl($this->config['user_info']);
+        }
 
         if (count($comments[0]) > 0) {
             reset($comments[0]);
@@ -622,8 +631,11 @@ class modxTalks {
                     'timeago'    => $timeago,
                     'user_info'  => '',
                 );
-                if ($isModerator) {
-                    $tmp['user_info'] = '<div class="user_info">IP: <span class="user_ip">'.$comment['ip'].'</span>Email: <span class="user_email">'.$email.'</span></div>';
+                if ($isModerator === true) {
+                    $tmp['user_info'] = $this->_parseTpl($userInfoTpl, array(
+                        'email' => $email,
+                        'ip' => $comment['ip']
+                    ));
                 }
                 /**
                  * If the post before this one is by the same member
@@ -742,7 +754,7 @@ class modxTalks {
             }
         }
         foreach ($dsYear as $key => $value) {
-            if ($key != strftime('%Y', mktime())) {
+            if ($key != strftime('%Y', time())) {
                 $dateScrubber .= '<li class="scrubber-'.$key.'01 selected" data-index="'.$key.'01"><a href="'.$this->getLink($key.'-01').'">'.$key.'</a><ul>'.$value.'</ul></li>';
             }
             else {
@@ -978,9 +990,18 @@ class modxTalks {
         echo '</pre>';
     }
 
-    private function _parseTpl($tpl = '', $arr = array(), $chunk = false) {
+
+    /**
+     * Parse template chunk
+     *
+     * @param string $tpl Template file
+     * @param array $arr Array of placeholders
+     * @param boolean $chunk If True get chunk, else use template from string
+     * @param string $postfix Chunk postfix if use file-based chunks
+     */
+    public function _parseTpl($tpl = '', $arr = array(), $chunk = false, $postfix = '.chunk.tpl') {
         if (empty($tpl) && $chunk === false) return '';
-        elseif (!empty($tpl) && $chunk === true) $tpl = $this->_getTpl($tpl);
+        elseif (!empty($tpl) && $chunk === true) $tpl = $this->_getTpl($tpl, $postfix);
 
         if (count($arr)) {
             $tmp = array();
@@ -994,22 +1015,32 @@ class modxTalks {
         return $tpl;
     }
 
+    /**
+     * Get template chunk
+     *
+     * @access private
+     * @param string $tpl Template file
+     * @param string $postfix Chunk postfix if use file-based chunks
+     */
     private function _getTpl($tpl = '', $postfix = '.chunk.tpl') {
         if (!$tpl) return '';
         if (isset($this->chunks[$tpl])) {
             return $this->chunks[$tpl];
         }
-        if ($chunk = $this->modx->getObject('modChunk',array('name' => $tpl))) {
-            $this->chunks[$tpl] = $chunk->get('content');
-            return $this->chunks[$tpl];
+        // If useChunk setting set to True, use the modx standard chunk
+        if ($this->config['useChunks'] === true) {
+            if ($chunk = $this->modx->getObject('modChunk',array('name' => $tpl))) {
+                $this->chunks[$tpl] = $chunk->get('content');
+                return $this->chunks[$tpl];
+            }
         }
-
-        $o = '';
+        // If chunk not found or useChunk set to False, use file-based chunk
         $f = $this->config['chunksPath'].strtolower($tpl).$postfix;
         if (file_exists($f)) {
-            $o = file_get_contents($f);
+            $this->chunks[$tpl] = file_get_contents($f);
+            return $this->chunks[$tpl];
         }
-        return $o;
+        return '';
     }
 
     /**

@@ -124,7 +124,14 @@ class commentUpdateProcessor extends modObjectUpdateProcessor {
             'timeMarker' => '',
             'funny_edit_date' => '',
             'edit_name'  => '',
+            'user_info'  => '',
         );
+        if ($this->modx->modxtalks->isModerator() === true) {
+            $data['user_info'] = $this->modx->modxtalks->_parseTpl($this->modx->modxtalks->config['user_info'], array(
+                'email' => $email,
+                'ip' => $this->object->ip
+            ), true);
+        }
 
         return $data;
     }

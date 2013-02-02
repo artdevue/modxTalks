@@ -13,5 +13,6 @@ $xpdo_meta_map = array (
     3 => 'modxTalksIpBlock',
     4 => 'modxTalksLike',
     5 => 'modxTalksSubscribers',
+    6 => 'modxTalksEmailBlock',
   ),
 );

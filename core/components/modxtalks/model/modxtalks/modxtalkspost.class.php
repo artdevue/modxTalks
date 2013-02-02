@@ -164,7 +164,6 @@ class modxTalksPost extends xPDOSimpleObject {
         $votes = $this->get('votes');
         $votes = !empty($votes) ? $votes : array($users => array(), $total => 0);
         if (!array_key_exists($users,$votes)) $votes[$users] = array();
-        if (!array_key_exists($total,$votes)) $votes[$total] = 0;
         $votes[$users][] = (int) $userId;
         $votes[$total] = count($votes[$users]);
         return $this->set('votes',$votes);
@@ -181,7 +180,6 @@ class modxTalksPost extends xPDOSimpleObject {
         $votes = $this->get('votes');
         $votes = !empty($votes) ? $votes : array($users => array(), $total => 0);
         if (!array_key_exists($users,$votes)) $votes[$users] = array();
-        if (!array_key_exists($total,$votes)) $votes[$total] = 0;
         if (in_array($userId, $votes[$users])) {
             $key = array_search($userId, $votes[$users]);
             unset($votes[$users][$key]);
@@ -200,7 +198,7 @@ class modxTalksPost extends xPDOSimpleObject {
         $votes = $this->get('votes');
         $votes = !empty($votes) ? $votes : array($users => array(), $total => 0);
         if (!array_key_exists($users,$votes)) $votes[$users] = array();
-        return $votes[$users];
+        return $votes;
     }
 
 }

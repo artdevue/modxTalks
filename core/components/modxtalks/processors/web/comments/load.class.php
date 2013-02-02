@@ -87,6 +87,9 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
         $restore = $this->modx->lexicon('modxtalks.restore');
 
         $isModerator = $this->modx->modxtalks->isModerator();
+        if ($isModerator === true) {
+           $userInfoTpl = $this->modx->modxtalks->config['user_info'];
+        }
 
         foreach ($data['results'] as $k => $comment) {
             $funny_date = $this->modx->modxtalks->date_format(array('date' => $comment['time']));
@@ -161,9 +164,12 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
                     'user_info'  => '',
                 );
                 if ($isModerator === true) {
-                    $tmp['user_info'] = '<div class="user_info"><span class="user_ip">IP: '.$comment['ip'].'</span><span class="user_email">Email: '.$email.'</span></div>';
+                    $tmp['user_info'] = $this->modx->modxtalks->_parseTpl($userInfoTpl, array(
+                        'email' => $email,
+                        'ip' => $comment['ip']
+                    ), true);
                 }
-                if ($email != $hideAvatarEmail) {
+                if ($email !== $hideAvatarEmail) {
                     $tmp['hideAvatar'] = '';
                     $hideAvatarEmail = $email;
                 }

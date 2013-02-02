@@ -31,12 +31,14 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
     }
 
     public function beforeSet() {
-
         if ($this->object->deleteTime > 0 || $this->object->deleteUserId) {
             $this->failure($this->modx->lexicon('modxtalks.already_deleted'));
             return false;
         }
 
+        /**
+         * Set comments data
+         */
         $this->properties = array(
             'deleteTime' => time(),
             'deleteUserId' => $this->modx->user->id,
@@ -62,7 +64,7 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
             $this->failure($this->modx->lexicon('modxtalks.delete_permission'));
             return false;
         }
-        // Check time for edit comment
+        // Check time for delete comment
         if ((time() - $this->object->time) > $this->modx->modxtalks->config['edit_time']) {
             $this->failure($this->modx->lexicon('modxtalks.delete_timeout'));
             return false;
