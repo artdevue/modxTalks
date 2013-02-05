@@ -7,6 +7,8 @@
 
 [MODX extras](http://modx.com/extras/package/modxTalks)
 
+## Comments idea took [esoTalk](http://esotalk.org)
+
 ### Authors
 <table>
   <tr>
