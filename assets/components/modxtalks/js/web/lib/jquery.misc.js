@@ -1,4 +1,4 @@
-$.fn.selectRange = function(start, end) {
+jQuery.fn.selectRange = function(start, end) {
     return this.each(function() {
         if (this.setSelectionRange) {
             this.focus();
@@ -14,7 +14,7 @@ $.fn.selectRange = function(start, end) {
     });
 };
 
-$.fn.getSelection = function() {
+jQuery.fn.getSelection = function() {
 
 	var e = (this.jquery) ? this[0] : this;
 
@@ -51,7 +51,7 @@ $.fn.getSelection = function() {
 
 };
 
-$.getSelection = function() {
+jQuery.getSelection = function() {
 	if (window.getSelection) {
 		return window.getSelection();
 	} else if (document.getSelection) {

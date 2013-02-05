@@ -1,7 +1,11 @@
 <?php
-
+/**
+ * @package modxtalks
+ * @subpackage processors
+ */
 class modxTalksPostGetProcessor extends modObjectGetProcessor {
     public $classKey = 'modxTalksPost';
+    public $objectType = 'modxtalks.post';
     public $languageTopics = array('modxtalks:default');
     public $context = '';
 

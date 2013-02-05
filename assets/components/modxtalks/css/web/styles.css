@@ -24,7 +24,7 @@ text-decoration: none;
 
 /* Messages */
 #messages {position:fixed; bottom:20px; left:20px; z-index:600}
-.message {max-width:700px; background:rgba(60, 59, 59, 0.8); color:#fff; padding:8px 13px; line-height:1.5em; display:inline-block; margin-top:10px; border-radius:3px}
+.message {max-width:700px; background:rgba(255, 201, 5, 0.8); color:#333; padding:8px 13px; line-height:1.5em; display:inline-block; margin-top:10px; border-radius:3px;box-shadow: 0 0 15px #333}
 .message .control-delete {float:right; margin-left:6px; margin-right:-6px; margin-top:-3px}
 .message a {color:#bbb}
 .message.hasIcon img {float:left; margin:-2px 8px -2px -3px}
@@ -249,7 +249,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fada13', end
 #conversationBody .postHeader {margin-bottom:2px; padding:7px 7px 7px 12px; overflow:hidden; color:#888}
 #conversationBody .postHeader h3 {display:inline; font-size:110%; margin:0}
 #conversationBody .postHeader h3, .postHeader h3 a {color:#000}
-#conversationBody .postHeader .info {display:inline}
+#conversationBody .postHeader .info {display:block;float:left;}
 #conversationBody .postHeader .info > span, .postHeader .info > a {font-size:85%; margin-left:7px; color:#888}
 #conversationBody .postHeader .controls {float:right; margin-top:3px}
 
@@ -446,6 +446,16 @@ border-right: 1px solid #888;
 padding-right: 10px;
 }
 
+.like_block {
+padding: 10px 10px 0;
+border-top: 1px dashed #CCC;
+margin-top: 10px;
+}
+
+.like-btn {
+margin-right: 10px;
+}
+
 #MTpopUpBox {
 	padding: 4px 2px;
 	font-size: 12px;
@@ -484,3 +494,17 @@ padding-right: 10px;
 .postBody {
     position:relative;
 }
+
+/* user comment like */
+.like_block .likes {color: #666666;}
+.like_block .likes.likehov {text-decoration: underline;cursor: pointer;}
+.like_block .likehov.hover {text-decoration: none;}
+#box_user_info {border-top: 1px dashed #CCC;padding: 10px 0 5px;margin: 10px 0 0 0; position: relative;}
+#box_user_info img {width: 25px;height: 25px;padding: 0 10px 0 5px;border-left: 3px dotted #cccccc;}
+#box_user_info .user_comment_like {font-size: 13px; margin-right: 12px; line-height: 22px;}
+
+
+
+
+
+

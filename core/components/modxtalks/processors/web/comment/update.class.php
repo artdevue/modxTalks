@@ -140,6 +140,7 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
             'timeago'         => date('c',$this->object->time),
             'timeMarker'      => '',
             'user_info'       => '',
+            'like_block'      => '',
         );
         if ($this->modx->modxtalks->isModerator() === true) {
             $data['user_info'] = $this->modx->modxtalks->_parseTpl($this->modx->modxtalks->config['user_info'], array(

@@ -18,6 +18,7 @@
 			<div class="postBody">
 				[[+content]]
 			</div>
+			[[+like_block]]
 			[[+user_info]]
 		</div>
 	</div>

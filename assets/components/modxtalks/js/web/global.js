@@ -1,43 +1,5 @@
 // Global JavaScript
 
-// Change the default jQuery easing method.
-/*
- * jQuery Easing v1.3 - http://gsgd.co.uk/sandbox/jquery/easing/
- *
- * Uses the built in easing capabilities added In jQuery 1.1
- * to offer multiple easing options
- *
- * TERMS OF USE - jQuery Easing
- *
- * Open source under the BSD License.
- *
- * Copyright © 2008 George McGinley Smith
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list of
- * conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice, this list
- * of conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- *
- * Neither the name of the author nor the names of contributors may be used to endorse
- * or promote products derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- *  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- *  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- */
-
 // t: current time, b: begInnIng value, c: change In value, d: duration
 jQuery.easing['jswing'] = jQuery.easing['swing'];
 
@@ -592,6 +554,179 @@ $.fn.popup = function(options) {
 	return wrapper;
 
 };
+
+
+
+//***** TOOLTIPS
+
+$.fn.tooltip = function(options) {
+
+	// If we're doing a tooltip on a distinct element, bind the handlers. But if we're using a selector, use live so they always apply.
+	var func = this.selector ? "live" : "bind";
+
+	return this.unbind("mouseenter.tooltip").die("mouseenter.tooltip")[func]("mouseenter.tooltip", function() {
+
+		var elm = $(this);
+		options = options || {};
+		$.hideToolTip();
+		if ($.tooltipParent) clearTimeout($.tooltipParent.data("hideTimeout"));
+
+		// Store the title attribute.
+		if (!elm.attr("title")) return;
+		elm.data("title", elm.attr("title"));
+		elm.attr("title", "");
+
+		var handler = function() {
+
+			// Set up the tooltip container. There should only be one in existance globally.
+			var tooltip = $("#tooltip");
+			if (!tooltip.length) tooltip = $("<div id='tooltip'></div>").appendTo("body").css({position: "absolute"})
+			.bind("mouseenter", function() {
+				clearTimeout($.tooltipParent.data("hideTimeout"));
+			}).bind("mouseleave", function() {
+				$.hideToolTip();
+			});
+			tooltip.removeClass().addClass("tooltip").hide().data("parent", elm);
+			if (options.className) tooltip.addClass(options.className);
+
+			// Set the tooltip value.
+			tooltip.html(elm.data("title"));
+
+			// Work out the right position...
+			var left = elm.offset().left, top = elm.offset().top - tooltip.outerHeight() - 3;
+			switch (options.alignment) {
+				case "left": break;
+				case "right": left += elm.outerWidth() - tooltip.outerWidth(); break;
+				default: left += elm.outerWidth() / 2 - tooltip.outerWidth() / 2;
+			}
+			left += options.offset ? options.offset[0] || 0 : 0;
+			left = Math.min(left, $("body").width() - tooltip.outerWidth());
+			left = Math.max(left, 0);
+			top += options.offset ? options.offset[1] || 0 : 0;
+
+			top = Math.max($(document).scrollTop(), top); 
+
+			// ...and position it!
+			tooltip.css({left: left, top: top});
+
+			// Stop a fade out animation and show the tooltip.
+			tooltip.stop(true, false).css({display: "block", opacity: 1}).show();
+
+		};
+
+		// Either show it straight away, or delay before we show it.
+		if (options.delay) $(this).data("timeout", setTimeout(handler, options.delay));
+		else handler();
+
+		$.tooltipParent = $(this);
+
+	})
+
+	// Bind a mouseleave handler to hide the tooltip.
+	.unbind("mouseleave.tooltip").die("mouseleave.tooltip")[func]("mouseleave.tooltip", function() {
+
+		// If the tooltip is hoverable, don't hide it instantly. Give it a chance to run the mouseenter event.
+		$("#tooltip").hasClass("hoverable")
+			? $.tooltipParent.data("hideTimeout", setTimeout($.hideToolTip, 1))
+			: $.hideToolTip();
+	});
+
+};
+
+$.fn.removeTooltip = function() {
+	$.hideToolTip();
+	return this.unbind("mouseenter.tooltip").die("mouseenter.tooltip").unbind("mouseleave.tooltip").die("mouseleave.tooltip")
+};
+
+// The element which the tooltip belongs to.
+$.tooltipParent = false;
+
+// Hide the tooltip: restore the parent's title attribute and fade out the tooltip.
+$.hideToolTip = function() {
+	$("#tooltip").fadeOut(100);
+	var elm = $.tooltipParent;
+	if (elm) {
+		elm.attr("title", elm.data("title"));
+		clearTimeout(elm.data("timeout"));
+		$("#tooltip").data("parent", null);
+	}
+};
+
+
+//***** MEMBERS ALLOWED TOOLTIP
+
+// The members allowed tooltip will load a list of members who are allowed in a conversation and display it in
+// a popup.
+var MTMembersAllowedTooltip = {
+	showDelay: 250,
+	hideDelay: 250,
+	showTimer: null,
+	hideTimer: null,
+	showing: false,
+
+	tooltip: null,
+
+	// Set up the members allowed tooltip to be activated on certain elements.
+	init: function(elm, conversationIdCallback, cutFirst3) {
+
+		// First, construct it (or get it if it already exists)...
+		MTMembersAllowedTooltip.tooltip = $("#membersAllowedTooltip").length
+			? $("#membersAllowedTooltip").hide()
+			: $("<div class='popup withArrow withArrowTop allowedList action' id='membersAllowedTooltip'>Loading...</div>").appendTo("body").hide();
+
+		// Bind event handlers to the element.
+		elm.unbind("mouseover").unbind("mouseout").bind("mouseover", function() {
+
+			// Prevent the tooltip from being hidden now that the mouse is over the activation element.
+			if (MTMembersAllowedTooltip.hideTimer) clearTimeout(MTMembersAllowedTooltip.hideTimer);
+
+			// If we're already showing the members allowed tooltip for this element, we don't need to show it again.
+			if (MTMembersAllowedTooltip.showing == this) return;
+			MTMembersAllowedTooltip.showing = this;
+
+			var self = this;
+			MTMembersAllowedTooltip.tooltip.html("Loading...").hide();
+
+			// Start a timer, which when finished, will load the members allowed list and show it.
+			MTMembersAllowedTooltip.showTimer = setTimeout(function() {
+
+				// Position the tooltip, but keep it hidden.
+				MTMembersAllowedTooltip.tooltip.css({position: "absolute", top: $(self).offset().top + $(self).height() + 5, left: $(self).offset().left}).hide();
+
+				// Load the members allowed.
+				$.MTAjax({
+					url: "conversation/membersAllowedList.view/" + conversationIdCallback($(self)),
+					dataType: "text",
+					global: false,
+					success: function(data) {
+
+						// Show the tooltip.
+						MTMembersAllowedTooltip.tooltip.html(data).show();
+
+						// Cut off the first 3 names if necessary.
+						if (cutFirst3) $(".name", MTMembersAllowedTooltip.tooltip).slice(0, 3).remove();
+
+					}
+				});
+			}, MTMembersAllowedTooltip.showDelay);
+		}).bind("mouseout", MTMembersAllowedTooltip.mouseOutHandler);
+
+		// Bind event handlers to the tooltip itself.
+		MTMembersAllowedTooltip.tooltip.unbind("mouseover").unbind("mouseout").bind("mouseover", function() {
+			if (MTMembersAllowedTooltip.hideTimer) clearTimeout(MTMembersAllowedTooltip.hideTimer);
+		}).bind("mouseout", MTMembersAllowedTooltip.mouseOutHandler);
+	},
+
+	// An event handler for when the mouse leaves the activation element or tooltip.
+	mouseOutHandler: function() {
+		if (MTMembersAllowedTooltip.showTimer) clearTimeout(MTMembersAllowedTooltip.showTimer);
+		MTMembersAllowedTooltip.hideTimer = setTimeout(function() {
+			MTMembersAllowedTooltip.tooltip.fadeOut("fast");
+			MTMembersAllowedTooltip.showing = false;
+		}, MTMembersAllowedTooltip.hideDelay);
+	}
+};
+
 
 
 //***** GLOBAL PAGE STUFF

@@ -4,11 +4,15 @@
  * @var array $scriptProperties
  */
 switch ($modx->event->name) {
+    case 'OnSiteRefresh':
+        if($modx->cacheManager->refresh(array('/modxtalks'=> array())))
+            $modx->log(modX::LOG_LEVEL_INFO,'modxTalks clear cache. '.$modx->lexicon('refresh_success'));
+    break;
     case 'OnUserFormSave':
         $user =& $modx->event->params['user'];
         if (is_object($user)) {
             $modx->cacheManager->delete($user->id, array(xPDO::OPT_CACHE_KEY => 'modxtalks/users'));
-        }
+        }        
     break;
     case 'OnManagerPageInit':
         $mtAccets = $modx->getOption('modxtalks.assets_url',null,$modx->getOption('assets_url').'components/modxtalks/');
@@ -19,7 +23,7 @@ switch ($modx->event->name) {
         $cssFile = $modx->getOption('modxtalks.assets_url',null,$modx->getOption('assets_url').'components/modxtalks/').'css/mgr/comments.css';
         $modx->regClientCSS($cssFile);
         break;
-    case 'OnPageNotFound':
+    case 'OnPageNotFound':    
         // Check whether active friendly_urls, if not, then the interrupt
         if ($modx->getOption('friendly_urls') != 1) break;
         

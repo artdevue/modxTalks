@@ -8,6 +8,7 @@ class postAddVoteProcessor extends modObjectUpdateProcessor {
     public $languageTopics = array('modxtalks:default');
     public $objectType = 'modxtalks.post';
     public $context = '';
+    private $voted;
 
     /**
      * Before set the fields on the post
@@ -36,24 +37,34 @@ class postAddVoteProcessor extends modObjectUpdateProcessor {
          */
         if (!$this->modx->user->isAuthenticated($this->context) && !$this->modx->modxtalks->isModerator()) {
             $this->failure($this->modx->lexicon('modxtalks.cant_vote'));
+            $this->voted = false;
             return false;
         }
 
-        $userId = $this->modx->user->id;
+        $this->userId = $this->modx->user->id;
         $this->votes = $this->object->getVotes();
 
-        if ($this->votes['votes'] > 0 && in_array($userId, $this->votes['users'])) {
-            $this->failure($this->modx->lexicon('modxtalks.already_voted'));
-            return false;
+        // Remove vote
+        if ($this->votes['votes'] > 0 && in_array($this->userId, $this->votes['users'])) {
+            $this->object->removeVote($this->userId);
+            return parent::beforeSet();
         }
 
-        $this->object->addVote($userId);
+        // Add vote
+        $this->object->addVote($this->userId);
+        $this->voted = true;
 
         return parent::beforeSet();
     }
 
     public function cleanup() {
         $data = $this->_preparePostData();
+
+        // Remove vote message
+        if (!$this->voted) {
+            return $this->success($this->modx->lexicon('modxtalks.successfully_un_voted'), $data);
+        }
+        // Add vote message
         return $this->success($this->modx->lexicon('modxtalks.successfully_voted'), $data);
     }
 
@@ -77,7 +88,25 @@ class postAddVoteProcessor extends modObjectUpdateProcessor {
      * @return array|string
      */
     private function _preparePostData() {
-        $data = $this->object->votes;
+        $this->votes = $this->object->getVotes();
+        $data = array(
+            'votes' => $this->votes['votes'],
+            'html'  => '',
+            'btn' => $this->modx->lexicon('modxtalks.i_like'),
+        );
+        if (in_array($this->userId, $this->votes['users'])) {
+            $total = count($this->votes['users']) - 1;
+            $data['btn'] = $this->modx->lexicon('modxtalks.not_like');
+            if ($total > 0) {
+                $data['html'] = $this->modx->modxtalks->decliner($total,$this->modx->lexicon('modxtalks.people_like_and_you', array('total' => $total)));
+            }
+            else {
+                $data['html'] = $this->modx->lexicon('modxtalks.you_like');
+            }
+        }
+        elseif ($this->votes['votes'] > 0) {
+            $data['html'] = $this->modx->modxtalks->decliner($this->votes['votes'],$this->modx->lexicon('modxtalks.people_like', array('total' => $this->votes['votes'])));
+        }
         return $data;
     }
 

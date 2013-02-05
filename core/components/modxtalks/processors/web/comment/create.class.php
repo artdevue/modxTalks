@@ -344,6 +344,7 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
             'funny_edit_date' => '',
             'edit_name'       => '',
             'user_info'       => '',
+            'like_block'      => '',
         );
 
         return $data;

@@ -75,7 +75,7 @@ $_lang['modxtalks.ip_removes_confirm'] = 'Do you really want to delete all the I
 $_lang['modxtalks.loading'] = 'Loading';
 
 $_lang['modxtalks.management'] = 'modxTalks. Manage Comments';
-$_lang['modxtalks.management_desc'] = 'Here you can view information about each topic. List comments are waiting for approval and, if necessary, <a class="link-mt" href="#homeTab:not-confirmed">approve</a> in relative topic/ In <a class="link-mt" href="#homeTab:ip-blocking">Blocking IP addresses tab</a> you can assign IP for blocking to disallow voting for the User with that IP.';
+$_lang['modxtalks.management_desc'] = 'Here you can view information about each hotel room topic comment. Confirmation not view comments, and if necessary, <a class="link-mt" href="#homeTab:not-confirmed">потвердить</a> в соответствующем разделе. В <a class="link-mt" href="#homeTab:ip-blocking">IP блокировки</a>, вы можете ввести IP адресс, чтобы запретить посетителю голосовать с таким IP адресом.';
 $_lang['modxtalks.management_unconfirmed_desc'] = '<strong>Comments not confirmed.</strong> You can not manage Confirmation comments Confirm or delete successfully.<br />After Confirmation, the comment will appear on your web portal, and the user who has sent successfully, will be notified about how to add a Web resource.';
 $_lang['modxtalks.moderators'] = 'Moderators';
 $_lang['modxtalks.moderators_desc'] = 'Comma-separated list of moderators who have the ability to moderate comments on this resource.';
@@ -297,3 +297,7 @@ $_lang['modxtalks.ip_ban_success'] = 'IP address is successfully banned!';
 $_lang['modxtalks.your_name_pl'] = 'Your Name';
 $_lang['modxtalks.your_email_pl'] = 'Your E-mail';
 $_lang['modxtalks.deleted_by'] = 'deleted by';
+$_lang['modxtalks.email_banned'] = 'Your Email address is banned. Если это ошибка свяжитесь с администратором сайта.';
+$_lang['modxtalks.successfully_voted'] = 'Вы успешно проголосовали за комментарий.';
+$_lang['modxtalks.cant_vote'] = 'Авторизуйтесь на сайте, чтобы оставить свой голос.';
+$_lang['modxtalks.already_voted'] = 'Вы уже голосовали за этот комментарий.';

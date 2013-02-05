@@ -83,6 +83,7 @@ class modxTalks {
             'commentEditFormTpl' => 'edit_commentform',
             'commentAuthTpl' => $this->modx->getOption('modxtalks.commentAuthTpl',null,'comment_auth_tpl'),
             'user_info' => 'user_info',
+            'votes_info' => 'votes_info',
             'useChunks' => (boolean) $this->modx->getOption('modxtalks.useChunks',null,false),
 
             // RSS Templates
@@ -272,6 +273,22 @@ class modxTalks {
     private function _regScripts() {
         // Check the settings, turn jQquery
         if ($this->modx->getOption('modxtalks.jquery',null,true)) {
+            $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery-1.9.min.js');
+        }
+        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.history.js');
+        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.autogrow.js');
+        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.misc.js');
+        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.scrollTo.js'); 
+        $this->modx->regClientScript($this->config['jsUrl'].'web/ejs_production.js');       
+        $this->modx->regClientScript($this->config['jsUrl'].'web/modxtalks.js');
+        $this->modx->regClientScript($this->config['jsUrl'].'web/scrubber.js');        
+        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/timeago.js');
+        // Localization for timeago plugin
+        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/timeago/'.$this->lang.'.js');
+
+
+        // Check the settings, turn jQquery
+        /*if ($this->modx->getOption('modxtalks.jquery',null,true)) {
             $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.js');
         }
         $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.history.js');
@@ -287,7 +304,7 @@ class modxTalks {
         $this->modx->regClientScript($this->config['jsUrl'].'web/autocomplete.js');
         $this->modx->regClientScript($this->config['jsUrl'].'web/script.js');
         $this->modx->regClientScript($this->config['jsUrl'].'web/scrubber.js');
-        $this->modx->regClientScript($this->config['jsUrl'].'web/ejs_production.js');
+        $this->modx->regClientScript($this->config['jsUrl'].'web/ejs_production.js');*/
 
         // Add a button at quoting the resource allocation in the footer
         $this->modx->regClientHTMLBlock('<div id="MTpopUpBox"><span class="">'.$this->modx->lexicon('modxtalks.quote_text').'</span></div>');
@@ -330,6 +347,7 @@ class modxTalks {
         "link": "'.$this->modx->getOption('site_url').$this->modx->resource->uri.'",
         "webPath": "'.MODX_BASE_URL.'",
         "token": "'.md5($_COOKIE['PHPSESSID']).'",
+        "lang": "'.$this->lang.'",
         "debug": false,
         "commentTpl": "ejs/'.$this->config['commentTpl'].'.ejs'.'",
         "deletedCommentTpl": "ejs/'.$this->config['deletedCommentTpl'].'.ejs'.'",
@@ -391,6 +409,7 @@ class modxTalks {
                 'userId'          => '<%= userId %>',
                 'timeago'         => '<%= timeago %>',
                 'user_info'       => '<%= user_info %>',
+                'like_block'      => '<%= like_block %>',
                 'link_reply'      => '',
                 'quote'           => '',
             );
@@ -449,6 +468,7 @@ class modxTalks {
         $this->config['commentsCount'] = 0;
 
         $this->config['slug'] = $this->generateLink($this->config['conversationId'],null,'abs');
+
         /*
         $this->pr($this->generateLink($this->config['conversationId'],null,'full'));
         $this->pr($this->config['slug']);
@@ -518,17 +538,23 @@ class modxTalks {
         $hideAvatarEmail = '';
         $relativeTime = '';
 
+        $isAuthenticated = $this->modx->user->isAuthenticated($this->context) || $this->isModerator();
+
         $guest_name = $this->modx->lexicon('modxtalks.guest');
         $quote_text = $this->modx->lexicon('modxtalks.quote');
         $del_by = $this->modx->lexicon('modxtalks.deleted_by');
         $restore = $this->modx->lexicon('modxtalks.restore');
 
-        $isModerator = $this->modx->modxtalks->isModerator();
-        if ($isModerator === true) {
+        if ($isAuthenticated) {
+            $btn_like = $this->modx->lexicon('modxtalks.i_like');
+            $btn_unlike = $this->modx->lexicon('modxtalks.not_like');
+        }
+
+        if ($isModerator = $this->modx->modxtalks->isModerator()) {
             $userInfoTpl = $this->_getTpl($this->config['user_info']);
         }
 
-        if (count($comments[0]) > 0) {
+        if (count($comments[0])) {
             reset($comments[0]);
             $first = current($comments[0]);
             $last = end($comments[0]);
@@ -630,6 +656,7 @@ class modxTalks {
                     'link'       => $this->getLink($comment['idx']),
                     'timeago'    => $timeago,
                     'user_info'  => '',
+                    'like_block' => '',
                 );
                 if ($isModerator === true) {
                     $tmp['user_info'] = $this->_parseTpl($userInfoTpl, array(
@@ -637,6 +664,34 @@ class modxTalks {
                         'ip' => $comment['ip']
                     ));
                 }
+                /**
+                 * Comment Votes
+                 */
+                $likes = '';
+                $btn = $btn_like;
+                if ($votes = json_decode($comment['votes'],true)) {
+                    if ($isAuthenticated && in_array($this->modx->user->id, $votes['users'])) {
+                        $btn = $btn_unlike;
+                        $total = count($votes['users']) - 1;
+                        if ($total > 0) {
+                            $likes = $this->decliner($total,$this->modx->lexicon('modxtalks.people_like_and_you', array('total' => $total)));
+                        }
+                        else {
+                            $likes = $this->modx->lexicon('modxtalks.you_like');
+                        }
+                    }
+                    elseif ($votes['votes'] > 0) {
+                        $likes = $this->decliner($votes['votes'],$this->modx->lexicon('modxtalks.people_like', array('total' => $votes['votes'])));
+                    }
+                }
+                if (!$isAuthenticated && (!isset($votes['votes']) || $votes['votes'] == 0)) {
+                    $tmp['like_block'] = '';
+                }
+                else {
+                    $btn = $isAuthenticated ? '<a href="#" class="like-btn">'.$btn.'</a>' : '';
+                    $tmp['like_block'] = '<div class="like_block">'.$btn.'<span class="likes">'.$likes.'</span></div>';
+                }
+
                 /**
                  * If the post before this one is by the same member
                  * as this one, hide the avatar
@@ -781,7 +836,6 @@ class modxTalks {
             's_2' => array('&#091;','&#093;')
         );
         if (!$this->config['bbcode']) {
-            // $content = $this->modx->stripTags($content);
             $content = $this->quotes($content);
             $content = str_replace($tags['d_1'], $tags['d_2'], $content);
             $content = str_replace($tags['s_1'], $tags['s_2'], $content);
@@ -832,15 +886,12 @@ class modxTalks {
      * @return string Gravatar image link
      */
     public function getAvatar($email = '', $size = 0){
-        $gravatarUrl = $this->config['imgUrl'].'avatar.png';
         if ($this->config['mtGravator'] && !empty($email)) {
-            $size = (int) $size;
-            $md5email = md5($email);
-            $gravatarSize = !empty($size) ? $size : $this->config['mtgravatarSize'];
             $urlsep = $this->modx->context->getOption('xhtml_urls',true) ? '&amp;' : '&';
-            $gravatarUrl = $this->config['mtgravatarUrl'].$md5email.'?s='.$gravatarSize.$urlsep.'d='.urlencode($this->config['defaultAvatar']);
+            return $this->config['mtgravatarUrl'].md5($email).'?s='.(intval($size) > 0 ? $size : $this->config['mtgravatarSize']).$urlsep.'d='.urlencode($this->config['defaultAvatar']);
         }
-        return $gravatarUrl;
+
+        return $this->config['imgUrl'].'avatar.png';
     }
 
     /**
@@ -1653,15 +1704,17 @@ class modxTalks {
          * те которых нет пишем в массив $nonCached для дальнейшего получения из базы
          */
         if ($this->mtCache && $cache) {
+            $cCache = true;
             foreach ($ids as $id) {
                 if ($comment = $this->modx->cacheManager->get($id, array(xPDO::OPT_CACHE_KEY => 'modxtalks/conversation/'.$conversationId))) {
                     $comments[$id] = $comment;
-                    $cCache = true;
                 }
                 else {
                     $nonCached[] = $id;
-                    $cCache = false;
                 }
+            }
+            if (count($nonCached)) {
+                $cCache = false;
             }
         }
 
@@ -1670,7 +1723,7 @@ class modxTalks {
          */
         if ($cCache === false) {
             $c = $this->modx->newQuery('modxTalksPost', array('conversationId' => $conversationId));
-            $c->select(array('id','idx','content','userId','time','deleteTime','deleteUserId','editTime','editUserId','username','useremail','ip'));
+            $c->select(array('id','idx','conversationId','date','content','userId','time','deleteTime','deleteUserId','editTime','editUserId','username','useremail','ip','votes','properties'));
             if (count($nonCached) && $this->mtCache && $cache) {
                 $c->andCondition(array('idx:IN' => $nonCached));
             }
@@ -1729,7 +1782,7 @@ class modxTalks {
     public function cacheComment(modxTalksPost & $comment) {
         $cache = $this->modx->getCacheManager();
         if ($this->mtCache && $cache) {
-            $tmp = $comment->toArray();
+            $tmp = $comment->toArray('',true);
             $tmp['raw_content'] = $comment->content;
             $tmp['content'] = $this->bbcode($comment->content);
             if (!$this->modx->cacheManager->set($comment->idx, $tmp, 0, array(xPDO::OPT_CACHE_KEY => 'modxtalks/conversation/'.$comment->conversationId))) {
@@ -2071,7 +2124,7 @@ class modxTalks {
             $link = $url.'/'.$slug;
         }
 
-        if (intval($idx) > 0) $link = $this->getLink($idx);
+        if (intval($idx) > 0) $link = str_replace($this->config['slugReplace'], $idx, $link);
 
         return $link;
     }

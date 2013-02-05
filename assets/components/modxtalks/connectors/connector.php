@@ -22,14 +22,18 @@ switch($action) {
         $action = 'web/comment/create';
         $_POST['preview'] = 1;
         break;
-    case     'add': $action = 'web/comment/create'; break;
-    case    'like': $action = 'web/comment/like'; break;
-    case   'quote': $action = 'web/comment/quote'; break;
-    case  'delete': $action = 'web/comment/remove'; break;
-    case 'restore': $action = 'web/comment/restore'; break;
-    case    'edit': $action = 'web/comment/update'; break;
-    case     'get': $action = 'web/comment/get'; break;
-    case    'load': $action = 'web/comments/load'; break;
+    case        'add': $action = 'web/comment/create'; break;
+    case       'like': $action = 'web/comment/like'; break;
+    case      'quote': $action = 'web/comment/quote'; break;
+    case     'delete': $action = 'web/comment/remove'; break;
+    case    'restore': $action = 'web/comment/restore'; break;
+    case       'edit': $action = 'web/comment/update'; break;
+    case        'get': $action = 'web/comment/get'; break;
+    case       'vote': $action = 'web/comment/vote'; break;
+    case     'unvote': $action = 'web/comment/unvote'; break;
+    case 'votes_info': $action = 'web/comment/votes_info'; break;
+    case       'load': $action = 'web/comments/load'; break;
+    case     'latest': $action = 'web/comments/latest'; break;
     default: return; break;
 }
 

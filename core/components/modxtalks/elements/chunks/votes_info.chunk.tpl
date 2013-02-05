@@ -1,0 +1,1 @@
+<div><img src="[[+avatar]]" width="50" height="50" /><span>[[+name]]</span></div>

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package modxtalks
+ * @subpackage processors
+ */
 class getCommentsListProcessor extends modObjectGetListProcessor {
     public $classKey = 'modxTalksPost';
     public $languageTopics = array('modxtalks:default');
@@ -78,6 +82,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
         $hideAvatarEmail = '';
         $relativeTime = '';
         $date_format = $this->modx->modxtalks->config['mtDateFormat'];
+        $isAuthenticated = $this->modx->user->isAuthenticated($this->context) || $this->modx->modxtalks->isModerator();
         /**
          * Languages...
          */
@@ -85,6 +90,10 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
         $guest_name = $this->modx->lexicon('modxtalks.guest');
         $del_by = $this->modx->lexicon('modxtalks.deleted_by');
         $restore = $this->modx->lexicon('modxtalks.restore');
+        if ($isAuthenticated) {
+            $btn_like = $this->modx->lexicon('modxtalks.i_like');
+            $btn_unlike = $this->modx->lexicon('modxtalks.not_like');
+        }
 
         $isModerator = $this->modx->modxtalks->isModerator();
         if ($isModerator === true) {
@@ -162,6 +171,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
                     'edit_name'  => '',
                     'timeago'    => $timeago,
                     'user_info'  => '',
+                    'like_block' => '',
                 );
                 if ($isModerator === true) {
                     $tmp['user_info'] = $this->modx->modxtalks->_parseTpl($userInfoTpl, array(
@@ -169,6 +179,34 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
                         'ip' => $comment['ip']
                     ), true);
                 }
+                /**
+                 * Comment Votes
+                 */
+                $likes = '';
+                $btn = $btn_like;
+                if ($votes = json_decode($comment['votes'],true)) {
+                    if ($isAuthenticated && in_array($this->modx->user->id, $votes['users'])) {
+                        $btn = $btn_unlike;
+                        $total = count($votes['users']) - 1;
+                        if ($total > 0) {
+                            $likes = $this->modx->modxtalks->decliner($total,$this->modx->lexicon('modxtalks.people_like_and_you', array('total' => $total)));
+                        }
+                        else {
+                            $likes = $this->modx->lexicon('modxtalks.you_like');
+                        }
+                    }
+                    elseif ($votes['votes'] > 0) {
+                        $likes = $this->modx->modxtalks->decliner($votes['votes'],$this->modx->lexicon('modxtalks.people_like', array('total' => $votes['votes'])));
+                    }
+                }
+                if (!$isAuthenticated && (!isset($votes['votes']) || $votes['votes'] == 0)) {
+                    $tmp['like_block'] = '';
+                }
+                else {
+                    $btn = $isAuthenticated ? '<a href="#" class="like-btn">'.$btn.'</a>' : '';
+                    $tmp['like_block'] = '<div class="like_block">'.$btn.'<span class="likes">'.$likes.'</span></div>';
+                }
+
                 if ($email !== $hideAvatarEmail) {
                     $tmp['hideAvatar'] = '';
                     $hideAvatarEmail = $email;
