@@ -35,6 +35,11 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
 
         $this->object->fromArray($this->getProperties());
 
+        $this->object->set('name',$this->name);
+        $this->object->set('email',$this->email);
+        $this->object->set('link',$this->modx->modxtalks->getLink($this->object->idx));
+        $this->object->set('processed_content',$this->modx->modxtalks->bbcode($this->object->content));
+
         /* if Comment premodarate return custom message before save comment */
         if ($this->preModarateComments && !$this->preview && !$this->modx->modxtalks->isModerator()) {
             $data = array(
@@ -44,10 +49,9 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
             );
             return $this->modx->toJSON($data);
         }
-        /* if Comment preview return custom message before save comment */
         elseif ($this->preview) {
+            /* if Comment preview return custom message before save comment */
             $data = $this->_preparePostData();
-            $data['hideAvatar'] = '';
             return $this->success($data);
         }
 
@@ -113,7 +117,9 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
             $this->failure($this->modx->lexicon('modxtalks.bad_context'));
             return false;
         }
-        // Check Conversation name
+        /**
+         * Check Conversation name
+         */
         if (empty($conversation)) {
             $this->addFieldError('conversation',$this->modx->lexicon('modxtalks.id_not_defined'));
         }
@@ -131,7 +137,9 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
             return false;
         }
 
-        // Check Comment Content
+        /**
+         * Check Comment Content
+         */
         if (empty($content)) {
             $this->addFieldError('content',$this->modx->lexicon('modxtalks.empty_content'));
         }
@@ -144,7 +152,9 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
 
         $_SESSION['comment_time'] = !empty($_SESSION['comment_time']) ? $_SESSION['comment_time'] : 0;
 
-        // Check user Email
+        /**
+         * Check user Email
+         */
         if ($this->modx->user->isAuthenticated($this->context) || $this->modx->modxtalks->isModerator()) {
             $this->userId = $this->modx->user->get('id');
             $this->email = $this->modx->user->Profile->email;
@@ -163,7 +173,9 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
                 $this->failure($this->modx->lexicon('modxtalks.user_exists'));
                 return false;
             }
-            // Check user name
+            /**
+             * Check user name
+             */
             if (empty($this->name)) {
                 $this->addFieldError('name',$this->modx->lexicon('modxtalks.empty_name'));
             }
@@ -189,7 +201,9 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
 
             $this->hash = md5($content.$this->email.$conversationId);
 
-            // Premoderate comment
+            /**
+             * Premoderate comment
+             */
             if ($this->preModarateComments === true && !$this->modx->modxtalks->isModerator()) {
                 // Check time before for add another comment
                 if ((time() - $_SESSION['comment_time']) < $this->timeout) {
@@ -217,14 +231,13 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
                         $params['username']  = $this->name;
                     }
                     $comment = $this->modx->newObject('modxTalksTempPost',$params);
-                    if (!$comment->save()) {
+                    if ($comment->save() === false) {
                         $this->failure($this->modx->lexicon('modxtalks.error_try_again'));
                         return false;
                     }
 
                     /**
-                     * Отправляем уведомления о подтверждении комментария
-                     * модераторам темы
+                     * Send Notify to conversation moderators
                      */
                     if (!$this->modx->modxtalks->notifyModerators($comment)) {
                         $this->failure($this->modx->lexicon('modxtalks.error_try_again'));
@@ -233,7 +246,6 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
 
                     $_SESSION['comment_time'] = time();
                 }
-
 
                 return parent::beforeSet();
             }
@@ -247,14 +259,17 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
                 $idx = $lastComment->idx + 1;
             }
 
-            // Check for comment double
+            /**
+             * Check for comment double
+             */
             if ((time() - $_SESSION['comment_time']) < $this->timeout && !$this->modx->modxtalks->isModerator()) {
                 $post = $this->modx->getObject($this->classKey,array('hash' => $this->hash, 'conversationId' => $conversationId, 'time' => $_SESSION['comment_time']));
                 $seconds = $this->timeout - (time() - $_SESSION['comment_time']);
                 if ($post && $seconds !== 0) {
                     $this->failure($this->modx->lexicon('modxtalks.resend_comment_waiting',array('seconds' => $seconds)));
                     return false;
-                } else {
+                }
+                else {
                     $this->failure($this->modx->lexicon('modxtalks.add_comment_waiting',array('seconds' => $seconds)));
                     return false;
                 }
@@ -288,7 +303,7 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
         $_SESSION['comment_time'] = time();
 
         /**
-         * Обновляем кэш комментария и темы
+         * Refresh comment and conversation cache
          */
         if ($this->modx->modxtalks->mtCache === true) {
             if (!$this->modx->modxtalks->cacheComment($this->object)) {
@@ -300,8 +315,7 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
         }
 
         /**
-         * Отправляем уведомления о добавлении нового комментария
-         * модераторам темы
+         * Send Notify to conversation moderators
          */
         if (!$this->modx->modxtalks->notifyModerators($this->object)) {
             $this->failure($this->modx->lexicon('modxtalks.error_try_again'));
@@ -317,7 +331,6 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
      */
     public function cleanup() {
         $data = $this->_preparePostData();
-        $data['hideAvatar'] = '';
         return $this->success('',$data);
     }
 
@@ -328,13 +341,13 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
     private function _preparePostData() {
         $data = array(
             'avatar'          => $this->modx->modxtalks->getAvatar($this->email),
-            'hideAvatar'      => ' style="display: none;"',
+            'hideAvatar'      => '',
             'name'            => $this->name,
-            'content'         => $this->modx->modxtalks->bbcode($this->object->content),
+            'content'         => $this->object->processed_content,
             'index'           => date('Ym',$this->object->time),
-            'date'            => date($this->modx->modxtalks->config['mtDateFormat'],$this->object->time),
+            'date'            => date($this->modx->modxtalks->config['dateFormat'],$this->object->time),
             'funny_date'      => $this->modx->lexicon('modxtalks.date_now'),
-            'link'            => $this->modx->modxtalks->getLink($this->object->idx),
+            'link'            => $this->object->link,
             'id'              => (int) $this->object->id,
             'idx'             => (int) $this->object->idx,
             'user'            => $this->modx->modxtalks->userButtons($this->userId,$this->object->time),

@@ -18,6 +18,10 @@ class modxTalks {
      */
     public $config = array();
     /**
+     * @var array An array of snippet config
+     */
+    public $scriptProperties = array();
+    /**
      * @var array An array of chunks
      */
     public $chunks = array();
@@ -29,9 +33,21 @@ class modxTalks {
      * @var boolean Enable or Disable modxTalks Comments cache
      */
     public $mtCache = true;
+    /**
+     * @var array An array of other configuration options
+     */
     private $mtConfig = array();
+    /**
+     * @var boolean True if FURLs Enabled
+     */
     private $friendly_urls;
-    private $slug;
+    /**
+     * @var string Conversation Id
+     */
+    private $conversationId;
+    /**
+     * @var string Culture key
+     */
     private $lang;
 
     /**
@@ -40,7 +56,7 @@ class modxTalks {
      * @param modX &$modx A reference to the modX object
      * @param array $config An array of configuration options
      */
-    function __construct(modX &$modx, array $config = array()) {
+    function __construct(modX & $modx, array $config = array()) {
         $this->modx =& $modx;
 
         $basePath = $this->modx->getOption('modxtalks.core_path',$config,$this->modx->getOption('core_path').'components/modxtalks/');
@@ -60,24 +76,30 @@ class modxTalks {
             'assetsUrl' => $assetsUrl,
             'imgUrl' => $assetsUrl.'img/web/',
             'connectorUrl' => $assetsUrl.'connector.php',
+            'ajaxConnectorUrl' => $assetsUrl.'connectors/connector.php',
 
             'moderator' => $this->modx->getOption('modxtalks.moderator',null,'Administrator'),
             'onlyAuthUsers' => (boolean) $this->modx->getOption('modxtalks.onlyAuthUsers',null,false),
-            'mtGravator' => (boolean) $this->modx->getOption('modxtalks.mtGravator',null,true),
-            'mtgravatarSize' => (int) $this->modx->getOption('modxtalks.mtgravatarSize',null,64),
-            'mtgravatarUrl' => 'http://www.gravatar.com/avatar/',
+            'voting' => (boolean) $this->modx->getOption('modxtalks.voting',null,false),
+            'gravatar' => (boolean) $this->modx->getOption('modxtalks.gravatar',null,true),
+            'gravatarSize' => (int) $this->modx->getOption('modxtalks.gravatarSize',null,64),
+            'gravatarUrl' => 'http://www.gravatar.com/avatar/',
             'defaultAvatar' => $siteUrl.$assetsUrl.'img/web/avatar.png',
 
-            'mtDateFormat' => $this->modx->getOption('modxtalks.mtDateFormat',null,'j-m-Y, G:i'),
+            'dateFormat' => $this->modx->getOption('modxtalks.dateFormat',null,'j-m-Y, G:i'),
             'startFrom' => 0,
             'lastRead' => 0,
             'commentsPerPage' => (int) $this->modx->getOption('modxtalks.commentsPerPage',null,20),
+            'commentsLatestLimit' => (int) $this->modx->getOption('modxtalks.commentsLatestLimit',null,20),
             'add_timeout' => (int) $this->modx->getOption('modxtalks.add_timeout',null,60),
             'edit_time' => (int) $this->modx->getOption('modxtalks.edit_time',null,180),
+            'lates_comments_update' => (int) $this->modx->getOption('modxtalks.lates_comments_update',null,60),
             'commentsClosed' => (boolean) $this->modx->getOption('modxtalks.commentsClosed',null,false),
 
             // Templates
             'commentTpl' => 'comment',
+            'commentLatestTpl' => 'comment_latest',
+            'commentsLatestOutTpl' => 'comments_latest_out',
             'deletedCommentTpl' => 'deleted_comment',
             'commentAddFormTpl' => 'commentform',
             'commentEditFormTpl' => 'edit_commentform',
@@ -118,6 +140,7 @@ class modxTalks {
             $config['commentsPerPage'] = (int) $config['commentsPerPage'];
         }
 
+        $this->scriptProperties =& $config;
         $this->config = array_merge($this->config, $config);
 
         $this->friendly_urls = (boolean) $this->modx->getOption('friendly_urls');
@@ -125,14 +148,6 @@ class modxTalks {
         $this->modx->addPackage('modxtalks',$this->config['modelPath']);
         $this->lang = $this->modx->getOption('cultureKey');
         $this->modx->lexicon->load('modxtalks:default');
-    }
-
-    public function setSlug($slug='') {
-        $this->slug = (string) $slug;
-    }
-
-    public function getSlug() {
-        return $this->slug;
     }
 
     /**
@@ -156,7 +171,7 @@ class modxTalks {
     }
 
     /**
-     * Initialize
+     * Initialize the component in frontend
      *
      * @access public
      * @param integer $limit Commets per request
@@ -171,36 +186,43 @@ class modxTalks {
             $this->pr("Your IP: {$this->get_client_ip()}");
         }
 
-        if (empty($this->config['conversation'])) return '';
-        $conversation = $this->config['conversation'];
+        if (empty($this->config['conversation'])) {
+            $this->config['conversation'] = $this->modx->resource->class_key.'-'.$this->modx->resource->id;
+        }
+
+        $conversation = $this->validateConversation($this->config['conversation']);
+        if ($conversation !== true) {
+            return $conversation;
+        }
 
         $this->context = $this->modx->context->key;
 
         if (isset($_REQUEST['rss']) && $_REQUEST['rss'] == true) {
             header('Content-Type: application/rss+xml; charset=utf-8');
-            $rssFeed = $this->createRssFeed($conversation,$limit);
+            $rssFeed = $this->createRssFeed($this->config['conversation'],$limit);
             die($rssFeed);
         }
 
-
-        if (isset($_REQUEST['comment'])) $id = (string) $_REQUEST['comment'];
+        if (isset($_REQUEST['comment'])) {
+            $id = (string) $_REQUEST['comment'];
+        }
 
         $limit = (int) $limit;
         if (empty($limit)) {
             $limit = $this->config['commentsPerPage'];
         }
 
-        $comments = $this->getComments($conversation, $limit, $id);
+        $comments = $this->getComments($this->config['conversation'], $limit, $id);
 
         /**
          * Create a "more" block item which we can use below.
          */
         if ($this->config['startFrom'] > 1) {
             $linkPrev = $this->config['startFrom'] <= $this->config['commentsPerPage'] ? 1 : $this->config['startFrom'] - $this->config['commentsPerPage'];
-            $comments = '<div class="scrubberMore scrubberPrevious"><a href="'.$this->getLink($linkPrev).'#conversationPosts">'.$this->modx->lexicon('modxtalks.more_text').'</a></div>'.$comments;
+            $comments = '<div class="mt_scrubberMore mt_scrubberPrevious"><a href="'.$this->getLink($linkPrev).'#mt_conversationPosts">'.$this->modx->lexicon('modxtalks.more_text').'</a></div>'.$comments;
         }
         if ($this->config['startFrom'] + $this->config['commentsPerPage'] <= $this->config['commentsCount']) {
-            $comments .= '<div class="scrubberMore scrubberNext"><a href="'.$this->getLink(($this->config['lastRead']+1)).'#mt_cf_conversationReply">'.$this->modx->lexicon('modxtalks.more_text').'</a></div>';
+            $comments .= '<div class="mt_scrubberMore mt_scrubberNext"><a href="'.$this->getLink(($this->config['lastRead']+1)).'#mt_mt_cf_conversationReply">'.$this->modx->lexicon('modxtalks.more_text').'</a></div>';
         }
 
         $this->_regStyles();
@@ -213,13 +235,15 @@ class modxTalks {
             $this->_ejsTemplates();
         }
 
-        $output = '<div id="conversationBody" class="hasScrubber'.($this->config['scrubberTop']?' scrubber-top':'').'"><div class="mthead"></div><div>';
+        $output = '<div id="mt_conversationBody" class="mt_hasScrubber'.($this->config['scrubberTop']?' scrubber-top':'').'"><div class="mt_mthead"></div><div>';
         $output .= $this->_parseTpl('scrubber', $this->getScrubber(), true);
-        $output .= '<div id="conversationPosts" class="postList" start="'.$this->config['startFrom'].'">';
+        $output .= '<div id="mt_conversationPosts" class="mt_postList" start="'.$this->config['startFrom'].'">';
         $output .= $comments;
         $output .= '</div>';
         $output .= $this->_getForm();
         $output .= '</div></div>';
+
+        $this->cacheProperties($this->config['conversation'], $this->scriptProperties);
 
         if ($this->config['debug'] && $this->modx->getOption('log_target') === 'HTML') {
             $this->pr(sprintf('Time: %2.2f мс',(microtime(true) - $time)*1000));
@@ -230,14 +254,15 @@ class modxTalks {
     }
 
     /**
-     * Add an event handler to the "getEditControls" method of the conversation controller to add BBCode
-     * formatting buttons to the edit controls.
+     * Add an event handler to the "getEditControls" method of
+     * the conversation controller to add BBCode formatting buttons
+     * to the edit controls.
      *
+     * @access private
      * @param string $id
-     * @access public
      * @return string $buttons
      */
-    public function getEditControls($id = 'reply') {
+    private function getEditControls($id = 'mt_reply') {
         $editControls = array(
             "fixed" => "<a href='javascript:BBCode.fixed(\"$id\");void(0)' title='' class='bbcode-fixed'><span>".$this->modx->lexicon('modxtalks.fixed')."</span></a>",
             "image" => "<a href='javascript:BBCode.image(\"$id\");void(0)' title='".$this->modx->lexicon('modxtalks.image')."' class='bbcode-img'><span>".$this->modx->lexicon('modxtalks.image')."</span></a>",
@@ -278,36 +303,16 @@ class modxTalks {
         $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.history.js');
         $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.autogrow.js');
         $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.misc.js');
-        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.scrollTo.js'); 
-        $this->modx->regClientScript($this->config['jsUrl'].'web/ejs_production.js');       
-        $this->modx->regClientScript($this->config['jsUrl'].'web/modxtalks.js');
-        $this->modx->regClientScript($this->config['jsUrl'].'web/scrubber.js');        
-        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/timeago.js');
-        // Localization for timeago plugin
-        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/timeago/'.$this->lang.'.js');
-
-
-        // Check the settings, turn jQquery
-        /*if ($this->modx->getOption('modxtalks.jquery',null,true)) {
-            $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.js');
-        }
-        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.history.js');
-        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/timeago.js');
-
-        // Localization for timeago plugin
-        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/timeago/'.$this->lang.'.js');
-
-        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.autogrow.js');
-        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.misc.js');
         $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.scrollTo.js');
-        $this->modx->regClientScript($this->config['jsUrl'].'web/global.js');
-        $this->modx->regClientScript($this->config['jsUrl'].'web/autocomplete.js');
-        $this->modx->regClientScript($this->config['jsUrl'].'web/script.js');
+        $this->modx->regClientScript($this->config['jsUrl'].'web/ejs_production.js');
+        $this->modx->regClientScript($this->config['jsUrl'].'web/modxtalks.js');
         $this->modx->regClientScript($this->config['jsUrl'].'web/scrubber.js');
-        $this->modx->regClientScript($this->config['jsUrl'].'web/ejs_production.js');*/
+        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/timeago.js');
+        // Localization for timeago plugin
+        $this->modx->regClientScript($this->config['jsUrl'].'web/lib/timeago/'.$this->lang.'.js');
 
         // Add a button at quoting the resource allocation in the footer
-        $this->modx->regClientHTMLBlock('<div id="MTpopUpBox"><span class="">'.$this->modx->lexicon('modxtalks.quote_text').'</span></div>');
+        $this->modx->regClientHTMLBlock('<div id="mt_MTpopUpBox"><span class="">'.$this->modx->lexicon('modxtalks.quote_text').'</span></div>');
 
         // Check the settings, turn BBCode
         if ($this->config['bbcode']) {
@@ -321,11 +326,12 @@ class modxTalks {
         return true;
     }
 
+
     /**
      * Add Styles to head
      *
      * @access private
-     * @return string true
+     * @return boolean true
      */
     private function _regStyles() {
         $this->modx->regClientCSS($this->config['cssUrl'].'web/bbcode/bbcode.css');
@@ -333,13 +339,14 @@ class modxTalks {
         return true;
     }
 
+
     /**
      * Get Script Head
      *
      * @access private
-     * @return string true and add script to head
+     * @return boolean true
      */
-    private function _getScriptHead(){
+    private function _getScriptHead() {
         $this->modx->regClientStartupHTMLBlock('<script>var MT = {
         "assetsPath":"'.$this->config['assetsUrl'].'",
         "conversation":"'.$this->config['conversation'].'",
@@ -361,6 +368,8 @@ class modxTalks {
             "moreText": "'.$this->modx->lexicon('modxtalks.more_text').'",
             "message.confirmDelete": "'.$this->modx->lexicon('modxtalks.confirm_delete').'",
             "message.confirmLeave":"'.$this->modx->lexicon('modxtalks.confirmLeave').'",
+            "message.confirm_ip":"'.$this->modx->lexicon('modxtalks.confirm_ip').'",
+            "message.confirm_email":"'.$this->modx->lexicon('modxtalks.confirm_email').'",
             "message.confirmDiscardReply":"'.$this->modx->lexicon('modxtalks.confirm_discard_reply').'",
             "Mute conversation": "'.$this->modx->lexicon('modxtalks.mute_conversation').'",
             "Unmute conversation": "'.$this->modx->lexicon('modxtalks.unmute_conversation').'"
@@ -383,11 +392,17 @@ class modxTalks {
         }
     }
     </script>');
-        return '';
-
+        return true;
     }
 
-    public function _ejsTemplates() {
+
+    /**
+     * Generate EJS Templates files
+     *
+     * @access private
+     * @return boolean
+     */
+    private function _ejsTemplates() {
         $commentTpl = $this->config['ejsTemplatesPath'].$this->config['commentTpl'].'.ejs';
         $deletedCommentTpl = $this->config['ejsTemplatesPath'].$this->config['deletedCommentTpl'].'.ejs';
         if (!file_exists($commentTpl)) {
@@ -441,18 +456,21 @@ class modxTalks {
         return true;
     }
 
+
     /**
      * Get Comments
      *
-     * @access public
+     * @access private
      * @param string $conversation Conversation Short name
      * @param integer $limit (Optional) A limit of records to retrieve in the collection
      * @param integer $id (Optional) Start comment ID
      * @return string $output Full processed comments
      */
-    public function getComments($conversation = '', $limit = 20, $id = '') {
-        if (empty($conversation)) return '';
+    private function getComments($conversation = '', $limit = 20, $id = '') {
         $output = '';
+        if (empty($conversation)) {
+            return $output;
+        }
 
         /**
          * Check the cache section
@@ -469,13 +487,15 @@ class modxTalks {
 
         $this->config['slug'] = $this->generateLink($this->config['conversationId'],null,'abs');
 
-        /*
-        $this->pr($this->generateLink($this->config['conversationId'],null,'full'));
-        $this->pr($this->config['slug']);
-        */
+        if ($this->config['debug'] && $this->modx->getOption('log_target') === 'HTML') {
+            $this->pr($this->generateLink($this->config['conversationId'],null,'full'));
+            $this->pr($this->config['slug']);
+        }
 
         $count = $theme->getProperty('total','comments');
-        if ($count < 1) return $output;
+        if ($count < 1) {
+            return $output;
+        }
 
         /**
          * Get resource URL
@@ -510,7 +530,7 @@ class modxTalks {
             if ($page === 1) {
                 $this->modx->sendRedirect($link);
             }
-            if ($page > $totalPages) {
+            elseif ($page > $totalPages) {
                 $this->modx->sendRedirect($link);
             }
             $first = ($page - 1) * $limit + 1;
@@ -525,6 +545,9 @@ class modxTalks {
         if (!$comments[0] && $count > 0) {
             $this->modx->sendRedirect($link);
         }
+        /**
+         * Set total comments count to config
+         */
         $this->config['commentsCount'] = $count;
         /**
          * Comment template
@@ -581,7 +604,7 @@ class modxTalks {
 
         foreach ($comments[0] as $comment) {
             $timeMarker = '';
-            $date = date($this->config['mtDateFormat'].' O',$comment['time']);
+            $date = date($this->config['dateFormat'].' O',$comment['time']);
             $funny_date = $this->date_format(array('date' => $comment['time']));
             $index = date('Ym',$comment['time']);
 
@@ -592,10 +615,10 @@ class modxTalks {
                 $name = $users[$comment['userId']]['name'];
                 $email = $users[$comment['userId']]['email'];
             }
-            /**
-             * If this is guest
-             */
             else {
+                /**
+                 * If this is guest
+                 */
                 $name = $comment['username'] ? $comment['username'] : $guest_name;
                 $email = $comment['useremail'] ? $comment['useremail'] : 'anonym@anonym.com';
             }
@@ -606,7 +629,7 @@ class modxTalks {
              */
             $relativeTimeComment = $this->relativeTime($comment['time']);
             if ($relativeTime != $relativeTimeComment) {
-                $timeMarker = '<div class="timeMarker" data-now="1">'.$relativeTimeComment.'</div>';
+                $timeMarker = '<div class="mt_timeMarker" data-now="1">'.$relativeTimeComment.'</div>';
                 $relativeTime = $relativeTimeComment;
             }
             /**
@@ -619,7 +642,7 @@ class modxTalks {
             if ($comment['deleteTime'] > 0 && $comment['deleteUserId'] > 0) {
                 $tmp = array(
                     'deleteUser' => $users[$comment['deleteUserId']]['name'],
-                    'delete_date' => date($this->config['mtDateFormat'].' O',$comment['deleteTime']),
+                    'delete_date' => date($this->config['dateFormat'].' O',$comment['deleteTime']),
                     'funny_delete_date' => $this->date_format(array('date' => $comment['deleteTime'])),
                     'name' => $name,
                     'index' => $index,
@@ -634,10 +657,10 @@ class modxTalks {
                     'restore' => $restore,
                 );
             }
-            /**
-             * Prepare data for published comment
-             */
             else {
+                /**
+                 * Prepare data for published comment
+                 */
                 $tmp = array(
                     'avatar'     => $this->getAvatar($email),
                     'hideAvatar' => 'style="display: none;"',
@@ -667,29 +690,31 @@ class modxTalks {
                 /**
                  * Comment Votes
                  */
-                $likes = '';
-                $btn = $btn_like;
-                if ($votes = json_decode($comment['votes'],true)) {
-                    if ($isAuthenticated && in_array($this->modx->user->id, $votes['users'])) {
-                        $btn = $btn_unlike;
-                        $total = count($votes['users']) - 1;
-                        if ($total > 0) {
-                            $likes = $this->decliner($total,$this->modx->lexicon('modxtalks.people_like_and_you', array('total' => $total)));
+                if ($this->config['voting']) {
+                    $likes = '';
+                    $btn = $btn_like;
+                    if ($votes = json_decode($comment['votes'],true)) {
+                        if ($isAuthenticated && in_array($this->modx->user->id, $votes['users'])) {
+                            $btn = $btn_unlike;
+                            $total = count($votes['users']) - 1;
+                            if ($total > 0) {
+                                $likes = $this->decliner($total,$this->modx->lexicon('modxtalks.people_like_and_you', array('total' => $total)));
+                            }
+                            else {
+                                $likes = $this->modx->lexicon('modxtalks.you_like');
+                            }
                         }
-                        else {
-                            $likes = $this->modx->lexicon('modxtalks.you_like');
+                        elseif ($votes['votes'] > 0) {
+                            $likes = $this->decliner($votes['votes'],$this->modx->lexicon('modxtalks.people_like', array('total' => $votes['votes'])));
                         }
                     }
-                    elseif ($votes['votes'] > 0) {
-                        $likes = $this->decliner($votes['votes'],$this->modx->lexicon('modxtalks.people_like', array('total' => $votes['votes'])));
+                    if (!$isAuthenticated && (!isset($votes['votes']) || $votes['votes'] == 0)) {
+                        $tmp['like_block'] = '';
                     }
-                }
-                if (!$isAuthenticated && (!isset($votes['votes']) || $votes['votes'] == 0)) {
-                    $tmp['like_block'] = '';
-                }
-                else {
-                    $btn = $isAuthenticated ? '<a href="#" class="like-btn">'.$btn.'</a>' : '';
-                    $tmp['like_block'] = '<div class="like_block">'.$btn.'<span class="likes">'.$likes.'</span></div>';
+                    else {
+                        $btn = $isAuthenticated ? '<a href="#" class="mt_like-btn">'.$btn.'</a>' : '';
+                        $tmp['like_block'] = '<div class="mt_like_block">'.$btn.'<span class="mt_likes">'.$likes.'</span></div>';
+                    }
                 }
 
                 /**
@@ -737,6 +762,7 @@ class modxTalks {
     /**
      * Get resource alias path
      *
+     * @access public
      * @param string $link
      * @param string $search
      * @return string Resource alias
@@ -786,9 +812,10 @@ class modxTalks {
             'conversation' => $this->modx->resource->id,
             'modxtalks_total' => $this->modx->lexicon('modxtalks.total'),
         );
-        /**
-         * Choose the topics of the month and if necessary, the topics
-         */
+        // Conclusion placeholder count_talks. The total number of votes
+        $this->modx->setPlaceholder('count_talks',$this->config['commentsCount']);
+
+        // Choose the topics of the month and if necessary, the topics
         $dateScrubber = '';
         $ds = $this->modx->newQuery('modxTalksPost');
         $ds->where(array('conversationId' => $conversationId));
@@ -805,12 +832,12 @@ class modxTalks {
                 $dsmi = $dsArray->$dateScrubbermi;
                 $dLink = $this->getLink((strftime('%Y', $dsp['time']).'-'.$dateScrubberm));
                 $dTitle = mb_convert_case($dsmi[0], MB_CASE_TITLE, "UTF-8");
-                $dsYear[$scrYear] = (isset($dsYear[$scrYear]) ? $dsYear[$scrYear] : '').'<li class="scrubber-'.$dsp['date'].'" data-index="'.$dsp['date'].'"><a href="'.$dLink.'">'.$dTitle.'</a></li>';
+                $dsYear[$scrYear] = (isset($dsYear[$scrYear]) ? $dsYear[$scrYear] : '').'<li class="mt_scrubber-'.$dsp['date'].'" data-index="'.$dsp['date'].'"><a href="'.$dLink.'">'.$dTitle.'</a></li>';
             }
         }
         foreach ($dsYear as $key => $value) {
             if ($key != strftime('%Y', time())) {
-                $dateScrubber .= '<li class="scrubber-'.$key.'01 selected" data-index="'.$key.'01"><a href="'.$this->getLink($key.'-01').'">'.$key.'</a><ul>'.$value.'</ul></li>';
+                $dateScrubber .= '<li class="mt_scrubber-'.$key.'01 selected" data-index="'.$key.'01"><a href="'.$this->getLink($key.'-01').'">'.$key.'</a><ul>'.$value.'</ul></li>';
             }
             else {
                 $dateScrubber .= $value;
@@ -885,10 +912,10 @@ class modxTalks {
      * @param string $email Email address
      * @return string Gravatar image link
      */
-    public function getAvatar($email = '', $size = 0){
-        if ($this->config['mtGravator'] && !empty($email)) {
+    public function getAvatar($email = '', $size = 0) {
+        if ($this->config['gravatar'] && !empty($email)) {
             $urlsep = $this->modx->context->getOption('xhtml_urls',true) ? '&amp;' : '&';
-            return $this->config['mtgravatarUrl'].md5($email).'?s='.(intval($size) > 0 ? $size : $this->config['mtgravatarSize']).$urlsep.'d='.urlencode($this->config['defaultAvatar']);
+            return $this->config['gravatarUrl'].md5($email).'?s='.(intval($size) > 0 ? $size : $this->config['gravatarSize']).$urlsep.'d='.urlencode($this->config['defaultAvatar']);
         }
 
         return $this->config['imgUrl'].'avatar.png';
@@ -930,7 +957,8 @@ class modxTalks {
                 'avatar' => $this->getAvatar($email),
                 'hidden' => ' hidden',
             );
-        } else {
+        }
+        else {
             $tmp = array(
                 'user'   => $this->modx->lexicon('modxtalks.guest'),
                 'avatar' => $this->getAvatar(),
@@ -986,16 +1014,18 @@ class modxTalks {
      * @param array $properties The properties for the Chunk
      * @return string The processed content of the Chunk
      */
-    public function getChunk($name,$properties = array()) {
+    public function getChunk($name, $properties = array()) {
         $chunk = null;
         if (!isset($this->chunks[$name])) {
             $chunk = $this->_getTplChunk($name);
             if (empty($chunk)) {
-                $chunk = $this->modx->getObject('modChunk',array('name' => $name));
-                if ($chunk == false) return false;
+                if (!$chunk = $this->modx->getObject('modChunk',array('name' => $name))) {
+                    return false;
+                }
             }
             $this->chunks[$name] = $chunk->getContent();
-        } else {
+        }
+        else {
             $o = $this->chunks[$name];
             $chunk = $this->modx->newObject('modChunk');
             $chunk->setContent($o);
@@ -1013,7 +1043,7 @@ class modxTalks {
      * @return modChunk/boolean Returns the modChunk object if found, otherwise
      * false.
      */
-    private function _getTplChunk($name,$postfix = '.chunk.tpl') {
+    private function _getTplChunk($name, $postfix = '.chunk.tpl') {
         $chunk = false;
         $f = $this->config['chunksPath'].strtolower($name).$postfix;
         if (file_exists($f)) {
@@ -1025,34 +1055,24 @@ class modxTalks {
         return $chunk;
     }
 
-    /**
-     * Debug function for printing vars, arrays or objects
-     *
-     * @param mixed $var
-     * @return void
-     */
-    private function pr($var) {
-        if (is_object($var)) {
-            if (!method_exists($var, 'toArray')) return;
-            $var = $var->toArray();
-        }
-        echo '<pre style="font:15px Consolas;padding:10px;border:1px solid #c2c2c2;border-radius:10px;background-color:f7f7f7;box-shadow:0 1px 2px #ccc;">';
-        print_r($var);
-        echo '</pre>';
-    }
-
 
     /**
      * Parse template chunk
      *
+     * @access public
      * @param string $tpl Template file
      * @param array $arr Array of placeholders
      * @param boolean $chunk If True get chunk, else use template from string
      * @param string $postfix Chunk postfix if use file-based chunks
+     * @return string Parsed chunck file
      */
     public function _parseTpl($tpl = '', $arr = array(), $chunk = false, $postfix = '.chunk.tpl') {
-        if (empty($tpl) && $chunk === false) return '';
-        elseif (!empty($tpl) && $chunk === true) $tpl = $this->_getTpl($tpl, $postfix);
+        if (empty($tpl) && $chunk === false) {
+            return '';
+        }
+        elseif (!empty($tpl) && $chunk === true) {
+            $tpl = $this->_getTpl($tpl, $postfix);
+        }
 
         if (count($arr)) {
             $tmp = array();
@@ -1066,15 +1086,19 @@ class modxTalks {
         return $tpl;
     }
 
+
     /**
      * Get template chunk
      *
      * @access private
      * @param string $tpl Template file
      * @param string $postfix Chunk postfix if use file-based chunks
+     * @return string Empty
      */
     private function _getTpl($tpl = '', $postfix = '.chunk.tpl') {
-        if (!$tpl) return '';
+        if (!$tpl) {
+            return '';
+        }
         if (isset($this->chunks[$tpl])) {
             return $this->chunks[$tpl];
         }
@@ -1097,6 +1121,7 @@ class modxTalks {
     /**
      * Funny date
      *
+     * @access public
      * @param array $p['date'] - (int) UNIX timestamp
      * @return string
      */
@@ -1130,12 +1155,14 @@ class modxTalks {
         if ($days > 365) {
             return $this->decliner($years,$this->modx->lexicon('modxtalks.date_years_back', array('years' => $years)));
         }
-        return date($this->config['mtDateFormat'],$p['date']);
+        return date($this->config['dateFormat'],$p['date']);
     }
+
 
     /**
      * Declension of word
      *
+     * @access public
      * @param int $count
      * @param string|array $forms
      * @return string
@@ -1165,6 +1192,9 @@ class modxTalks {
             }
         }
         else {
+            /**
+             * If lang not RU
+             */
             return ($count == 1) ? $forms[0] : $forms[1];
         }
     }
@@ -1172,6 +1202,7 @@ class modxTalks {
     /**
      * Get user buttons for comment
      *
+     * @access public
      * @param int $userId User Id
      * @param int $time UNIX timestamp
      * @return string HTML buttons
@@ -1180,8 +1211,8 @@ class modxTalks {
         /**
          * If a registered user is a member of moderators, then give moderate comments.
          */
-        $buttons = '<a href="#" title="Изменить" class="control-edit">Изменить</a>';
-        $buttons .= '<a href="#" title="Удалить" class="control-delete">Удалить</a>';
+        $buttons = '<a href="#" title="Изменить" class="mt_control-edit">Изменить</a>';
+        $buttons .= '<a href="#" title="Удалить" class="mt_control-delete">Удалить</a>';
 
         if ($this->isModerator()) {
             return $buttons;
@@ -1195,12 +1226,16 @@ class modxTalks {
         return '';
     }
 
+
     /**
      * Get a human-friendly string (eg. 1 hour ago) for
      * how much time has passed since a given time.
      *
-     * @param int $then UNIX timestamp of the time to work out how much time has passed since.
-     * @param bool $precise Whether or not to return "x minutes/seconds", or just "a few minutes".
+     * @access public
+     * @param integer $then UNIX timestamp of the time to work out
+     * how much time has passed since.
+     * @param boolean $precise Whether or not to return "x minutes/seconds",
+     * or just "a few minutes".
      * @return string A human-friendly time string.
      */
     public function relativeTime($then, $precise = false) {
@@ -1216,33 +1251,33 @@ class modxTalks {
         // If this happened over a year ago, return "x years ago".
         if ($ago >= ($period = 60 * 60 * 24 * 365.25)) {
             $years = floor($ago / $period);
-            if($years == 1) return $this->modx->lexicon('modxtalks.d_year_ago');
-            if($years < 5) return $this->modx->lexicon('modxtalks.d_yearago',array('d' => $years));
-            return $this->modx->lexicon('modxtalks.d_year_ago',array('d' => $years)); //("%d year ago", "%d years ago", $years);
+            if ($years == 1) return $this->modx->lexicon('modxtalks.d_year_ago');
+            if ($years < 5) return $this->modx->lexicon('modxtalks.d_yearago',array('d' => $years));
+            return $this->modx->lexicon('modxtalks.d_year_ago',array('d' => $years));
         }
 
         // If this happened over two months ago, return "x months ago".
         elseif ($ago >= ($period = 60 * 60 * 24 * (365.25 / 12)) * 2) {
             $months = floor($ago / $period);
-            if($months == 1) return $this->modx->lexicon('modxtalks.d_month_ago');
-            if($months < 5) return $this->modx->lexicon('modxtalks.d_monthsago',array('d' => $months));
-            return $this->modx->lexicon('modxtalks.d_month_ago',array('d' => $months)); //Ts("%d month ago", "%d months ago", $months);
+            if ($months == 1) return $this->modx->lexicon('modxtalks.d_month_ago');
+            if ($months < 5) return $this->modx->lexicon('modxtalks.d_monthsago',array('d' => $months));
+            return $this->modx->lexicon('modxtalks.d_month_ago',array('d' => $months));
         }
 
         // If this happend over a week ago, return "x weeks ago".
         elseif ($ago >= ($period = 60 * 60 * 24 * 7)) {
             $weeks = floor($ago / $period);
-            if($weeks == 1) return $this->modx->lexicon('modxtalks.d_week_ago');
-            if($weeks < 5) return $this->modx->lexicon('modxtalks.d_weeksago',array('d' => $weeks));
-            return $this->modx->lexicon('modxtalks.d_weeks_ago',array('d' => $weeks)); //Ts("%d week ago", "%d weeks ago", $weeks);
+            if ($weeks == 1) return $this->modx->lexicon('modxtalks.d_week_ago');
+            if ($weeks < 5) return $this->modx->lexicon('modxtalks.d_weeksago',array('d' => $weeks));
+            return $this->modx->lexicon('modxtalks.d_weeks_ago',array('d' => $weeks));
         }
 
         // If this happened over a day ago, return "x days ago".
         elseif ($ago >= ($period = 60 * 60 * 24)) {
             $days = floor($ago / $period);
-            if($days == 1) return $this->modx->lexicon('modxtalks.d_day_ago');
-            if($days <= 4) return $this->modx->lexicon('modxtalks.d_daysago',array('d' => $days));
-            return $this->modx->lexicon('modxtalks.d_days_ago',array('d' => $days)); //Ts("%d day ago", "%d days ago", $days);
+            if ($days == 1) return $this->modx->lexicon('modxtalks.d_day_ago');
+            if ($days <= 4) return $this->modx->lexicon('modxtalks.d_daysago',array('d' => $days));
+            return $this->modx->lexicon('modxtalks.d_days_ago',array('d' => $days));
         }
 
         // If this happened over an hour ago, return "x hours ago".
@@ -1251,12 +1286,13 @@ class modxTalks {
             if($hours > 9) return $this->modx->lexicon('modxtalks.d_hours_today');
             if($hours == 1) return $this->modx->lexicon('modxtalks.d_hour_ago');
             if($hours < 5) return $this->modx->lexicon('modxtalks.d_hoursago',array('d' => $hours));
-            return $this->modx->lexicon('modxtalks.d_hours_ago',array('d' => $hours)); //Ts("%d hour ago", "%d hours ago", $hours);
+            return $this->modx->lexicon('modxtalks.d_hours_ago',array('d' => $hours));
         }
 
         // Otherwise, just return "date now".
-        return $this->modx->lexicon('modxtalks.date_now'); //"just now";
+        return $this->modx->lexicon('modxtalks.date_now');
     }
+
 
     /**
      * Make Quotes for modxTalks::quotes()
@@ -1277,7 +1313,7 @@ class modxTalks {
         $quote = $content.'<blockquote>';
         if (!empty($postId)) {
             $link = str_replace($this->config['slugReplace'], $postId, $this->config['slug']);
-            $quote .= '<a href="'.$link.'" rel="comment" data-id="'.$postId.'" class="control-search postRef">'.$this->mtConfig['go_to_comment'].'</a>';
+            $quote .= '<a href="'.$link.'" rel="comment" data-id="'.$postId.'" class="mt_control-search mt_postRef">'.$this->mtConfig['go_to_comment'].'</a>';
         }
         if (!empty($user)) {
             $quote .= '<cite>'.$user.'</cite>';
@@ -1286,10 +1322,12 @@ class modxTalks {
         return $quote;
     }
 
+
     /**
      * Make Quotes from BBCode
      *
      * @access public
+     * @param string $content Comment content
      * @return string Processed Content
      */
     public function quotes($content) {
@@ -1303,6 +1341,7 @@ class modxTalks {
         return $content;
     }
 
+
     /**
      * Get User IP Address
      *
@@ -1310,11 +1349,18 @@ class modxTalks {
      * @return string $ip
      */
     public function get_client_ip() {
-        if (isset($_SERVER['HTTP_CLIENT_IP'])) $ip = $_SERVER['HTTP_CLIENT_IP'];
-        elseif (isset($_SERVER['REMOTE_ADDR'])) $ip = $_SERVER['REMOTE_ADDR'];
-        else $ip = '0.0.0.0';
+        if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        }
+        elseif (isset($_SERVER['REMOTE_ADDR'])) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        else {
+            $ip = '0.0.0.0';
+        }
         return $ip;
     }
+
 
     /**
      * Collects element tags in a string and injects them into an array.
@@ -1394,16 +1440,22 @@ class modxTalks {
         return $matchCount;
     }
 
+
     /**
      * Sends an email for conversation
-     * @param string $subject
-     * @param string $body
-     * @param string $to
+     *
+     * @access protected
+     * @param string $subject Email subject
+     * @param string $body Email content
+     * @param string $to Receiver Emails
+     * @param string $body_text Optional, Plain text version of email content
      * @return bool
      */
     protected function sendEmail($subject, $body = '', $to, $body_text = '', $options = array()) {
         $this->modx->getService('mail', 'mail.modPHPMailer');
-        if (!$this->modx->mail) return false;
+        if (!$this->modx->mail) {
+            return false;
+        }
 
         $emailFrom = $this->modx->getOption('modxtalks.emailsFrom',$this->modx->getOption('emailsender'));
         $emailReplyTo = $this->modx->getOption('modxtalks.emailsReplyTo',$this->modx->getOption('emailsender'));
@@ -1415,7 +1467,9 @@ class modxTalks {
 
         $success = false;
         foreach ($to as $emailAddress) {
-            if (empty($emailAddress) || strpos($emailAddress,'@') === false) continue;
+            if (empty($emailAddress) || strpos($emailAddress,'@') === false) {
+                continue;
+            }
 
             $this->modx->mail->set(modMail::MAIL_BODY,$body);
             if (!empty($body_text)) {
@@ -1438,6 +1492,7 @@ class modxTalks {
     /**
      * Sends notification to all watchers of conversation saying a new post has been made.
      *
+     * @access public
      * @param modxTalksPost|modxTalksTempPost $comment A reference to the actual comment
      * @return boolean True if successful
      */
@@ -1449,7 +1504,7 @@ class modxTalks {
         $this->modx->lexicon->load('modxtalks:emails');
 
         /**
-         * Получаем инфрмацию о пользователе
+         * get User info
          */
         $user = $comment->getUserData();
         $images_url = $this->modx->getOption('site_url').substr($this->config['imgUrl'],1);
@@ -1477,7 +1532,7 @@ class modxTalks {
             'images_url' => $images_url,
             'avatar'     => $this->getAvatar($user['email'],50),
             'text'       => $text,
-            'date'       => date($this->config['mtDateFormat'].' O',$comment->time),
+            'date'       => date($this->config['dateFormat'].' O',$comment->time),
         );
 
         /**
@@ -1502,9 +1557,11 @@ class modxTalks {
         return $success;
     }
 
+
     /**
      * Sends notification to users
      *
+     * @access public
      * @param modxTalksPost $comment A reference to the actual comment
      * @return boolean True if successful
      */
@@ -1537,7 +1594,7 @@ class modxTalks {
             'images_url' => $images_url,
             'avatar'     => $this->getAvatar($user['email'],50),
             'text'       => $text,
-            'date'       => date($this->config['mtDateFormat'].' O',$comment->time),
+            'date'       => date($this->config['dateFormat'].' O',$comment->time),
         );
 
         /**
@@ -1556,9 +1613,11 @@ class modxTalks {
         return $success;
     }
 
+
     /**
      * Get Users data by groups
      *
+     * @access public
      * @param string|array $groups Moderators groups
      * @param modxTalksPost $comment A reference to the actual comment
      * @return array
@@ -1611,18 +1670,26 @@ class modxTalks {
     /**
      * Get conversation by conversation name
      *
+     * @access public
      * @param string $name Conversation name
      * @return object $conversation
-     **/
+     */
     public function getConversation($name = '') {
-        if (empty($name)) return false;
+        /**
+         * If Conversation name is empty or not defined return False
+         */
+        if (empty($name)) {
+            return false;
+        }
         /**
          * Conversation in cache TRUE or FALSE
          */
         $cCache = false;
         $cache = $this->modx->getCacheManager();
         // Create a key by conversation name
-        $keyConversation = md5('modxtalks::'.$name);
+        if (!$keyConversation = $this->conversationHash($name)) {
+            return false;
+        }
         // If there is a cache, set the flag to TRUE ConversationCache, otherwise FALSE
         if ($this->mtCache && $cache) {
             if ($theme = $this->modx->cacheManager->get($keyConversation,array(
@@ -1639,8 +1706,8 @@ class modxTalks {
         // If the flag is in ConversationCache FALSE - get data from database
         if ($cCache === false) {
             // If the key is not section, create a new
-            if (!$conversation = $this->modx->getObject('modxTalksConversation',array('conversation'=>$name))) {
-                $conversation = $this->modx->newObject('modxTalksConversation',array('conversation'=>$name));
+            if (!$conversation = $this->modx->getObject('modxTalksConversation',array('conversation' => $name))) {
+                $conversation = $this->modx->newObject('modxTalksConversation',array('conversation' => $name));
                 $properties = array(
                     'total' => 0,
                     'deleted' => 0,
@@ -1660,18 +1727,25 @@ class modxTalks {
         return $conversation;
     }
 
+
     /**
      * Cache conversation
      *
+     * @access public
      * @param object $conversation Conversation object
      * @return boolean true|false
-     **/
+     */
     public function cacheConversation(modxTalksConversation & $conversation) {
+        /**
+         * If $conversation is empty or not defined return False
+         */
         if (empty($conversation)) return false;
 
         $cache = $this->modx->getCacheManager();
         if ($this->mtCache && $cache) {
-            $keyConversation = md5('modxtalks::'.$conversation->conversation);
+            if (!$keyConversation = $this->conversationHash($conversation->conversation)) {
+                return false;
+            }
             if (!$this->modx->cacheManager->set($keyConversation, $conversation, 0, array(xPDO::OPT_CACHE_KEY => 'modxtalks/conversation'))) {
                 return false;
             }
@@ -1679,32 +1753,38 @@ class modxTalks {
         return true;
     }
 
+
     /**
      * Retrieve comment or comments from cache if it's cached or database
      *
+     * @access public
      * @param string|array $ids Comment idx or Comments idx'es
      * @param integer $ids Comment ID or Comments IDs
-     * @return array [0] - comments, [1] - users
-     **/
-    public function getCommentsArray($ids,$conversationId) {
-        if (empty($ids) || empty($conversationId)) return false;
-
+     * @return array array[0] - comments, array[1] - users
+     */
+    public function getCommentsArray($ids, $conversationId) {
+        if (empty($ids) || empty($conversationId)) {
+            return false;
+        }
         /**
-         * Result Comments array
+         * @var array Result Comments array
          */
         $comments = array();
         /**
-         * Non cached comments
+         * @var array Non cached comments
          */
         $nonCached = array();
+        /**
+         * @var boolean True if one or more comments not cached
+         */
+        $cached = false;
         $cache = $this->modx->getCacheManager();
-        $cCache = false;
         /**
          * Retrieve comments from cache
          * те которых нет пишем в массив $nonCached для дальнейшего получения из базы
          */
         if ($this->mtCache && $cache) {
-            $cCache = true;
+            $cached = true;
             foreach ($ids as $id) {
                 if ($comment = $this->modx->cacheManager->get($id, array(xPDO::OPT_CACHE_KEY => 'modxtalks/conversation/'.$conversationId))) {
                     $comments[$id] = $comment;
@@ -1714,14 +1794,14 @@ class modxTalks {
                 }
             }
             if (count($nonCached)) {
-                $cCache = false;
+                $cached = false;
             }
         }
 
         /**
          * Get comments by idx and conversation Id
          */
-        if ($cCache === false) {
+        if ($cached === false) {
             $c = $this->modx->newQuery('modxTalksPost', array('conversationId' => $conversationId));
             $c->select(array('id','idx','conversationId','date','content','userId','time','deleteTime','deleteUserId','editTime','editUserId','username','useremail','ip','votes','properties'));
             if (count($nonCached) && $this->mtCache && $cache) {
@@ -1744,7 +1824,7 @@ class modxTalks {
                     $result['content'] = $this->bbcode($result['content']);
                     $comments[$result['idx']] = $result;
                     /**
-                     * Cache comment
+                     * Cache the comment
                      */
                     if ($this->mtCache && $cache) {
                         $this->modx->cacheManager->set($result['idx'], $result, 0, array(
@@ -1774,8 +1854,9 @@ class modxTalks {
     }
 
     /**
-     * Cache comment
+     * Cache the comment
      *
+     * @access public
      * @param object $comment Comment object
      * @return true
      */
@@ -1795,19 +1876,25 @@ class modxTalks {
     /**
      * Get user or users
      *
+     * @access public
      * @param string|array $ids User id or Users id's
      * @param integer $ids Comment ID or Comments IDs
      * @return array $comments
-     **/
+     */
     public function getUsers($ids) {
-        if (empty($ids)) return false;
+        /**
+         * If Users Ids is empty or not defined return False;
+         */
+        if (empty($ids)){
+            return false;
+        }
 
         /**
-         * Result Users array
+         * @var array Result Users array
          */
         $users = array();
         /**
-         * Non cached comments
+         * @var array Non cached comments
          */
         $nonCached = array();
         /**
@@ -1846,7 +1933,7 @@ class modxTalks {
             foreach ($results as $result) {
                 $users[$result['id']] = $result;
                 /**
-                 * Пишем информацию пользователя в кэш
+                 * Cache user data
                  */
                 if ($this->mtCache && $cache) {
                     $this->modx->cacheManager->set($result['id'], $result, 0, array(
@@ -1861,6 +1948,7 @@ class modxTalks {
     /**
      * Cache user data
      *
+     * @access public
      * @param object $user User object
      * @return true
      */
@@ -1884,24 +1972,28 @@ class modxTalks {
     /**
      * Get index of comment by date
      *
-     * @param object $user User object
+     * @access public
+     * @param integer $conversationId Conversation ID
+     * @param string $date Conversation date index
      * @return true
      */
-    public function getDateIndex($conversationId,$date) {
+    public function getDateIndex($conversationId, $date) {
         if (empty($conversationId) || empty($date) || $date !== date('Y-m',strtotime($date))) {
             return false;
         }
         $date = str_replace('-', '', $date);
-
-        $cCache = false;
+        /**
+         * @var boolean True if comment not cached
+         */
+        $cached = false;
         $cache = $this->modx->getCacheManager();
         if ($this->mtCache && $cache) {
             if ($index = $this->modx->cacheManager->get($date, array(xPDO::OPT_CACHE_KEY => 'modxtalks/conversation/'.$conversationId.'/dates'))) {
-                $cCache = true;
+                $cached = true;
             }
         }
 
-        if ($cCache == false) {
+        if ($cached == false) {
             $c = $this->modx->newQuery('modxTalksPost',array('conversationId' => $conversationId, 'date' => $date));
             $c->sortby('idx','ASC');
             if (!$index = $this->modx->getObject('modxTalksPost',$c)) {
@@ -1918,9 +2010,12 @@ class modxTalks {
     /**
      * Create RSS Feed of latest comments
      *
-     * @return sring
-     **/
-    public function createRssFeed($conversation,$limit) {
+     * @access public
+     * @param string $conversation Conversation name
+     * @param integer $limit Comments to show
+     * @return string
+     */
+    public function createRssFeed($conversation, $limit) {
         /**
          * Check for conversation present
          */
@@ -1929,7 +2024,9 @@ class modxTalks {
         }
 
         $count = $theme->getProperty('total','comments');
-        if ($count < 1) return '';
+        if ($count < 1) {
+            return '';
+        }
 
         $limit = (int) $limit;
         if (empty($limit)) {
@@ -1979,7 +2076,7 @@ class modxTalks {
         $output = '';
         $comments[0] = array_reverse($comments[0]);
         foreach ($comments[0] as $comment) {
-            $date = date($this->config['mtDateFormat'].' O',$comment['time']);
+            $date = date($this->config['dateFormat'].' O',$comment['time']);
 
             // If this is registered user
             if ($comment['userId'] > 0) {
@@ -1993,16 +2090,16 @@ class modxTalks {
             }
 
             $tmp = array(
-                'name'       => $name,
-                'content'    => $this->modx->stripTags($comment['content']),
-                'date'       => $date,
-                'link'       => $this->getLink($comment['idx']),
+                'name'    => $name,
+                'content' => $this->modx->stripTags($comment['content']),
+                'date'    => $date,
+                'link'    => $this->getLink($comment['idx']),
             );
 
             $output .= $this->getChunk($item_tpl,$tmp);
 
         }
-        $output = $this->getChunk($feed_tpl,array('content' => $output));
+        $output = $this->getChunk($feed_tpl,array('content' => $output, 'year' => date("Y")));
 
         return $output;
     }
@@ -2010,22 +2107,24 @@ class modxTalks {
     /**
      * Create conversations map
      *
+     * @access public
      * @return array|false False if cache is off
      */
     public function conversationsMap() {
         /**
-         * Если выключено кэширование возвращаем False
+         * If cache is disabled return False
          */
-        if (!$this->mtCache) return false;
+        if (!$this->mtCache) {
+            return false;
+        }
         /**
-         * Если карта присутсвует в кэше, то просто возвразщаем её
+         * If conversation in cache return it
          */
-        if ($map = $this->modx->cacheManager->get('conversations_map', array(
-            xPDO::OPT_CACHE_KEY => 'modxtalks'))) {
+        if ($map = $this->modx->cacheManager->get('conversations_map', array(xPDO::OPT_CACHE_KEY => 'modxtalks'))) {
             return $map;
         }
         /**
-         * Если карта отсутсвует в кэше, получаем все темы из базы и строим карту
+         * Else if get it from database and put in cache
          */
         $map = array();
         $c = $this->modx->newQuery('modxTalksConversation');
@@ -2046,25 +2145,28 @@ class modxTalks {
     /**
      * Check resource have conversations
      *
+     * @access public
      * @param integer $id Resource ID
      * @return boolean True if resource have a conversation
      */
     public function hasConversations($id) {
         if (!intval($id)) return false;
         /**
-         * Проверяем через карту тем в кэше
+         * Check in conversation map
          */
         if ($map = $this->conversationsMap()) {
             /**
-             * Если ресурс содержит хотя бы одну тему возвращаем true
+             * If resource has more then one conversation return True
              */
-            if (array_key_exists($id, $map)) return true;
+            if (array_key_exists($id, $map)) {
+                return true;
+            }
             return false;
         }
-        /**
-         * Если функция conversationsMap() вернула false (при выключенном кэше), проверяем по базе
-         */
         elseif ($this->modx->getCount('modxTalksConversation',array('rid' => $id))) {
+            /**
+             * If method conversationsMap() returned false (if cache is enabled), check in database
+             */
             return true;
         }
 
@@ -2074,6 +2176,7 @@ class modxTalks {
     /**
      * Refresh comment and conversation cache
      *
+     * @access public
      * @param modxTalksPost $comment
      * @param modxTalksConversation $conversation
      */
@@ -2092,15 +2195,18 @@ class modxTalks {
     /**
      * Generate comment URL
      *
+     * @access public
      * @param integer $cid Conversation Id
      * @param integer $idx Comment Idx
      * @param string $scheme URL scheme - full or abs
      * @return string Comment URL
      */
-    public function generateLink($cid = 0,$idx = 0,$scheme = 'full') {
+    public function generateLink($cid = 0, $idx = 0, $scheme = 'full') {
         $conversation = $this->modx->getObject('modxTalksConversation',$cid);
         $rid = $conversation->rid;
-        if ($scheme !== 'full') $scheme = 'abs';
+        if ($scheme !== 'full') {
+            $scheme = 'abs';
+        }
         $url = $this->modx->makeUrl($rid,$this->context,'',$scheme);
         if ($this->config['debug']) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR,'Link to Resource: '.$url);
@@ -2127,6 +2233,193 @@ class modxTalks {
         if (intval($idx) > 0) $link = str_replace($this->config['slugReplace'], $idx, $link);
 
         return $link;
+    }
+
+    /**
+     * Slice string
+     *
+     * @access public
+     * @param string $input String to slice
+     * @param integer $limit String limit. Default = 200
+     * @return string $output
+     */
+    public function slice($input, $limit = 200) {
+        $limit = isset($limit) ? $limit : 200;
+        $enc = 'UTF-8';
+        $len = mb_strlen($input,$enc);
+        if ($limit > $len) {
+            $limit = $len;
+        }
+        return trim(mb_substr($input,0,$limit,$enc)).($limit == $len ? '' : '...');
+    }
+
+    /**
+     * Get Latest comments
+     *
+     * @access public
+     * @return string $output
+     */
+    public function getLatestComments() {
+        $this->modx->regClientCSS($this->config['cssUrl'].'web/mt_cl.css');
+        $this->modx->regClientScript($this->config['jsUrl'].'web/mt_cl.js');
+        $this->modx->regClientStartupHTMLBlock('<script>var MTL = {
+        connectorUrl: "'.$this->config['ajaxConnectorUrl'].'",
+        limit: '.$this->config['commentsLatestLimit'].',
+        updateInterval: '.$this->config['lates_comments_update']."\n"
+        .'};</script>');
+
+        $comments = $this->modx->runProcessor('web/comments/latest',array(),array(
+            'processors_path' => $this->config['processorsPath']
+        ));
+        $comments =& $comments->response['results'];
+
+        $output = '';
+        foreach ($comments as $c) {
+            $output .= $this->_parseTpl($this->config['commentLatestTpl'], $c, true);
+        }
+
+        $output = $this->_parseTpl($this->config['commentsLatestOutTpl'], array(
+            'output' => $output
+        ), true);
+
+        return $output;
+    }
+
+    /**
+     * Slice string by words count
+     *
+     * @param string $string
+     * @param string $count
+     */
+    public function sliceStringByWords($string, $count) {
+        $words = preg_split('@[\s\r\n]+@um', $string);
+        if ($count < count($words)){
+            $words = array_slice($words, 0, $count);
+        }
+        return implode(' ', $words);
+    }
+
+    /**
+     * Prepare data for Ajax requests
+     */
+    public function ajaxInit() {
+        if (empty($this->config['conversation'])) {
+            $this->config['conversation'] = $this->modx->resource->class_key.'-'.$this->modx->resource->id;
+        }
+
+        $conversation = $this->validateConversation($this->config['conversation']);
+        if ($conversation !== true) {
+            return $conversation;
+        }
+
+        $this->_ejsTemplates();
+
+        $this->context = $this->modx->context->key;
+    }
+
+
+    /**
+     * Validate conversation name
+     * @param string $value Conversation name
+     * @return boolean|string True if conversation name is valid or error message
+     */
+    public function validateConversation($value = '') {
+        if (preg_match('@[^a-zA-z-_.0-9]@i', $value)) {
+            return $this->modx->lexicon('modxtalks.unallowed_symbols');
+        }
+        elseif (strlen($value) < 2 || strlen($value) > 63) {
+            return $this->modx->lexicon('modxtalks.bad_id');
+        }
+        return true;
+    }
+
+
+    /**
+     * Cache snippet start properties
+     * @param string $conversation Conversation name
+     * @param array $config Config to cache
+     * @return boolean False if conversation name is invalid
+     */
+    public function cacheProperties($conversation = null, $config = array()) {
+        if (!$keyConversation = $this->conversationHash($conversation)) {
+            return false;
+        }
+        $path = 'modxtalks/properties';
+        $this->modx->cacheManager->set($keyConversation,$config,0,array(
+            xPDO::OPT_CACHE_KEY => $path,
+            xPDO::OPT_CACHE_HANDLER => 'xPDOFileCache',
+        ));
+    }
+
+
+    /**
+     * Get snippet properties from cache
+     * @param string $conversation Conversation name
+     * @return array|boolean False if conversation name is invalid
+     */
+    public function getProperties($conversation = null) {
+        if (!$keyConversation = $this->conversationHash($conversation)) {
+            return false;
+        }
+        $path = 'modxtalks/properties';
+        $config = $this->modx->cacheManager->get($keyConversation,array(
+            xPDO::OPT_CACHE_KEY => $path,
+            xPDO::OPT_CACHE_HANDLER => 'xPDOFileCache',
+        ));
+        return is_array($config) ? $config : array();
+    }
+
+
+    /**
+     * Generate conversation hash by conversation name
+     * @param string $conversation Conversation name
+     * @return string Hash of conversation name
+     */
+    public function conversationHash($conversation = null) {
+        if (empty($conversation)) return false;
+        return md5('modxtalks::'.$conversation);
+    }
+
+
+    /**
+     * Check IP for block
+     * @param string $action
+     * @param array $allowedActions Array of allowed actions to check
+     * @return boolean|string True if IP address not blocked
+     */
+    public function checkIp($action, $allowedActions = array()) {
+        if (!in_array($action,$allowedActions)) {
+            $ip = $this->get_client_ip();
+            $ip = explode('.',$ip);
+            $ipArr = array(
+                $ip[0].'.',
+                $ip[0].'.'.$ip[1].'.',
+                $ip[0].'.'.$ip[1].'.'.$ip[2].'.',
+                $ip[0].'.'.$ip[1].'.'.$ip[2].'.'.$ip[3]
+            );
+            if ($this->modx->getCount('modxTalksIpBlock',array('ip:IN' => $ipArr))) {
+                return '{"message":"'.$this->modx->lexicon('modxtalks.ip_blacklist_confirm').'","success":false}';
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Debug function for printing vars, arrays or objects
+     *
+     * @access private
+     * @param mixed $var
+     * @return void
+     */
+    private function pr($var) {
+        if (is_object($var)) {
+            if (!method_exists($var, 'toArray')) return;
+            $var = $var->toArray();
+        }
+        echo '<pre style="font:15px Consolas;padding:10px;border:1px solid #c2c2c2;border-radius:10px;background-color:f7f7f7;box-shadow:0 1px 2px #ccc;">';
+        print_r($var);
+        echo '</pre>';
     }
 
 }

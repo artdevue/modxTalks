@@ -37,6 +37,7 @@
       strings: {
         prefixAgo: null,
         prefixFromNow: null,
+        justNow: "just now",
         suffixAgo: "ago",
         suffixFromNow: "from now",
         seconds: function(v) { return v == 1 ? "%d second" : "%d seconds"; },
@@ -55,9 +56,19 @@
       }
     },
     inWords: function(distanceMillis) {
-      var $l = this.settings.strings;
-      var prefix = $l.prefixAgo;
-      var suffix = $l.suffixAgo;
+      var words,
+          $l = this.settings.strings,
+          prefix = $l.prefixAgo,
+          suffix = $l.suffixAgo,
+          separator = $l.wordSeparator || "",
+          seconds = Math.abs(distanceMillis) / 1000,
+          minutes = Math.floor(seconds / 60),
+          hours = Math.floor(minutes / 60),
+          days = Math.floor(hours / 24),
+          months = Math.floor(days / 30),
+          years = Math.floor(days / 365),
+          seconds = Math.floor(seconds);
+
       if (this.settings.allowFuture) {
         if (distanceMillis < 0) {
           prefix = $l.prefixFromNow;
@@ -65,32 +76,24 @@
         }
       }
 
-      var seconds = Math.abs(distanceMillis) / 1000;
-      var minutes = Math.floor(seconds / 60);
-      var hours = Math.floor(minutes / 60);
-      var days = Math.floor(hours / 24);
-      var months = Math.floor(days / 30);
-      var years = Math.floor(days / 365);
-      var seconds = Math.floor(seconds);
-
       function substitute(stringOrFunction, number) {
         var string = $.isFunction(stringOrFunction) ? stringOrFunction(number, distanceMillis) : stringOrFunction;
         var value = ($l.numbers && $l.numbers[number]) || number;
         return string.replace(/%d/i, value);
       }
 
-      var words = seconds < 60 && substitute($l.seconds, seconds) ||
-        minutes < 45 && substitute($l.minutes, minutes) ||
-        minutes < 60 && substitute($l.hour, 1) ||
-        hours < 24 && substitute($l.hours, hours) ||
-        days < 30 && substitute($l.days, days) ||
-        days < 45 && substitute($l.month, 1) ||
-        days < 365 && substitute($l.months, months) ||
-        years < 1.5 && substitute($l.year, 1) ||
-        substitute($l.years, years);
+      if (seconds < 10) { words = $l.justNow; suffix = ''; }
+      else if (seconds < 60) { words = substitute($l.seconds, seconds); }
+      else if (minutes < 45) { words = substitute($l.minutes, minutes); }
+      else if (minutes < 60) { words = substitute($l.hour, 1); }
+      else if (hours < 24) { words = substitute($l.hours, hours); }
+      else if (days < 30) { words = substitute($l.days, days); }
+      else if (days < 45) { words = substitute($l.month, 1); }
+      else if (days < 365) { words = substitute($l.months, months); }
+      else if (years < 1.5) { words = substitute($l.year, 1); }
+      else { words = substitute($l.years, years); }
 
-      var separator = $l.wordSeparator || "";
-      if ($l.wordSeparator === undefined) { separator = " "; }
+      if ($l.wordSeparator === undefined) { separator = ' '; }
       return $.trim([prefix, words, suffix].join(separator));
     },
     parse: function(iso8601) {

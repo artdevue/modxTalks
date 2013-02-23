@@ -17,7 +17,7 @@
     suffixAgo: "назад",
     suffixFromNow: null,
     seconds: function(value) { return numpf(value, "%d секунду", "%d секунды", "%d секунд"); },
-    justnow: "Только что",
+    justNow: "Только что",
     minute: "1 минуту",
     minutes: function(value) { return numpf(value, "%d минуту", "%d минуты", "%d минут"); },
     hour: "Менее часа",

@@ -140,12 +140,12 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
 
         $data = array(
             'deleteUser' => $deleteUser,
-            'delete_date' => date($this->modx->modxtalks->config['mtDateFormat'].' O',$this->object->deleteTime),
+            'delete_date' => date($this->modx->modxtalks->config['dateFormat'].' O',$this->object->deleteTime),
             'deleted_by' => $this->modx->lexicon('modxtalks.deleted_by'),
             'funny_delete_date' => $this->modx->lexicon('modxtalks.date_now'),
             'name' => $name,
             'index' => date('Ym',$this->object->time),
-            'date' => date($this->modx->modxtalks->config['mtDateFormat'].' O',$this->object->time),
+            'date' => date($this->modx->modxtalks->config['dateFormat'].' O',$this->object->time),
             'funny_date' => $this->modx->modxtalks->date_format(array('date' => $this->object->time)),
             'id' => (int) $this->object->id,
             'idx' => (int) $this->object->idx,

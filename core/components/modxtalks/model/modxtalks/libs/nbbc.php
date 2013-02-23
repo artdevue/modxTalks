@@ -864,7 +864,7 @@ function DoQuote($bbcode, $action, $name, $default, $params, $content) {
     $title = '';
     if (isset($params['id'])) {
         $link = str_replace($bbcode->slugReplace, intval($params['id']), $bbcode->slug);
-        $title .= '<a href="'.$link.'" rel="comment" data-id="'.intval($params['id']).'" class="control-search postRef">'.$bbcode->modx->lexicon('modxtalks.go_to_comment').'</a>';
+        $title .= '<a href="'.$link.'" rel="comment" data-id="'.intval($params['id']).'" class="mt_control-search mt_postRef">'.$bbcode->modx->lexicon('modxtalks.go_to_comment').'</a>';
     }
     if (isset($params['user'])) {
         $title .= '<cite>'.htmlspecialchars(trim($params['user'])).'</cite>';

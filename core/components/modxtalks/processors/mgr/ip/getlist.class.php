@@ -1,4 +1,10 @@
 <?php
+/**
+ * Get list of blocked IP addresses
+ *
+ * @package modxtalks
+ * @subpackage processors
+ */
 class getIpBlockListProcessor extends modObjectGetListProcessor {
     public $classKey = 'modxTalksIpBlock';
     public $defaultSortField = 'id';
@@ -28,14 +34,12 @@ class getIpBlockListProcessor extends modObjectGetListProcessor {
 
         if (!empty($resourceArray['date'])) {
             $resourceArray['publishedon_date'] = date('j M Y',$resourceArray['date']);
-            // $resourceArray['publishedon_date'] = strftime('%e %b %Y',$resourceArray['date']);
             $resourceArray['publishedon_time'] = date('g:s A',$resourceArray['date']);
             $resourceArray['actions'] = array();
             $resourceArray['actions'][] = array(
                 'text' => $this->modx->lexicon('delete'),
             );
         }
-
 
         return $resourceArray;
     }

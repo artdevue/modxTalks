@@ -89,6 +89,17 @@ $settings['modxtalks.bbcode']->fromArray(array(
     'namespace' => 'modxtalks',
     'area' => 'settingBBCode',
 ),'',true,true);
+
+
+
+$settings['modxtalks.voting']= $modx->newObject('modSystemSetting');
+$settings['modxtalks.voting']->fromArray(array(
+    'key' => 'modxtalks.voting',
+    'value' => false,
+    'xtype' => 'combo-boolean',
+    'namespace' => 'modxtalks',
+    'area' => 'settings',
+),'',true,true);
 $settings['modxtalks.scrubberTop']= $modx->newObject('modSystemSetting');
 $settings['modxtalks.scrubberTop']->fromArray(array(
     'key' => 'modxtalks.scrubberTop',
@@ -121,30 +132,6 @@ $settings['modxtalks.onlyAuthUsers']->fromArray(array(
     'namespace' => 'modxtalks',
     'area' => 'settings',
 ),'',true,true);
-$settings['modxtalks.mtgravatarSize']= $modx->newObject('modSystemSetting');
-$settings['modxtalks.mtgravatarSize']->fromArray(array(
-    'key' => 'modxtalks.mtgravatarSize',
-    'value' => 64,
-    'xtype' => 'textfield',
-    'namespace' => 'modxtalks',
-    'area' => 'settings',
-),'',true,true);
-$settings['modxtalks.mtGravator']= $modx->newObject('modSystemSetting');
-$settings['modxtalks.mtGravator']->fromArray(array(
-    'key' => 'modxtalks.mtGravator',
-    'value' => true,
-    'xtype' => 'combo-boolean',
-    'namespace' => 'modxtalks',
-    'area' => 'settings',
-),'',true,true);
-$settings['modxtalks.mtDateFormat']= $modx->newObject('modSystemSetting');
-$settings['modxtalks.mtDateFormat']->fromArray(array(
-    'key' => 'modxtalks.mtDateFormat',
-    'value' => 'j-m-Y, G:i',
-    'xtype' => 'textfield',
-    'namespace' => 'modxtalks',
-    'area' => 'settings',
-),'',true,true);
 $settings['modxtalks.moderator']= $modx->newObject('modSystemSetting');
 $settings['modxtalks.moderator']->fromArray(array(
     'key' => 'modxtalks.moderator',
@@ -161,9 +148,17 @@ $settings['modxtalks.jquery']->fromArray(array(
     'namespace' => 'modxtalks',
     'area' => 'settings',
 ),'',true,true);
-$settings['modxtalks.jquery']= $modx->newObject('modSystemSetting');
-$settings['modxtalks.jquery']->fromArray(array(
-    'key' => 'modxtalks.jquery',
+$settings['modxtalks.gravatarSize']= $modx->newObject('modSystemSetting');
+$settings['modxtalks.gravatarSize']->fromArray(array(
+    'key' => 'modxtalks.gravatarSize',
+    'value' => 64,
+    'xtype' => 'textfield',
+    'namespace' => 'modxtalks',
+    'area' => 'settings',
+),'',true,true);
+$settings['modxtalks.gravatar']= $modx->newObject('modSystemSetting');
+$settings['modxtalks.gravatar']->fromArray(array(
+    'key' => 'modxtalks.gravatar',
     'value' => true,
     'xtype' => 'combo-boolean',
     'namespace' => 'modxtalks',
@@ -181,6 +176,14 @@ $settings['modxtalks.defaultAvatar']= $modx->newObject('modSystemSetting');
 $settings['modxtalks.defaultAvatar']->fromArray(array(
     'key' => 'modxtalks.defaultAvatar',
     'value' => '',
+    'xtype' => 'textfield',
+    'namespace' => 'modxtalks',
+    'area' => 'settings',
+),'',true,true);
+$settings['modxtalks.dateFormat']= $modx->newObject('modSystemSetting');
+$settings['modxtalks.dateFormat']->fromArray(array(
+    'key' => 'modxtalks.dateFormat',
+    'value' => 'j-m-Y, G:i',
     'xtype' => 'textfield',
     'namespace' => 'modxtalks',
     'area' => 'settings',

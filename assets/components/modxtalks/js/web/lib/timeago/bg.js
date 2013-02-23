@@ -3,6 +3,7 @@ jQuery.timeago.settings.strings = {
   prefixAgo: "преди",
   prefixFromNow: "след",
   suffixAgo: null,
+  justNow: "just now",
   suffixFromNow: null,
   seconds: "по-малко от минута",
   minute: "една минута",

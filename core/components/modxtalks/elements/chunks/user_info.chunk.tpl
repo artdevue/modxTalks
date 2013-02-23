@@ -1,1 +1,1 @@
-<div class="user_info">IP: <span class="user_ip">[[+ip]]</span>Email: <span class="user_email">[[+email]]</span></div>
+<div class="mt_user_info"><span class="mt_user_ip">[[+ip]]</span><span class="mt_user_email">[[+email]]</span></div>

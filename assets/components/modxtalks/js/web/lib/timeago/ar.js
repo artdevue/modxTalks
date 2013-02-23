@@ -15,6 +15,7 @@
   jQuery.timeago.settings.strings = {
     prefixAgo: "منذ",
     prefixFromNow: "يتبقى",
+    justNow: "just now",
     suffixAgo: null,
     suffixFromNow: null, // null OR "من الآن"
     seconds: function(value) { return numpf(value, "لحظات", "ثانيتين", "%d ثواني", "%d ثانيه"); },

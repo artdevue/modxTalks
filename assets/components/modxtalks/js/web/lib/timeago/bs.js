@@ -17,6 +17,7 @@
   jQuery.timeago.settings.strings = {
     prefixAgo: "prije",
     prefixFromNow: "za",
+    justNow: "just now",
     suffixAgo: null,
     suffixFromNow: null,
     second: "sekund",

@@ -3,6 +3,7 @@ jQuery.timeago.settings.strings = {
   prefixAgo: null,
   prefixFromNow: null,
   suffixAgo: "ago",
+  justNow: "just now",
   suffixFromNow: "from now",
   seconds: function(v) { return v == 1 ? "%d second" : "%d seconds"; },
   minute: "about a minute",

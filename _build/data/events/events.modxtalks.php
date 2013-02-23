@@ -28,6 +28,13 @@
  */
 $events = array();
 
+$events['OnSiteRefresh']= $modx->newObject('modPluginEvent');
+$events['OnSiteRefresh']->fromArray(array(
+    'event' => 'OnSiteRefresh',
+    'priority' => 0,
+    'propertyset' => 0,
+),'',true,true);
+
 $events['OnUserFormSave']= $modx->newObject('modPluginEvent');
 $events['OnUserFormSave']->fromArray(array(
     'event' => 'OnUserFormSave',
@@ -52,6 +59,13 @@ $events['OnManagerPageInit']->fromArray(array(
 $events['OnDocFormPrerender']= $modx->newObject('modPluginEvent');
 $events['OnDocFormPrerender']->fromArray(array(
     'event' => 'OnDocFormPrerender',
+    'priority' => 0,
+    'propertyset' => 0,
+),'',true,true);
+
+$events['OnWebPagePrerender']= $modx->newObject('modPluginEvent');
+$events['OnWebPagePrerender']->fromArray(array(
+    'event' => 'OnWebPagePrerender',
     'priority' => 0,
     'propertyset' => 0,
 ),'',true,true);

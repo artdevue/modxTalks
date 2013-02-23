@@ -5,7 +5,7 @@
 	<atom:link href="[[~[[*id]]?scheme=`full`]]" rel="self" type="application/rss+xml" />
 	<description><![CDATA[ [[++site_url]] / RSS channel]]></description>
 	<language>[[++cultureKey]]</language>
-	<copyright>Copyright [[+year]] by [[++site_admin]]. All Rights Reserved.</copyright>
+	<copyright>Copyright [[+year]] by [[++site_name]]. All Rights Reserved.</copyright>
 	<generator>[[++site_url]]</generator>
 	[[+content]]
 </channel>

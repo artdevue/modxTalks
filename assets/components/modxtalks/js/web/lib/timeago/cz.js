@@ -2,6 +2,7 @@
 jQuery.timeago.settings.strings = {
   prefixAgo: "před",
   prefixFromNow: null,
+  justNow: "just now",
   suffixAgo: null,
   suffixFromNow: null,
   seconds: "méně než minutou",

@@ -45,8 +45,21 @@ if ($object->xpdo) {
             $manager->createObjectContainer('modxTalksSubscribers');
             $manager->createObjectContainer('modxTalksTempPost');
 
+            $manager->createObjectContainer('modxTalksEmailBlock');
+            $manager->createObjectContainer('modxTalksLatestPost');
+            //CommentsModxTalks
             break;
         case xPDOTransport::ACTION_UPGRADE:
+            $modx =& $object->xpdo;
+            $modelPath =$modx->getOption('modxtalks.core_path',null,$modx->getOption('core_path').'components/modxtalks/').'model/';
+            $modx->addPackage('modxtalks',$modelPath);
+            $manager = $modx->getManager();
+            $oldLogLevel = $modx->getLogLevel();
+            $modx->setLogLevel(0);
+
+            $manager->createObjectContainer('modxTalksEmailBlock');
+            $manager->createObjectContainer('modxTalksLatestPost');
+            $modx->setLogLevel($oldLogLevel);
             break;
     }
 }

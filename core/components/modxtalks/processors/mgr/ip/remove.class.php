@@ -1,5 +1,7 @@
 <?php
 /**
+ * Remove blocked IP address
+ *
  * @package modxTalks
  * @subpackage processors
  */

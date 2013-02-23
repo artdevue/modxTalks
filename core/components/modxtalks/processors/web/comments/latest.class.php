@@ -6,114 +6,84 @@
  * @subpackage processors
  */
 class getLatestCommentsListProcessor extends modObjectGetListProcessor {
-    public $classKey = 'modxTalksPost';
+    public $classKey = 'modxTalksLatestPost';
     public $languageTopics = array('modxtalks:default');
-    public $limit = 10;
-    public $start = 0;
+    public $objectType = 'modxtalks.latestpost';
+    public $limit;
+    public $time;
+    public $action;
 
-    public function beforeQuery() {
-        if ($this->modx->modxtalks->config['commentsPerPage'] != 0) {
-            $this->limit = $this->modx->modxtalks->config['commentsPerPage'];
-        }
-
-        return parent::beforeQuery();
-    }
-
-    public function getData() {
-        $data = array('total' => 0, 'results' => array());
-
-        $count = $this->theme->getProperty('total','comments');
-        if ($count < 1) return $data;
-
-        if ($slug = $this->getProperty('slug')) {
-            $this->modx->modxtalks->config['slug'] = $slug;
-        }
-
-        $array = ();
-
-        $comments = $this->modx->modxtalks->getCommentsArray($array,$this->conversationId);
-
-        $usersIds =& $comments[1];
-        $users = array();
-        if (count($usersIds)) {
-            $authUsers = $this->modx->modxtalks->getUsers($usersIds);
-            foreach ($authUsers as $a) {
-                $users[$a['id']] = array(
-                    'name'  => $a['fullname'] ? $a['fullname'] : $a['username'],
-                    'email' => $a['email'],
-                );
+    /**
+     * {@inheritDoc}
+     * @return mixed
+     */
+    public function process() {
+        $this->action = $this->getProperty('action');
+        $data = $this->getData();
+        if ($this->action === 'latest') {
+            $output = array();
+            foreach ($data['results'] as $r) {
+                $output[$r['cid']] = $this->modx->modxtalks->_parseTpl($this->modx->modxtalks->config['commentLatestTpl'], $r, true);
             }
+            return $this->outputArray($output,$data['total']);
         }
-
-        $data['total'] = $count;
-        $data['results'] =& $comments[0];
-        $data['users'] =& $users;
         return $data;
     }
 
+    public function getData() {
+        $this->time = (int) $this->getProperty('time');
+        $this->limit = (int) $this->modx->modxtalks->config['commentsLatestLimit'];
 
-    /**
-     * Iterate across the data
-     *
-     * @param array $data
-     * @return array
-     */
-    public function iterate(array $data) {
+        $data = array('total' => 0, 'results' => array());
+
+        $q = $this->modx->newQuery('modxTalksLatestPost');
+        if ($this->action === 'latest') {
+            $q->where(array('time:>' => $this->time));
+        }
+
+        $count = $this->modx->getCount('modxTalksLatestPost',$q);
+
+        if ($count == 0) {
+            return $data;
+        }
+
+        $q->select($this->modx->getSelectColumns('modxTalksLatestPost'));
+        $q->sortby('time','DESC');
+        $q->limit($this->limit);
+
+        $comments = array();
+        if ($q->prepare() && $q->stmt->execute()) {
+            $comments = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
         $list = array();
-        $link = $this->modx->getOption('site_url');
-        $users =& $data['users'];
-        $relativeTime = '';
-        $date_format = $this->modx->modxtalks->config['mtDateFormat'];
-        /**
-         * Languages...
-         */
-        $guest_name = $this->modx->lexicon('modxtalks.guest');
+        $date_format = $this->modx->modxtalks->config['dateFormat'];
 
-        foreach ($data['results'] as $k => $comment) {
-            $funny_date = $this->modx->modxtalks->date_format(array('date' => $comment['time']));
-            $index = date('Ym',$comment['time']);
-            $date = date($date_format.' O',$comment['time']);
-            if ($comment['userId'] > 0) {
-                $name = $users[$comment['userId']]['name'];
-                $email = $users[$comment['userId']]['email'];
-            }
-            else {
-                $name = $comment['username'] ? $comment['username'] : $guest_name;
-                $email = $comment['useremail'] ? $comment['useremail'] : 'anonym@anonym.com';
-            }
-
-            $userId = md5($comment['userId'].$email);
-
-            $relativeTimeComment = $this->modx->modxtalks->relativeTime($comment['time']);
-            if ($relativeTime != $relativeTimeComment) {
-                $timeMarker = '<div class="timeMarker" data-now="1">'.$relativeTimeComment.'</div>';
-                $relativeTime = $relativeTimeComment;
-            }
-            /**
-             * Timeago date format
-             */
-            $timeago = date('c',$comment['time']);
+        foreach ($comments as $k => $comment) {
             /**
              * Prepare data for published comment
              */
-            else {
-                $tmp = array(
-                    'name'       => $name,
-                    'index'      => $index,
-                    'date'       => $date,
-                    'funny_date' => $funny_date,
-                    'id'         => $comment['id'],
-                    'idx'        => $comment['idx'],
-                    'link'       => $this->modx->modxtalks->getLink($comment['idx']),
-                    'timeago'    => $timeago,
-                );
-
-            }
-
-            $list[] = $tmp;
-
+            $comment['content'] = $this->modx->stripTags($comment['content']);
+            $list[] = array(
+                'name'       => $comment['name'],
+                'avatar'     => $this->modx->modxtalks->getAvatar($comment['email']),
+                'date'       => date($date_format.' O',$comment['time']),
+                'funny_date' => $this->modx->modxtalks->date_format(array('date' => $comment['time'])),
+                'id'         => $comment['pid'],
+                'cid'        => $comment['cid'],
+                'idx'        => $comment['idx'],
+                'link'       => $comment['link'],
+                'timeago'    => date('c',$comment['time']),
+                'time'       => $comment['time'],
+                'content'    => $this->modx->modxtalks->slice($comment['content']),
+                'total'      => $comment['total'],
+                'title'      => $comment['title'],
+            );
         }
-        return $list;
+
+        $data['total'] = $count;
+        $data['results'] =& $list;
+        return $data;
     }
 
 }

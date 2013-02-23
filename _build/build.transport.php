@@ -12,7 +12,7 @@ set_time_limit(0);
 /* define package names */
 define('PKG_NAME','modxTalks');
 define('PKG_NAME_LOWER','modxtalks');
-define('PKG_VERSION','0.0.1');
+define('PKG_VERSION','0.0.2');
 define('PKG_RELEASE','beta');
 
 /* define build paths */
@@ -28,6 +28,7 @@ $sources = array(
     'source_core' => $root.'core/components/'.PKG_NAME_LOWER,
     'source_assets' => $root.'assets/components/'.PKG_NAME_LOWER,
     'plugins' => $root.'core/components/'.PKG_NAME_LOWER.'/elements/plugins/',
+    'chunks' => $root.'core/components/'.PKG_NAME_LOWER.'/elements/chunks/',
     'snippets' => $root.'core/components/'.PKG_NAME_LOWER.'/elements/snippets/',
     'lexicon' => $root . 'core/components/'.PKG_NAME_LOWER.'/lexicon/',
     'docs' => $root.'core/components/'.PKG_NAME_LOWER.'/docs/',

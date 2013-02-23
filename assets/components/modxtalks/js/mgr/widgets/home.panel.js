@@ -85,6 +85,19 @@ modxTalks.panel.Home = function(config) {
                     xtype: 'modxtalks-grid-ipblock'
                     ,preventRender: true
                 }]
+            },{
+                title: _('modxtalks.blocking_email')
+                ,cls: 'email-manager'
+                ,defaults: { autoHeight: true }
+                ,id: 'email-blocking'
+                ,items: [{
+                    html: '<p>'+ _('modxtalks.emailblock_desc') +'</p>'
+                    ,border: true
+                    ,bodyCssClass: 'panel-desc'
+                },{
+                    xtype: 'modxtalks-grid-emailblock'
+                    ,preventRender: true
+                }]
             }],
         listeners: {
             'tabchange': function(tabPanel, tab){

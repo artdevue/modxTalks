@@ -3,6 +3,7 @@ jQuery.timeago.settings.strings = {
    // environ ~= about, it's optional
    prefixAgo: "il y a",
    prefixFromNow: "d'ici",
+   justNow: "just now",
    seconds: "moins d'une minute",
    minute: "environ une minute",
    minutes: "environ %d minutes",

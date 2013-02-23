@@ -1,0 +1,20 @@
+#mt_mtCommentLatest div, #mt_mtCommentLatest span, #mt_mtCommentLatest a {
+	margin: 0;
+	padding: 0;
+	line-height: 14px;
+	font-size: 14px;
+	color: #71767a;	
+}
+#mt_mtCommentLatest a {color: #B5B5B5}
+#mt_mtCommentLatest a:hover {color: #71767a}
+.mt_latcomment_item {position: relative;}
+#mt_mtCommentLatest .mt_latcomment_name {float: left; color: #000000;width: 100%;}
+#mt_mtCommentLatest .mt_latcomment_name span {color: #71767a;}
+#mt_mtCommentLatest .mt_latcomment_total {float: right; padding-left: 20px; background: url("../../img/web/16-Speech-Bubbles.png") no-repeat 0 -2px transparent;}
+.mt_latcomment_content {/*display: inline-block;*/width: 100%;}
+#mt_mtCommentLatest .mt_latcomment_item {margin: 5px 0; padding: 7px 5px; border-bottom: #cccccc dashed 1px;display: inline-block; width: 100%}
+#mt_mtCommentLatest .mt_highlight {background-color: #ffffcc;}
+#mt_mtCommentLatest .mt_latcomment_avatardiv {float: left;margin-right: 10px;display: inline-block;}
+#mt_mtCommentLatest img.mt_latcomment_avatar {width: 30px; height: 30px}
+#mt_mtCommentLatest .mt_latcomment_cont {margin-left: 40px;}
+#mt_mtCommentLatest .mt_latcomment_content {display: inline-block;}

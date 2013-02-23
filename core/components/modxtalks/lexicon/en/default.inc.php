@@ -1,10 +1,21 @@
 <?php
 /**
+ * ModxTalks
+ *
+ * This file is part of modxTalks, a simple commenting component for MODx Revolution.
+ *
+ * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
+ * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <npobolka@gmail.com>. Translation by Viktorminator
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
+ *
+ */
+/**
  * Default English Lexicon Entries for modxTalks
  *
  * @package modxtalks
  * @subpackage lexicon
  */
+
 $_lang['modxtalks'] = 'modxTalks';
 $_lang['modxtalks.add'] = 'Add';
 $_lang['modxtalks.add_comment'] = 'Add comment';
@@ -15,6 +26,7 @@ $_lang['modxtalks.ajax_disconnected'] = 'Server not responding. <a href=\"javasc
 $_lang['modxtalks.ban'] = 'Ban';
 $_lang['modxtalks.ban_comment'] = 'Add IP-address to the list of block IP, comment will be deleted automatically';
 $_lang['modxtalks.blocking_ip'] = 'Blocking IP Addresses';
+$_lang['modxtalks.blocking_email'] = 'Block Email Addresses';
 
 $_lang['modxtalks.content'] = 'Сomment';
 $_lang['modxtalks.confirm_delete'] = 'Delete a comment, forever?';
@@ -32,6 +44,8 @@ $_lang['modxtalks.confirm_discard_reply'] = 'Comment has not yet been sent, disc
 $_lang['modxtalks.confirmLeave'] = 'Woah, you haven\'t saved the stuff you are editing! If you leave this page, you\'ll lose any changes you\'ve made. Is this ok?';
 $_lang['modxtalks.conversation'] = 'Topic';
 $_lang['modxtalks.conversations'] = 'Topics';
+$_lang['modxtalks.confirm_ip'] = 'Do you really want to block the IP address - ';
+$_lang['modxtalks.confirm_email'] = 'Do you really want to block the Email address - ';
 
 $_lang['modxtalks.default_desc'] = 'Leave blank if you want to use the default settings.';
 $_lang['modxtalks.default'] = 'default';
@@ -52,6 +66,13 @@ $_lang['modxtalks.date_create'] = 'Date';
 
 $_lang['modxtalks.editUserId'] = 'Edited';
 $_lang['modxtalks.editTime'] = 'Editing date';
+$_lang['modxtalks.email_adress'] = 'Email address';
+$_lang['modxtalks.emailblock_desc'] = 'Management of Email-locks. List of Email-addresses that are blocked. This means that they can not vote.';
+$_lang['modxtalks.email_block_create'] = 'Add Email';
+$_lang['modxtalks.email_remove'] = 'Remove Email';
+$_lang['modxtalks.email_removes'] = 'Remove Emails';
+$_lang['modxtalks.email_remove_confirm'] = 'Do you really want to delete this Email-address?';
+$_lang['modxtalks.email_removes_confirm'] = 'Do you really want to delete all the Emails-addresses?';
 
 $_lang['modxtalks.goto_web'] = 'Go to the page.';
 
@@ -66,6 +87,7 @@ $_lang['modxtalks.ipblock_desc'] = 'Management of IP-locks. List of IP-addresses
 $_lang['modxtalks.ip_adress'] = 'IP address';
 $_lang['modxtalks.ip_adress_desc'] = 'Note. description, note...';
 $_lang['modxtalks.ip_block_create'] = 'Add IP';
+$_lang['modxtalks.ip_blacklist_confirm'] = 'Your IP address is blacklisted? If the error is svyazhite with the site!';
 $_lang['modxtalks.ip_creat'] = 'Must be numeric IP-address';
 $_lang['modxtalks.ip_remove'] = 'Remove IP';
 $_lang['modxtalks.ip_remove_confirm'] = 'Do you really want to delete this IP-address?';
@@ -75,7 +97,7 @@ $_lang['modxtalks.ip_removes_confirm'] = 'Do you really want to delete all the I
 $_lang['modxtalks.loading'] = 'Loading';
 
 $_lang['modxtalks.management'] = 'modxTalks. Manage Comments';
-$_lang['modxtalks.management_desc'] = 'Here you can view information about each hotel room topic comment. Confirmation not view comments, and if necessary, <a class="link-mt" href="#homeTab:not-confirmed">потвердить</a> в соответствующем разделе. В <a class="link-mt" href="#homeTab:ip-blocking">IP блокировки</a>, вы можете ввести IP адресс, чтобы запретить посетителю голосовать с таким IP адресом.';
+$_lang['modxtalks.management_desc'] = 'Here you can view information about each topic. List comments are waiting for approval and, if necessary, <a class="link-mt" href="#homeTab:not-confirmed">approve</a> in relative topic/ In <a class="link-mt" href="#homeTab:ip-blocking">Blocking IP addresses tab</a> you can assign IP for blocking to disallow voting for the User with that IP.';
 $_lang['modxtalks.management_unconfirmed_desc'] = '<strong>Comments not confirmed.</strong> You can not manage Confirmation comments Confirm or delete successfully.<br />After Confirmation, the comment will appear on your web portal, and the user who has sent successfully, will be notified about how to add a Web resource.';
 $_lang['modxtalks.moderators'] = 'Moderators';
 $_lang['modxtalks.moderators_desc'] = 'Comma-separated list of moderators who have the ability to moderate comments on this resource.';
@@ -133,6 +155,9 @@ $_lang['modxtalks.userId'] = 'User';
 $_lang['modxtalks.unmute_conversation'] = 'restore conversation';
 
 $_lang['modxtalks.with_comments'] = ' with comments';
+
+$_lang['modxtalks.voting_disabled'] = 'Voting closed!';
+
 // BBCode
 $_lang['modxtalks.bold'] = 'Bold';
 $_lang['modxtalks.fixed'] = 'Code';
@@ -168,14 +193,14 @@ $_lang['setting_modxtalks.emailsReplyTo'] = 'Email Reply To';
 $_lang['setting_modxtalks.emailsReplyTo_desc'] = 'E-mail address for reply';
 $_lang['setting_modxtalks.commentsPerPage'] = 'Number of Comments';
 $_lang['setting_modxtalks.commentsPerPage_desc'] = 'The maximum number of comments on the page to display when rendering the control page navigation.';
-$_lang['setting_modxtalks.mtGravator'] = 'Use gravatar';
-$_lang['setting_modxtalks.mtGravator_desc'] = 'Include a gravatar member. Yes / NO';
-$_lang['setting_modxtalks.mtgravatarSize'] = 'Size gravatar';
-$_lang['setting_modxtalks.mtgravatarSize_desc'] = 'Gravatar output size in the comments.';
+$_lang['setting_modxtalks.gravatar'] = 'Use Gravatar service';
+$_lang['setting_modxtalks.gravatar_desc'] = 'Include the Gravatar member. Yes / No';
+$_lang['setting_modxtalks.gravatarSize'] = 'Gravatar size';
+$_lang['setting_modxtalks.gravatarSize_desc'] = 'Gravatar output size in the comments.';
 $_lang['setting_modxtalks.defaultAvatar'] = 'Default avatar';
 $_lang['setting_modxtalks.defaultAvatar_desc'] = 'Link to the avatar that will be the default for users.';
-$_lang['setting_modxtalks.mtDateFormat'] = 'Date Format';
-$_lang['setting_modxtalks.mtDateFormat_desc'] = 'Date format. displayed in comments.';
+$_lang['setting_modxtalks.dateFormat'] = 'Date Format';
+$_lang['setting_modxtalks.dateFormat_desc'] = 'Date format. displayed in comments.';
 $_lang['setting_modxtalks.scrubberTop'] = 'Scrubber in top';
 $_lang['setting_modxtalks.scrubberTop_desc'] = 'Scrubber display for easy navigation of the comments in the top position?. Yes / No';
 $_lang['setting_modxtalks.scrubberOffsetTop'] = 'Scrubber Offset';
@@ -196,6 +221,8 @@ $_lang['setting_modxtalks.highlight'] = 'Theme Highlight';
 $_lang['setting_modxtalks.highlight_desc'] = 'Specify theme highlight the code. More details on the website <a target="_blank" href="http://softwaremaniacs.org/soft/highlight/en/">highlight</a>.<br />Available Themes: Default, Dark, FAR, IDEA,Sunburst, Zenburn, Visual Studio,Ascetic,Magula,GitHub,Google Code,Brown Paper,School Book,IR Black,Solarized - Dark,Solarized - Light,Arta,Monokai,XCode,Pojoaque,Rainbow,Tomorrow,Tomorrow Night,Tomorrow Night Bright,Tomorrow Night Blue,Tomorrow Night Eighties';
 $_lang['setting_modxtalks.moderator'] = 'Group moderators';
 $_lang['setting_modxtalks.moderator_desc'] = 'Specify a comma-separated group moderators have the right to moderate comments';
+$_lang['setting_modxtalks.voting'] = 'Vote for comment';
+$_lang['setting_modxtalks.voting_desc'] = 'Select Yes if you want to include a vote for a comment';
 // Scrubber
 $_lang['modxtalks.start'] = 'Original Post';
 $_lang['modxtalks.now'] = 'Now';

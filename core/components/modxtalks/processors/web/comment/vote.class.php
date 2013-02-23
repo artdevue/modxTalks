@@ -16,11 +16,17 @@ class postAddVoteProcessor extends modObjectUpdateProcessor {
      * @return void
      */
     public function beforeSet() {
-        $this->context = trim($this->getProperty('ctx'));
-
+        /**
+         * Check for voting
+         */
+        if (!$this->modx->modxtalks->config['voting']) {
+            $this->failure($this->modx->lexicon('modxtalks.voting_disabled'));
+            return false;
+        }
         /**
          * Check Context
          */
+        $this->context = trim($this->getProperty('ctx'));
         if (empty($this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.empty_context'));
             return false;

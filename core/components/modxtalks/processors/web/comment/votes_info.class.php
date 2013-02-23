@@ -11,6 +11,13 @@ class getVotesInfo extends modObjectGetProcessor {
 
     public function initialize() {
         /**
+         * Check for voting
+         */
+        if (!$this->modx->modxtalks->config['voting']) {
+            $this->failure($this->modx->lexicon('modxtalks.voting_disabled'));
+            return false;
+        }
+        /**
          * Check context
          */
         $this->context = trim($this->getProperty('ctx'));

@@ -2,11 +2,15 @@
 /**
  * @package modxtalks
  */
-$scriptProperties['conversation'] = $modx->getOption('conversation',$scriptProperties,$modx->resource->class_key.'-'.$modx->resource->id);
-$modx->lexicon->load('modxtalks:default');
-$modx->modxtalks = $modx->getService('modxtalks','modxTalks',$modx->getOption('modxtalks.core_path',null,$modx->getOption('core_path').'components/modxtalks/').'model/modxtalks/',$scriptProperties);
-if (!($modx->modxtalks instanceof modxTalks)) return '';
+if (!isset($modx->modxtalks) || !($modx->modxtalks instanceof modxTalks)) {
+    $modx->modxtalks = $modx->getService('modxtalks','modxTalks',$modx->getOption('modxtalks.core_path',null,$modx->getOption('core_path').'components/modxtalks/').'model/modxtalks/',$scriptProperties);
+}
 
+$isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
+if ($isAjax) {
+echo 'keks';die;
+}
 $comments = $modx->modxtalks->init();
 
 return $comments;

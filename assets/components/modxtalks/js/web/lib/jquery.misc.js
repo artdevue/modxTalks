@@ -1,3 +1,4 @@
+
 jQuery.fn.selectRange = function(start, end) {
     return this.each(function() {
         if (this.setSelectionRange) {
@@ -14,8 +15,9 @@ jQuery.fn.selectRange = function(start, end) {
     });
 };
 
-jQuery.fn.getSelection = function() {
 
+
+jQuery.fn.getSelection = function() {
 	var e = (this.jquery) ? this[0] : this;
 
 	return (

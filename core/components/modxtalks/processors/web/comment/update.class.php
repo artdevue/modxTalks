@@ -129,7 +129,7 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
             'edit_name'       => $this->modx->lexicon('modxtalks.edited_by',array('name' => $edit_name)),
             'content'         => $this->modx->modxtalks->bbcode($this->object->content),
             'index'           => date('Ym',$this->object->time),
-            'date'            => date($this->modx->modxtalks->config['mtDateFormat'],$this->object->time),
+            'date'            => date($this->modx->modxtalks->config['dateFormat'],$this->object->time),
             'funny_date'      => $this->modx->modxtalks->date_format(array('date' => $this->object->time)),
             'funny_edit_date' => $this->modx->lexicon('modxtalks.date_now'),
             'link'            => '#comment-'.$this->object->idx,

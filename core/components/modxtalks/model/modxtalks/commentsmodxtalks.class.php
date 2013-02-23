@@ -54,7 +54,7 @@ class CommentsModxTalks extends modResource {
         foreach ($properties as $key => $property) {
             $out .= "&{$key}=`{$property}`";
         }
-        $content .= '[[!modxTalks?'.$out.']]';
+        $content .= '[[$chankModxTalksStreak]][[!modxTalks?'.$out.']]';
         return $content;
     }
 }

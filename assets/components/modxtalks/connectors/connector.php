@@ -8,37 +8,43 @@ ini_set("display_errors", 1);
 
 $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
-if (!$isAjax) die('Only XHR requests allowed!');
+if (!$isAjax) return;
 
 if (empty($_POST['action']) && empty($_SERVER['HTTP_ACTION'])) return;
 
-if (!empty($_SERVER['HTTP_ACTION']))
+if (!empty($_SERVER['HTTP_ACTION'])) {
     $action = $_SERVER['HTTP_ACTION'];
-else
+}
+else {
     $action = $_POST['action'];
+}
 
 switch($action) {
     case 'preview':
-        $action = 'web/comment/create';
+        $proc = 'web/comment/create';
         $_POST['preview'] = 1;
         break;
-    case        'add': $action = 'web/comment/create'; break;
-    case       'like': $action = 'web/comment/like'; break;
-    case      'quote': $action = 'web/comment/quote'; break;
-    case     'delete': $action = 'web/comment/remove'; break;
-    case    'restore': $action = 'web/comment/restore'; break;
-    case       'edit': $action = 'web/comment/update'; break;
-    case        'get': $action = 'web/comment/get'; break;
-    case       'vote': $action = 'web/comment/vote'; break;
-    case     'unvote': $action = 'web/comment/unvote'; break;
-    case 'votes_info': $action = 'web/comment/votes_info'; break;
-    case       'load': $action = 'web/comments/load'; break;
-    case     'latest': $action = 'web/comments/latest'; break;
+    case        'add': $proc = 'web/comment/create'; break;
+    case       'like': $proc = 'web/comment/like'; break;
+    case      'quote': $proc = 'web/comment/quote'; break;
+    case     'delete': $proc = 'web/comment/remove'; break;
+    case    'restore': $proc = 'web/comment/restore'; break;
+    case       'edit': $proc = 'web/comment/update'; break;
+    case        'get': $proc = 'web/comment/get'; break;
+    case       'vote': $proc = 'web/comment/vote'; break;
+    case 'votes_info': $proc = 'web/comment/votes_info'; break;
+    case  'ban_email': $proc = 'web/comment/block_email'; break;
+    case     'ban_ip': $proc = 'web/comment/block_ip'; break;
+    case       'load': $proc = 'web/comments/load'; break;
+    case     'latest':
+        $_POST['action'] = $action;
+        $proc = 'web/comments/latest';
+        break;
     default: return; break;
 }
 
 /**
- * Чистим контент комментаия от тегов MODX
+ * Convert MODX tags
  */
 $tags = array('[[', ']]','<?','?>');
 $rTags = array('[_[',']_]','&lt;?','?&gt;');
@@ -69,39 +75,34 @@ if (version_compare($version['full_version'],'2.2.6-pl') >= 0) {
 }
 $_REQUEST['HTTP_MODAUTH'] = $_SERVER['HTTP_MODAUTH'];
 
-/*require_once MODX_CORE_PATH.'components/modxtalks/model/modxtalks/modxtalks.class.php';
-$modx->modxtalks = new modxTalks($modx);*/
-
-/**
- * Подключаем основной класс modxTalks
- */
-$modx->modxtalks = $modx->getService('modxtalks','modxTalks',$modx->getOption($requestCorePath,null,$modx->getOption('core_path').'components/modxtalks/').'model/modxtalks/',array());
-if (!($modx->modxtalks instanceof modxTalks)) return '';
-
-/**
- * Страшный метод проверки IP по черному списку в базе
- * Нужно обязательно переписать
- */
-$allowedActions = array('web/comments/load');
-if (!in_array($action,$allowedActions)) {
-    $ip = $modx->modxtalks->get_client_ip();
-    $ip = explode('.',$ip);
-    $ipArr = array(
-        $ip[0].'.',
-        $ip[0].'.'.$ip[1].'.',
-        $ip[0].'.'.$ip[1].'.'.$ip[2].'.',
-        $ip[0].'.'.$ip[1].'.'.$ip[2].'.'.$ip[3]
-    );
-    if ($modx->getCount('modxTalksIpBlock',array('ip:IN' => $ipArr))) {
-        echo '{"message":"Ваш IP адрес находится в черном списке! Если это ошибка свяжитеь с администрацией сайта!","success":false}';
-        die;
+$config = array();
+if (!in_array($action, array('latest','vote','votes_info','ban_ip','ban_email'))) {
+    if (!$config = $modx->cacheManager->get(md5('modxtalks::'.strval($_POST['conversation'])), array(xPDO::OPT_CACHE_KEY => 'modxtalks/properties', xPDO::OPT_CACHE_HANDLER => 'xPDOFileCache'))) {
+        echo '{"message":"Ошибка","success":false}';
+        return;
     }
 }
 
-/* initiate the request. */
+/**
+ * Initialize modxTalks
+ */
+$modx->modxtalks = $modx->getService('modxtalks','modxTalks',$modx->getOption($requestCorePath,null,$modx->getOption('core_path').'components/modxtalks/').'model/modxtalks/',$config);
+if (!($modx->modxtalks instanceof modxTalks)) return;
+
+/**
+ * Check IP
+ */
+$checkIp = $modx->modxtalks->checkIp($action, array('load','latest'));
+if ($checkIp !== true) {
+    echo $checkIp; return;
+}
+
+/**
+ * Initiate the request
+ */
 $path = $requestCorePath.'processors/';
 $modx->request->handleRequest(array(
     'processors_path' => $path,
     'location' => '',
-    'action' => $action
+    'action' => $proc
 ));

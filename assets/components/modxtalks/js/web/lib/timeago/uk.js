@@ -17,6 +17,7 @@
   jQuery.timeago.settings.strings = {
     prefixAgo: null,
     prefixFromNow: "через",
+    justNow: "щойно",
     suffixAgo: "тому",
     suffixFromNow: null,
     seconds: "менше хвилини",

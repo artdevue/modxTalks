@@ -1,6 +1,6 @@
 <?php
 /**
- * Get list of blocked IP addresses
+ * Get blocked IP address
  *
  * @package modxtalks
  * @subpackage processors

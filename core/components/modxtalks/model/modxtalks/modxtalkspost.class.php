@@ -15,6 +15,27 @@ class modxTalksPost extends xPDOSimpleObject {
     }
 
     /**
+     * Get the conversation by comment conversationId
+     *
+     * @return object
+     **/
+    public function getConversation() {
+        return $this->xpdo->getObject('modxTalksConversation',$this->conversationId);
+    }
+
+    /**
+     * Get resource pagetitle
+     *
+     * @return object
+     **/
+    public function getResourceTitle(modxTalksConversation & $conversation, $type = 'pagetitle') {
+        if (!($conversation instanceof modxTalksConversation)) return false;
+        $resource = $this->xpdo->getObject('modResource',$conversation->rid);
+        $title = $type === 'longtitle' ? $type : 'pagetitle';
+        return $resource->{$title};
+    }
+
+    /**
      * Get user data
      *
      * @access public

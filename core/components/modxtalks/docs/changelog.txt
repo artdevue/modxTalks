@@ -1,1 +1,27 @@
 Changelog file for modxTalks component.
+
+modxTalks 0.0.2
+======================================
+- [FS#3]  Fixed. Customize style is the message as hard to see.
+- [FS#4]  Fixed. javascript - loading of the last comment at 21, 41, etc. comments.
+- [FS#9]  Improved. Compress all image files.
+- [FS#10] Fixed. properties.inc.php include snippets for modxTalks.
+- [FS#11] Fixed. The panel of resource management, by changing the type of resource, and not hang menyaetsya a resource with comments.
+- [FS#12] Fixed. When quoting comment name without quotes added
+- [FS#14] Fixed. Compatibility with jQuery 1,9.
+- [FS#15] Fixed. Front, does not translate into a splitter time, ie it remains as such when booting.
+- [FS#19] Fixed. Plugin to OnSiteRefresh ejs does not remove files.
+- [FS#37] Fixed. RSS news.
+- [FS#39] New. Add to admin panel grid locks Email addresses
+- [FS#1]  Fixed. Permissions for moderators
+- [FS#5]  Fixed. The problem with pagination.
+- [FS#7]  New. Front-Part. Create button - "comment" in order to be able to comment on the text of the resource.
+- [FS#8]  New. When you click on the link in the comments, displaying INPUT which will link to copy.
+- [FS#13] New. Vote for comments
+- [FS#21] New. The conclusion of the latest comments to modxTalks
+- [FS#22] New. Create a placeholder for the output display the number of comments in the topic
+- [FS#23] New. Plugin for output to tape number Comment
+- [FS#24] Fixed. Problems with styles, rewritten styles modxTalks prefixed
+- [FS#25] New. Print a chunk layer for CRC
+- [FS#41] New. Added Ukrainian translation
+- [FS#42] New. Blocking by IP and Email address from the front

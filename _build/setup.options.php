@@ -12,8 +12,7 @@ $values = array(
 );
 /* get values based on mode */
 switch ($options[xPDOTransport::PACKAGE_ACTION]) {
-    case xPDOTransport::ACTION_INSTALL:
-    case xPDOTransport::ACTION_UPGRADE:
+    case xPDOTransport::ACTION_INSTALL:    
         $setting = $modx->getObject('modSystemSetting',array('key' => 'modxtalks.emailsFrom'));
         if ($setting != null) { $values['emailsFrom'] = $setting->get('value'); }
         unset($setting);
@@ -22,6 +21,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         if ($setting != null) { $values['emailsReplyTo'] = $setting->get('value'); }
         unset($setting);
     break;
+    case xPDOTransport::ACTION_UPGRADE: break;
     case xPDOTransport::ACTION_UNINSTALL: break;
 }
 

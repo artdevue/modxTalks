@@ -13,9 +13,10 @@ class modxTalksIpBlockMultipleProcessor extends modObjectProcessor {
         if (!$ids = $this->getProperty('ids',null)) {
             return $this->failure($this->modx->lexicon('modxtalks.post_err_ns_multiple'));
         }
+
         $ids = is_array($ids) ? $ids : explode(',',$ids);
 
-        if (!$addresses = $this->modx->removeCollection('modxTalksIpBlock',array('id:IN' => $ids))) {
+        if (!$addresses = $this->modx->removeCollection($this->classKey,array('id:IN' => $ids))) {
             return $this->failure($this->modx->lexicon('modxtalks.post_err_ns_multiple'));
         }
 

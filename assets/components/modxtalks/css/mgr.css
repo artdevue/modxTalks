@@ -11,9 +11,11 @@
 li#homeTab__ip-blocking a.x-tab-right {padding-left:35px;background: url(../img/mrg/32-Locked-s.png) no-repeat -3px center;}
 li#homeTab__not-confirmed a.x-tab-right {padding-left:35px;background: url(../img/mrg/32-Mail-2-s.png) no-repeat -3px center;}
 li#homeTab__home a.x-tab-right {padding-left:35px;background: url(../img/mrg/32-Note-Book-s.png) no-repeat -3px center;}
+li#homeTab__email-blocking a.x-tab-right {padding-left:35px;background: url(../img/mrg/32-Mail_b2.png) no-repeat -3px center;}
 li.x-tab-strip-active#homeTab__home a.x-tab-right {background: url(../img/mrg/32-Note-Book.png) no-repeat -3px center;}
 li.x-tab-strip-active#homeTab__ip-blocking a.x-tab-right {background: url(../img/mrg/32-Locked.png) no-repeat -3px center;}
 li.x-tab-strip-active#homeTab__not-confirmed a.x-tab-right {background: url(../img/mrg/32-Mail-2.png) no-repeat -3px center;}
+li.x-tab-strip-active#homeTab__email-blocking a.x-tab-right {background: url(../img/mrg/32-Mail_b.png) no-repeat -3px center;}
 
 #talks_active, #talks_noactive { width:30px; height:16px; background:url("../img/mrg/eye_16.png") no-repeat scroll center center transparent !important;}
 #talks_noactive {background:url("../img/mrg/eyeoffgr_12.png") no-repeat scroll center center transparent !important;}
@@ -261,12 +263,13 @@ h3.grey{
 }
 .linkconv {padding-left: 30px; color: #999999;background: url(../img/mrg/16-Link-b.png) no-repeat 10px center;}
 a.linkconv:hover {color: #333333}
-.total-h, .unconfirmed-h, .delete-h, .conversations-h, .date-h, .ip-h, .description-h {padding-left: 20px; text-align: left; background: url(../img/mrg/16-List-w_-Images.png) no-repeat 0 center;}
+.total-h, .unconfirmed-h, .delete-h, .conversations-h, .date-h, .ip-h, .email-h, .description-h {padding-left: 20px; text-align: left; background: url(../img/mrg/16-List-w_-Images.png) no-repeat 0 center;}
 .unconfirmed-h {background: url(../img/mrg/16-Box-Incoming.png) no-repeat 0 center;}
 .delete-h {background: url(../img/mrg/16-Archive.png) no-repeat 0 center;}
 .conversations-h {background: url(../img/mrg/16-Books.png) no-repeat 0 center;}
 .date-h {background: url(../img/mrg/16-Day-Calendar.png) no-repeat 0 center;}
 .ip-h {background: url(../img/mrg/16-Sign-Post.png) no-repeat 0 center;}
+.email-h {background: url(../img/mrg/16-Mail.png) no-repeat 0 center;}
 .description-h {background: url(../img/mrg/16-Create-_-Write.png) no-repeat 0 center;}
 .talks-grid-date {
 color:#a0a0a0;

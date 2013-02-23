@@ -113,7 +113,7 @@ class commentUpdateProcessor extends modObjectUpdateProcessor {
             'email'      => $email,
             'content'    => $this->modx->modxtalks->bbcode($this->object->content),
             'index'      => date('Ym',$this->object->time),
-            'date'       => date($this->modx->modxtalks->config['mtDateFormat'],$this->object->time),
+            'date'       => date($this->modx->modxtalks->config['dateFormat'],$this->object->time),
             'funny_date' => $this->modx->modxtalks->date_format(array('date' => $this->object->time)),
             'link'       => '#comment-'.$this->object->idx,
             'id'         => (int) $this->object->id,
