@@ -636,7 +636,7 @@ var MTConversation = {
                 jQuery('.mt_get_link_textarea').remove();
                 var clEl = jQuery(this);
                 clEl.parents('.mt_postHeader').after('<textarea class="mt_get_link_textarea e_mt_get_link_textarea" style="height: 26px; margin: 0px 10px; width: '
-                    +(clEl.parents('.mt_postContent').width() - 20)+'px;">'
+                    +(clEl.parents('.mt_postContent').width() - 40)+'px;">'
                     +(document.getElementsByTagName('base')[0].href).slice(0, -1)+clEl.attr('href')+'</textarea>');
                 jQuery('.mt_get_link_textarea').select();
                 e.preventDefault();

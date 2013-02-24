@@ -264,6 +264,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fada13', end
 #mt_conversationBody .mt_deleted .mt_controls {margin-top:1px}
 #mt_conversationBody .mt_deleted .mt_thing {background:#f2f2f2; border:0; -webkit-box-shadow:none; box-shadow:none}
 #mt_conversationBody .mt_deleted .mt_thing:before, .mt_deleted .mt_thing:after {display:none}
+#mt_conversationBody .mt_postHeader h3 {line-height: normal;}
 
 /* Post content (code, quotes, headers) */
 #mt_conversationBody .mt_postBody h4 {margin:1.2em 0 0.8em; font-size:130%; font-weight:normal}

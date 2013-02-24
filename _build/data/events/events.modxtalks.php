@@ -34,38 +34,39 @@ $events['OnSiteRefresh']->fromArray(array(
     'priority' => 0,
     'propertyset' => 0,
 ),'',true,true);
-
 $events['OnUserFormSave']= $modx->newObject('modPluginEvent');
 $events['OnUserFormSave']->fromArray(array(
     'event' => 'OnUserFormSave',
     'priority' => 0,
     'propertyset' => 0,
 ),'',true,true);
-
 $events['OnPageNotFound']= $modx->newObject('modPluginEvent');
 $events['OnPageNotFound']->fromArray(array(
     'event' => 'OnPageNotFound',
     'priority' => 0,
     'propertyset' => 0,
 ),'',true,true);
-
 $events['OnManagerPageInit']= $modx->newObject('modPluginEvent');
 $events['OnManagerPageInit']->fromArray(array(
     'event' => 'OnManagerPageInit',
     'priority' => 0,
     'propertyset' => 0,
 ),'',true,true);
-
 $events['OnDocFormPrerender']= $modx->newObject('modPluginEvent');
 $events['OnDocFormPrerender']->fromArray(array(
     'event' => 'OnDocFormPrerender',
     'priority' => 0,
     'propertyset' => 0,
 ),'',true,true);
-
 $events['OnWebPagePrerender']= $modx->newObject('modPluginEvent');
 $events['OnWebPagePrerender']->fromArray(array(
     'event' => 'OnWebPagePrerender',
+    'priority' => 0,
+    'propertyset' => 0,
+),'',true,true);
+$events['OnModxTalksCommentAfterAdd']= $modx->newObject('modPluginEvent');
+$events['OnModxTalksCommentAfterAdd']->fromArray(array(
+    'event' => 'OnModxTalksCommentAfterAdd',
     'priority' => 0,
     'propertyset' => 0,
 ),'',true,true);

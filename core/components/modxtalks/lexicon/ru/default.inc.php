@@ -81,6 +81,7 @@ $_lang['modxtalks.help_desc'] = 'Документация комментарие
 
 $_lang['modxtalks.items_empty_conversation_msg'] = '<h4>Нет записей, удовлетворяющих вашим критериям поиска</h4><p>Или вы еще не создали ни одной Темы с комментариями.</p>';
 $_lang['modxtalks.items_empty_ip_msg'] = '<h4>Нет записей, удовлетворяющих вашим критериям поиска</h4><p>Или вы еще не добавили ни одного IP-адреса.</p>';
+$_lang['modxtalks.items_empty_email_msg'] = '<h4>Нет записей, удовлетворяющих вашим критериям поиска</h4><p>Или вы еще не добавили ни одного Email-адреса.</p>';
 $_lang['modxtalks.items_empty_unconfirmed_msg'] = '<h4>Нет записей, удовлетворяющих вашим критериям поиска</h4><p>Или еще никто не опубликовал комментария на подтверждения.</p>';
 $_lang['modxtalks.ipblock_desc'] = 'Управление IP-блокировками. Список IP-адресов, которые заблокированы. Это означает, что они не могут голосовать. <br/><strong class="alert-mt">Примечание.</strong> Вы можете настроить шаблоны с помощью символа *. --- Пример: заблокировать все IP-адреса, которые начинаются с "123.123.123."';
 $_lang['modxtalks.ip_adress'] = 'IP адрес';
@@ -213,8 +214,8 @@ $_lang['setting_modxtalks.ajax'] = 'Аякс обновление';
 $_lang['setting_modxtalks.ajax_desc'] = 'Включить аякс обновление комментариев с сервера?. Да / Нет';
 $_lang['setting_modxtalks.highlight'] = 'Подсветка кода';
 $_lang['setting_modxtalks.highlight_desc'] = 'Включить подсветку кода Highlight в комментариях?. Да / Нет';
-$_lang['setting_modxtalks.highlight'] = 'Тема Highlight';
-$_lang['setting_modxtalks.highlight_desc'] = 'Укажите тему оформления подсветки кода. Более детально на сайте <a target="_blank" href="http://softwaremaniacs.org/soft/highlight/en/">highlight</a>.<br />Доступные темы: Default, Dark, FAR, IDEA,Sunburst, Zenburn, Visual Studio,Ascetic,Magula,GitHub,Google Code,Brown Paper,School Book,IR Black,Solarized - Dark,Solarized - Light,Arta,Monokai,XCode,Pojoaque,Rainbow,Tomorrow,Tomorrow Night,Tomorrow Night Bright,Tomorrow Night Blue,Tomorrow Night Eighties';
+$_lang['setting_modxtalks.highlighttheme'] = 'Тема Highlight';
+$_lang['setting_modxtalks.highlighttheme_desc'] = 'Укажите тему оформления подсветки кода. Более детально на сайте <a target="_blank" href="http://softwaremaniacs.org/soft/highlight/en/">highlight</a>.<br />Доступные темы: Default, Dark, FAR, IDEA,Sunburst, Zenburn, Visual Studio,Ascetic,Magula,GitHub,Google Code,Brown Paper,School Book,IR Black,Solarized - Dark,Solarized - Light,Arta,Monokai,XCode,Pojoaque,Rainbow,Tomorrow,Tomorrow Night,Tomorrow Night Bright,Tomorrow Night Blue,Tomorrow Night Eighties';
 $_lang['setting_modxtalks.moderator'] = 'Группы модераторов';
 $_lang['setting_modxtalks.moderator_desc'] = 'Укажите через запятую группы модераторов, которые которые имею право модерировать комментарии';
 $_lang['setting_modxtalks.voting'] = 'Голосование за комментарий';

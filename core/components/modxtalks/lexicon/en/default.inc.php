@@ -81,6 +81,7 @@ $_lang['modxtalks.help_desc'] = 'Documentation comments on modxTalks.';
 
 $_lang['modxtalks.items_empty_conversation_msg'] = '<h4>There are no records that match your search criteria</h4><p>Or you have not created any topics with comments.</p>';
 $_lang['modxtalks.items_empty_ip_msg'] = '<h4>There are no records that match your search criteria</h4><p>Or you have not added a single IP-address.</p>';
+$_lang['modxtalks.items_empty_email_msg'] = '<h4>There are no records that meet your search criteria </h4> <p> Or you have not added any Email-Address.</p>';
 $_lang['modxtalks.items_empty_unconfirmed_msg'] = '<h4>There are no records that match your search criteria</h4><p>Or no one has posted a comment on confirmation.</p>';
 
 $_lang['modxtalks.ipblock_desc'] = 'Management of IP-locks. List of IP-addresses that are blocked. This means that they can not vote. <br/><strong class="alert-mt">NOTE.</strong> You can customize the templates with the symbol *. --- Example: block all IP-addresses that start with "123.123.123.*"';
@@ -217,8 +218,8 @@ $_lang['setting_modxtalks.ajax'] = 'Ajax update';
 $_lang['setting_modxtalks.ajax_desc'] = 'Ajax update include comments from the server?. Yes / No';
 $_lang['setting_modxtalks.highlight'] = 'Lighting package';
 $_lang['setting_modxtalks.highlight_desc'] = 'Highlight include code highlighting in comments?. Yes / No';
-$_lang['setting_modxtalks.highlight'] = 'Theme Highlight';
-$_lang['setting_modxtalks.highlight_desc'] = 'Specify theme highlight the code. More details on the website <a target="_blank" href="http://softwaremaniacs.org/soft/highlight/en/">highlight</a>.<br />Available Themes: Default, Dark, FAR, IDEA,Sunburst, Zenburn, Visual Studio,Ascetic,Magula,GitHub,Google Code,Brown Paper,School Book,IR Black,Solarized - Dark,Solarized - Light,Arta,Monokai,XCode,Pojoaque,Rainbow,Tomorrow,Tomorrow Night,Tomorrow Night Bright,Tomorrow Night Blue,Tomorrow Night Eighties';
+$_lang['setting_modxtalks.highlighttheme'] = 'Theme Highlight';
+$_lang['setting_modxtalks.highlighttheme_desc'] = 'Specify theme highlight the code. More details on the website <a target="_blank" href="http://softwaremaniacs.org/soft/highlight/en/">highlight</a>.<br />Available Themes: Default, Dark, FAR, IDEA,Sunburst, Zenburn, Visual Studio,Ascetic,Magula,GitHub,Google Code,Brown Paper,School Book,IR Black,Solarized - Dark,Solarized - Light,Arta,Monokai,XCode,Pojoaque,Rainbow,Tomorrow,Tomorrow Night,Tomorrow Night Bright,Tomorrow Night Blue,Tomorrow Night Eighties';
 $_lang['setting_modxtalks.moderator'] = 'Group moderators';
 $_lang['setting_modxtalks.moderator_desc'] = 'Specify a comma-separated group moderators have the right to moderate comments';
 $_lang['setting_modxtalks.voting'] = 'Vote for comment';

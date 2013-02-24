@@ -52,4 +52,30 @@ switch ($modx->event->name) {
             $counts->mtcount();
         }
         break;
+    case 'OnModxTalksCommentAfterAdd':
+        $comment =& $modx->event->params['modxtalks.post'];
+
+        if (!$latest = $modx->getObject('modxTalksLatestPost',array('cid' => $comment->conversationId))) {
+            $latest = $modx->newObject('modxTalksLatestPost');
+            $latest->set('cid',$comment->conversationId);
+        }
+
+        $conversation = $comment->getConversation();
+        $total = $conversation->getProperty('total');
+        if (!$title = $comment->getResourceTitle($conversation)) $title = 'Не указан';
+
+        $latest->fromArray(array(
+            'pid'     => $comment->id,
+            'idx'     => $comment->idx,
+            'name'    => $comment->name,
+            'email'   => $comment->email,
+            'content' => $comment->processed_content,
+            'time'    => $comment->time,
+            'link'    => $comment->link,
+            'userId'  => $comment->userId,
+            'title'   => $title,
+            'total'   => $total,
+        ));
+        $latest->save();
+        break;
 }
