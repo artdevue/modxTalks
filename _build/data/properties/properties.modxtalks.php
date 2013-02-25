@@ -1,6 +1,6 @@
 <?php
 /**
- * @package doodles
+ * @package modxtalks
  * @subpackage build
  */
 $properties = array(

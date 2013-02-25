@@ -33,6 +33,9 @@ $snippets[2]->fromArray(array(
     'description' => 'The conclusion of the latest comments on your site.',
     'snippet' => file_get_contents($sources['snippets'].'snippet.modxtalkslatestcomments.php'),
 ));
+$properties = include $sources['properties'].'properties.modxtalkslatestcomments.php';
+$snippets[2]->setProperties($properties);
+unset($properties);
 
 $snippets[3]= $modx->newObject('modSnippet');
 $snippets[3]->fromArray(array(
