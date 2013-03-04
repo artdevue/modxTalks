@@ -22,7 +22,7 @@ abstract class modxTalksManagerController extends modExtraManagerController {
     public function getLanguageTopics() {
         return array('modxtalks:default');
     }
-    public function checkPermissions() { return true;}
+    public function checkPermissions() { return true; }
 }
 /**
  * @package modxtalks

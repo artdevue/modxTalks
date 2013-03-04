@@ -21,5 +21,5 @@ $_lang['modxtalks.email_new_comment'] = 'Новий коментар';
 $_lang['modxtalks.email_comment_approved'] = 'Ваш коментар затверджений';
 $_lang['modxtalks.email_added_new_comment'] = '[[+name]] додав <a href="[[+link]]" style="text-decoration:none;color:#1C62B9">коментар</a>';
 $_lang['modxtalks.email_new_premoderated_comment'] = 'Доданий новий коментар чекаючий премодерацію';
-$_lang['modxtalks.email_user_add_premoderated_comment'] = 'Користувач <span style="color:#1C62B9">[[+name]]</span> додав коментар і чекає премодерації.';
+$_lang['modxtalks.email_user_add_premoderated_comment'] = 'Користувач <span style="color:#1C62B9">[[+name]]</span> додав коментар який чекає премодерацію';
 $_lang['modxtalks.email_user_approve_comment'] = 'Ваш коментар затверджений. Переглянути його можна по <a href="[[+link]]" style="text-decoration:none;color:#1C62B9">посиланню</a>';

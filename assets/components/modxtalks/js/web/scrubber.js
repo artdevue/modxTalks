@@ -118,7 +118,6 @@ var MTScrubber = {
                 newer.find("a").click();
             }
         });
-
         // Alright, so, all the scrolling event stuff is done! Now we need to make the "next/previous page" and
         // "load more" blocks clickable.
         jQuery(MTScrubber.body).on("click", ".mt_scrubberMore a", function (e) {

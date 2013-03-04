@@ -637,7 +637,7 @@ var MTConversation = {
                 var clEl = jQuery(this);
                 clEl.parents('.mt_postHeader').after('<textarea class="mt_get_link_textarea e_mt_get_link_textarea" style="height: 26px; margin: 0px 10px; width: '
                     +(clEl.parents('.mt_postContent').width() - 40)+'px;">'
-                    +(document.getElementsByTagName('base')[0].href).slice(0, -1)+clEl.attr('href')+'</textarea>');
+                    + location.protocol + '//' + location.host + clEl.attr('href')+'</textarea>');
                 jQuery('.mt_get_link_textarea').select();
                 e.preventDefault();
             });
@@ -786,7 +786,7 @@ var MTConversation = {
             // When the "add a reply" button in the sidebar is clicked, we trigger a click on the "now" item in
             // the scrubber, and also on the reply textarea.
             jQuery('#mt_jumpToReply').click(function (e) {
-                jQuery('.mt_scrubber-now a').click();
+                //jQuery('.mt_scrubber-now a').click();
                 setTimeout(function () {
                     jQuery('#mt_reply textarea').click();
                 }, 1);
@@ -853,9 +853,9 @@ var MTConversation = {
             });
 
             /*jQuery('.mt_like-btn').click(function(e) {
-			 	MTConversation.mt_like(jQuery(this).parents(".mt_post").data("id"));
-			 	e.preventDefault();
-			 });*/
+                MTConversation.mt_like(jQuery(this).parents(".mt_post").data("id"));
+                e.preventDefault();
+             });*/
 
             // Initialize the posts.
             this.initPosts();
@@ -1051,7 +1051,7 @@ var MTConversation = {
 
                 // Put the cursor at the end of the textarea.
                 var pos = textarea.val().length;
-                textarea.selectRange(pos, pos);
+                textarea.selectRange(pos, pos);                
             }
         });
 
@@ -1104,13 +1104,13 @@ var MTConversation = {
             success: function (data) {
                 if (data.message === false) return;
                 //jQuery("#comment-"+postId).replaceWith(data.view);
-                data.object.link = MTConversation.slug.replace("$$$", postId);
                 data.object.link_restore = MTConversation.slug.replace("$$$", 'mt_restore-' + postId);
                 data.object.timeMarker = ''
                 jQuery("#comment-" + postId).replaceWith(new EJS({
                     url: MT.assetsPath + MT.deletedCommentTpl
                 }).render(data.object));
                 MTConversation.redisplayAvatars();
+                jQuery('.mt_loadingOverlay').remove();
             }
         });
     },
@@ -1137,7 +1137,6 @@ var MTConversation = {
             success: function (data) {
                 if (data.success === false) return;
                 //jQuery("#comment-"+postId).replaceWith(data.view);
-                data.object.link = MTConversation.slug.replace("$$$", postId);
                 data.object.link_restore = MTConversation.slug.replace("$$$", 'mt_delete-' + postId);
                 data.object.timeMarker = '';
                 jQuery("#mt_comment-" + postId).replaceWith(new EJS({
@@ -1148,6 +1147,7 @@ var MTConversation = {
                     hljs.highlightBlock(e)
                 });
                 // setTimeout(function () { jQuery('a.time').timeago() }, 5000);
+                jQuery('.mt_loadingOverlay').remove();
             }
         });
     },
@@ -1308,8 +1308,8 @@ var MTConversation = {
     scrollElem: function (elm) {
         jQuery.scrollTo(elm);
         /*jQuery('html, body').animate({
-					scrollTop: jQuery(elm).offset().top
-				});*/
+                    scrollTop: jQuery(elm).offset().top
+                });*/
     },
 
     // Quote a post.

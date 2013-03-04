@@ -24,6 +24,20 @@ class makeQuoteProcessor extends modObjectGetProcessor {
             return false;
         }
         return parent::initialize();
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return mixed
+     */
+    public function process() {
+        if ($this->object->deleteTime || $this->object->deleteUser) {
+            $this->failure($this->modx->lexicon('modxtalks.unknown_error'));
+            return false;
+        }
+        
+        return $this->cleanup();
     }
 
     public function cleanup() {
@@ -42,8 +56,8 @@ class makeQuoteProcessor extends modObjectGetProcessor {
 
         $output = array(
             'content' => $content,
-            'id' => $this->object->id,
-            'user' => '"'.$name.'"'
+            'id'      => $this->object->id,
+            'user'    => '"'.$name.'"'
         );
 
         return $this->success('',$output);

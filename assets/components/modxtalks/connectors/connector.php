@@ -1,10 +1,10 @@
 <?php
 header('Content-Type: application/json; charset=UTF-8');
 
-/*
+
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
-*/
+
 
 $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 

@@ -9,13 +9,13 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
     public $objectType = 'modxtalks.post';
     public $afterSaveEvent = 'OnModxTalksCommentAfterAdd';
     public $beforeSaveEvent = 'OnModxTalksCommentBeforeAdd';
-    public $context = '';
-    public $preModarateComments;
-    public $preview;
-    public $timeout = 60;
-    public $hash = '';
-    protected $theme;
-    protected $defaultProprties = array(
+    private $context;
+    private $preModarateComments;
+    private $preview;
+    private $timeout = 60;
+    private $hash = '';
+    private $theme;
+    private $defaultProprties = array(
         'total' => 0,
         'deleted' => 0,
         'unconfirmed' => 0,
@@ -99,7 +99,7 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
         $conversationId = 0;
         $conversation = trim($this->getProperty('conversation'));
         $content = trim($this->getProperty('content'));
-        $this->context = trim($this->getProperty('ctx'));
+        // $this->context = trim($this->getProperty('ctx'));
         $this->preview = $this->getProperty('preview');
         $this->timeout = $this->modx->modxtalks->config['add_timeout'];
         if ($slug = $this->getProperty('slug')) {
@@ -109,14 +109,15 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
         /**
          * Check Context
          */
-        if (empty($this->context)) {
+        $this->context = $this->modx->modxtalks->getContext();
+        /*if (empty($this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.empty_context'));
             return false;
         }
         elseif (!$this->modx->getCount('modContext',$this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.bad_context'));
             return false;
-        }
+        }*/
         /**
          * Check Conversation name
          */
@@ -317,7 +318,17 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
         /**
          * Send Notify to conversation moderators
          */
-        if (!$this->modx->modxtalks->notifyModerators($this->object)) {
+        $checkExec = explode(' ', ini_get('disable_functions'));
+        $checkExec = array_map('trim', $checkExec);
+        $success = false;
+        if (!in_array('exec', $checkExec) && $this->modx->modxtalks->sendMail($this->object->id)) {
+            $success = true;
+        }
+        elseif ($this->modx->modxtalks->notifyModerators($this->object)) {
+            $success = true;
+        }
+
+        if (!$success) {
             $this->failure($this->modx->lexicon('modxtalks.error_try_again'));
             return false;
         }
@@ -339,6 +350,10 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
      * @return array $data
      */
     private function _preparePostData() {
+        if ($this->preview) {
+            return array('content' => $this->object->processed_content);
+        }
+
         $data = array(
             'avatar'          => $this->modx->modxtalks->getAvatar($this->email),
             'hideAvatar'      => '',
@@ -359,6 +374,9 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
             'user_info'       => '',
             'like_block'      => '',
         );
+        if ($this->modx->modxtalks->isModerator()) {
+            $data['user_info'] = $this->modx->modxtalks->_parseTpl($this->modx->modxtalks->config['user_info'], array('email' => $this->email, 'ip' => $this->object->ip), true);
+        }
 
         return $data;
     }

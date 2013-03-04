@@ -27,6 +27,11 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
             $this->failure($this->modx->lexicon('modxtalks.bad_context'));
             return false;
         }
+        
+        if ($slug = (string) $this->getProperty('slug')) {
+            $this->modx->modxtalks->config['slug'] = $slug;
+        }
+        
         return parent::initialize();
     }
 
@@ -137,21 +142,26 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
                 }
             }
         }
+        
 
+        
+        $restore = $this->modx->lexicon('modxtalks.restore');
+        $idx = (int) $this->object->idx;
         $data = array(
-            'deleteUser' => $deleteUser,
-            'delete_date' => date($this->modx->modxtalks->config['dateFormat'].' O',$this->object->deleteTime),
-            'deleted_by' => $this->modx->lexicon('modxtalks.deleted_by'),
+            'deleteUser'        => $deleteUser,
+            'delete_date'       => date($this->modx->modxtalks->config['dateFormat'].' O',$this->object->deleteTime),
+            'deleted_by'        => $this->modx->lexicon('modxtalks.deleted_by'),
             'funny_delete_date' => $this->modx->lexicon('modxtalks.date_now'),
-            'name' => $name,
-            'index' => date('Ym',$this->object->time),
-            'date' => date($this->modx->modxtalks->config['dateFormat'].' O',$this->object->time),
-            'funny_date' => $this->modx->modxtalks->date_format(array('date' => $this->object->time)),
-            'id' => (int) $this->object->id,
-            'idx' => (int) $this->object->idx,
-            'userId' => md5($this->object->userId.$email),
-            'restore' => $this->modx->lexicon('modxtalks.restore'),
-            'timeago' => date('c',$this->object->time),
+            'name'              => $name,
+            'index'             => date('Ym',$this->object->time),
+            'date'              => date($this->modx->modxtalks->config['dateFormat'].' O',$this->object->time),
+            'funny_date'        => $this->modx->modxtalks->date_format(array('date' => $this->object->time)),
+            'id'                => (int) $this->object->id,
+            'idx'               => (int) $idx,
+            'userId'            => md5($this->object->userId.$email),
+            'restore'           => '<a href="'.$this->modx->modxtalks->getLink('restore-'.$idx).'" title="'.$restore.'" class="mt_control-restore">'.$restore.'</a>',
+            'timeago'           => date('c',$this->object->time),
+            'link'              => $this->modx->modxtalks->getLink($idx),
         );
         return $data;
     }

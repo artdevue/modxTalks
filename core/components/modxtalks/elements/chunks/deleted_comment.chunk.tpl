@@ -9,7 +9,7 @@
                 </div>
                 <div class="mt_controls">
                     <span><span title="[[+delete_date]]">[[+funny_delete_date]]</span> [[+deleted_by]] [[+deleteUser]]</span>
-                    <a href="[[+link_restore]]" title="[[+restore]]" class="mt_control-restore">[[+restore]]</a>
+                    [[+restore]]
                 </div>
             </div>
         </div>

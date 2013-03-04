@@ -100,6 +100,14 @@ $settings['modxtalks.voting']->fromArray(array(
     'namespace' => 'modxtalks',
     'area' => 'settings',
 ),'',true,true);
+$settings['modxtalks.revers']= $modx->newObject('modSystemSetting');
+$settings['modxtalks.revers']->fromArray(array(
+    'key' => 'modxtalks.revers',
+    'value' => false,
+    'xtype' => 'combo-boolean',
+    'namespace' => 'modxtalks',
+    'area' => 'settings',
+),'',true,true);
 $settings['modxtalks.scrubberTop']= $modx->newObject('modSystemSetting');
 $settings['modxtalks.scrubberTop']->fromArray(array(
     'key' => 'modxtalks.scrubberTop',

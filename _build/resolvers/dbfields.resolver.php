@@ -59,6 +59,7 @@ if ($object->xpdo) {
 
             $manager->createObjectContainer('modxTalksEmailBlock');
             $manager->createObjectContainer('modxTalksLatestPost');
+            $manager->createObjectContainer('modxTalksMails');
             $modx->setLogLevel($oldLogLevel);
             break;
     }

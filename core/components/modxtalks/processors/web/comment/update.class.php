@@ -103,8 +103,9 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
      * @return array|string
      */
     private function _preparePostData() {
-        $name = '';
-        $email = '';
+        $name = $this->modx->lexicon('modxtalks.guest');
+        $email = 'anonym@anonym.com';
+        
         if ($user = $this->modx->getObjectGraph('modUser', '{"Profile":{}}', $this->object->userId, true)) {
             $profile = $user->getOne('Profile');
             $email = $profile->get('email');
@@ -132,7 +133,7 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
             'date'            => date($this->modx->modxtalks->config['dateFormat'],$this->object->time),
             'funny_date'      => $this->modx->modxtalks->date_format(array('date' => $this->object->time)),
             'funny_edit_date' => $this->modx->lexicon('modxtalks.date_now'),
-            'link'            => '#comment-'.$this->object->idx,
+            'link'            => $this->modx->modxtalks->getLink($this->object->idx),
             'id'              => (int) $this->object->id,
             'idx'             => (int) $this->object->idx,
             'user'            => $this->modx->modxtalks->userButtons($this->object->userId,$this->object->time),

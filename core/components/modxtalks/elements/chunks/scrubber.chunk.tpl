@@ -26,4 +26,4 @@
 </ul>
 <a href="#reply" class="mt_button" id="mt_jumpToReply"><span class="mt_icon-add"></span> [[+reply]]</a>
 </div>
-</div>
+</div> 

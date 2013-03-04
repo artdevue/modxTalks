@@ -9,9 +9,7 @@ class modxTalksTempPostApproveProcessor extends modObjectRemoveProcessor {
     public $classKey = 'modxTalksTempPost';
     public $objectType = 'modxtalks.temppost';
     public $languageTopics = array('modxtalks:default');
-    public $beforeRemoveEvent = '';
-    public $afterRemoveEvent = '';
-    protected $conversationId;
+    private $conversationId;
 
     public function beforeRemove() {
         $this->conversationId = $this->object->conversationId;

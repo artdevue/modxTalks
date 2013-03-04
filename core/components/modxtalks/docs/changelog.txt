@@ -1,5 +1,9 @@
 Changelog file for modxTalks component.
 
+modxTalks 1.0.0
+======================================
+- [FS#6] New. Displaying Comments reverse, new top, if select NO, the new comments are below.
+
 modxTalks 0.0.2
 ======================================
 - [FS#3]  Fixed. Customize style is the message as hard to see.

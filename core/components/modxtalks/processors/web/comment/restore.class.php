@@ -25,6 +25,9 @@ class commentUpdateProcessor extends modObjectUpdateProcessor {
     }
 
     public function beforeSet() {
+        if ($slug = $this->getProperty('slug')) {
+            $this->modx->modxtalks->config['slug'] = $slug;
+        }
         /**
          * Check user permission to restore comment
          */
@@ -96,13 +99,20 @@ class commentUpdateProcessor extends modObjectUpdateProcessor {
             $name = $this->object->username;
             $email = $this->object->useremail;
         }
-        else {
-            if ($user = $this->modx->getObject('modUser',$this->object->userId)) {
-                $profile = $user->getOne('Profile');
-                $email = $profile->email;
-                if (!$name = $profile->fullname) {
-                    $name = $user->username;
-                }
+        elseif ($user = $this->modx->getObjectGraph('modUser', '{"Profile":{}}', $this->object->userId, true)) {
+            $profile = $user->getOne('Profile');
+            $email = $profile->get('email');
+            if (!$name = $profile->get('fullname')) {
+                $name = $user->get('username');
+            }
+        }
+        
+        $edit_name = $name;
+        if ($this->object->userId !== $this->object->editUserId) {
+            if ($edit_user = $this->modx->getObjectGraph('modUser', '{"Profile":{}}', $this->object->editUserId, true)) {
+                $profile = $edit_user->getOne('Profile');
+                if (!$edit_name = $profile->get('fullname'))
+                    $edit_name = $user->get('username');
             }
         }
 
@@ -115,17 +125,17 @@ class commentUpdateProcessor extends modObjectUpdateProcessor {
             'index'      => date('Ym',$this->object->time),
             'date'       => date($this->modx->modxtalks->config['dateFormat'],$this->object->time),
             'funny_date' => $this->modx->modxtalks->date_format(array('date' => $this->object->time)),
-            'link'       => '#comment-'.$this->object->idx,
+            'link'       => $this->modx->modxtalks->getLink($this->object->idx),
             'id'         => (int) $this->object->id,
             'idx'        => (int) $this->object->idx,
             'userId'     => md5($this->object->userId.$email),
             'user'       => $this->modx->modxtalks->userButtons($this->object->userId,$this->object->time),
             'timeago'    => date('c',$this->object->time),
             'timeMarker' => '',
-            'funny_edit_date' => '',
-            'edit_name'  => '',
-            'user_info'  => '',
-            'like_block' => '',
+            'funny_edit_date' => $this->modx->lexicon('modxtalks.date_now'),
+            'edit_name'       => $this->modx->lexicon('modxtalks.edited_by',array('name' => $edit_name)),
+            'user_info'       => '',
+            'like_block'      => '',
         );
         if ($this->modx->modxtalks->isModerator() === true) {
             $data['user_info'] = $this->modx->modxtalks->_parseTpl($this->modx->modxtalks->config['user_info'], array(
