@@ -12,7 +12,7 @@ set_time_limit(0);
 /* define package names */
 define('PKG_NAME','modxTalks');
 define('PKG_NAME_LOWER','modxtalks');
-define('PKG_VERSION','1.0.0');
+define('PKG_VERSION','1.0.1');
 define('PKG_RELEASE','beta');
 
 /* define build paths */
