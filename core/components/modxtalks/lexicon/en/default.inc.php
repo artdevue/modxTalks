@@ -332,3 +332,6 @@ $_lang['modxtalks.email_banned'] = 'Your Email address is banned. Если эт�
 $_lang['modxtalks.successfully_voted'] = 'Вы успешно проголосовали за комментарий.';
 $_lang['modxtalks.cant_vote'] = 'Авторизуйтесь на сайте, чтобы оставить свой голос.';
 $_lang['modxtalks.already_voted'] = 'Вы уже голосовали за этот комментарий.';
+$_lang['modxtalks.you_like'] = 'Do you like this comment';
+$_lang['modxtalks.i_like'] = 'Like';
+$_lang['modxtalks.not_like'] = 'Dislike';
