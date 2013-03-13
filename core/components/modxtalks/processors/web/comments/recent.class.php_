@@ -50,7 +50,7 @@ class getLatestCommentsListProcessor extends modObjectGetListProcessor {
                 'name'       => $comment['name'],
                 'avatar'     => $this->modx->modxtalks->getAvatar($comment['email']),
                 'date'       => date($date_format.' O',$comment['time']),
-                'funny_date' => $this->modx->modxtalks->date_format(array('date' => $comment['time'])),
+                'funny_date' => $this->modx->modxtalks->date_format($comment['time']),
                 'id'         => $comment['pid'],
                 'cid'        => $comment['cid'],
                 'idx'        => $comment['idx'],

@@ -86,7 +86,7 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor {
                 }
 
                 $c['avatar'] = $this->modx->modxtalks->getAvatar($c['useremail']);
-                $c['funny_date'] = $this->modx->modxtalks->date_format(array('date' => $c['time']));
+                $c['funny_date'] = $this->modx->modxtalks->date_format($c['time']);
                 $c['date'] = date('j-m-Y, G:i O', $c['time']);
                 // $c['datmon'] = strftime('%m-%d-%y %R', $c['time']);
 

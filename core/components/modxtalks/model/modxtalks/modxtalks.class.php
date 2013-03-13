@@ -633,7 +633,6 @@ class modxTalks {
         $guest_name = $this->modx->lexicon('modxtalks.guest');
         $quote_text = $this->modx->lexicon('modxtalks.quote');
         $del_by = $this->modx->lexicon('modxtalks.deleted_by');
-        
 
         $btn_like = '';
         $btn_unlike = '';
@@ -688,7 +687,7 @@ class modxTalks {
         foreach ($comments[0] as $comment) {
             $timeMarker = '';
             $date = date($this->config['dateFormat'].' O',$comment['time']);
-            $funny_date = $this->date_format(array('date' => $comment['time']));
+            $funny_date = $this->date_format($comment['time']);
             $index = date('Ym',$comment['time']);
 
             /**
@@ -710,8 +709,8 @@ class modxTalks {
              * If the post before this one has a different relative
              * time string to this one, output a 'time marker'.
              */
-            $relativeTimeComment = $this->relativeTime($comment['time']);
-            if ($relativeTime != $relativeTimeComment) {
+            $relativeTimeComment = $this->date_format($comment['time'], true);
+            if ($relativeTime !== $relativeTimeComment) {
                 $timeMarker = '<div class="mt_timeMarker" data-now="1">'.$relativeTimeComment.'</div>';
                 $relativeTime = $relativeTimeComment;
             }
@@ -726,7 +725,7 @@ class modxTalks {
                 $tmp = array(
                     'deleteUser'        => $users[$comment['deleteUserId']]['name'],
                     'delete_date'       => date($this->config['dateFormat'].' O',$comment['deleteTime']),
-                    'funny_delete_date' => $this->date_format(array('date' => $comment['deleteTime'])),
+                    'funny_delete_date' => $this->date_format($comment['deleteTime']),
                     'name'              => $name,
                     'index'             => $index,
                     'date'              => $date,
@@ -815,7 +814,7 @@ class modxTalks {
                  * If comment edited, get edit time and user
                  */
                 if ($comment['editTime'] && $comment['editUserId'] && !$comment['deleteTime']) {
-                    $tmp['funny_edit_date'] = $this->date_format(array('date' => $comment['editTime']));
+                    $tmp['funny_edit_date'] = $this->date_format($comment['editTime']);
                     $tmp['edit_name'] = $this->modx->lexicon('modxtalks.edited_by',array('name' => $users[$comment['editUserId']]['name']));
                     ;
                 }
@@ -1216,11 +1215,12 @@ class modxTalks {
      * Funny date
      *
      * @access public
-     * @param array $p['date'] - (int) UNIX timestamp
+     * @param integer $time UNIX timestamp
+     * @param boolean $group
      * @return string
      */
-    public function date_format($p) {
-        $seconds = abs(time() - $p['date']);
+    public function date_format($time, $group = true) {
+        $seconds = abs(time() - $time);
         $minutes = floor($seconds / 60);
         $hours = floor($minutes / 60);
         $days = floor($hours / 24);
@@ -1228,6 +1228,9 @@ class modxTalks {
         $years = floor($days / 365);
         $seconds = floor($seconds);
 
+        if ($group === true && $minutes < 60) {
+            return $this->modx->lexicon('modxtalks.date_hours_back_less');
+        }
         if ($seconds < 60) {
             return $this->decliner($seconds,$this->modx->lexicon('modxtalks.date_seconds_back', array('seconds' => $seconds)));
         }
@@ -1249,7 +1252,7 @@ class modxTalks {
         if ($days > 365) {
             return $this->decliner($years,$this->modx->lexicon('modxtalks.date_years_back', array('years' => $years)));
         }
-        return date($this->config['dateFormat'],$p['date']);
+        return date($this->config['dateFormat'], $time);
     }
 
 
@@ -1263,7 +1266,7 @@ class modxTalks {
      */
     public function decliner($count, $forms) {
         if (!is_array($forms)) {
-            $forms = explode(';',$forms);
+            $forms = explode(';', $forms);
         }
         $count = abs($count);
         if ($this->lang === 'ru') {
@@ -1318,73 +1321,6 @@ class modxTalks {
             return '';
         }
         return '';
-    }
-
-
-    /**
-     * Get a human-friendly string (eg. 1 hour ago) for
-     * how much time has passed since a given time.
-     *
-     * @access public
-     * @param integer $then UNIX timestamp of the time to work out
-     * how much time has passed since.
-     * @param boolean $precise Whether or not to return "x minutes/seconds",
-     * or just "a few minutes".
-     * @return string A human-friendly time string.
-     */
-    public function relativeTime($then, $precise = false) {
-        // If there is no $then, we can only assume that whatever it is never happened...
-        if (!$then) return $this->modx->lexicon('modxtalks.never');
-
-        // Work out how many seconds it has been since $then.
-        $ago = time() - $then;
-
-        // If $then happened less than 10 minutes ago (or is yet to happen,) say "date now".
-        if ($ago < 600) return $this->modx->lexicon('modxtalks.date_now');
-
-        // If this happened over a year ago, return "x years ago".
-        if ($ago >= ($period = 60 * 60 * 24 * 365.25)) {
-            $years = floor($ago / $period);
-            if ($years == 1) return $this->modx->lexicon('modxtalks.d_year_ago');
-            if ($years < 5) return $this->modx->lexicon('modxtalks.d_yearago',array('d' => $years));
-            return $this->modx->lexicon('modxtalks.d_year_ago',array('d' => $years));
-        }
-
-        // If this happened over two months ago, return "x months ago".
-        elseif ($ago >= ($period = 60 * 60 * 24 * (365.25 / 12)) * 2) {
-            $months = floor($ago / $period);
-            if ($months == 1) return $this->modx->lexicon('modxtalks.d_month_ago');
-            if ($months < 5) return $this->modx->lexicon('modxtalks.d_monthsago',array('d' => $months));
-            return $this->modx->lexicon('modxtalks.d_month_ago',array('d' => $months));
-        }
-
-        // If this happend over a week ago, return "x weeks ago".
-        elseif ($ago >= ($period = 60 * 60 * 24 * 7)) {
-            $weeks = floor($ago / $period);
-            if ($weeks == 1) return $this->modx->lexicon('modxtalks.d_week_ago');
-            if ($weeks < 5) return $this->modx->lexicon('modxtalks.d_weeksago',array('d' => $weeks));
-            return $this->modx->lexicon('modxtalks.d_weeks_ago',array('d' => $weeks));
-        }
-
-        // If this happened over a day ago, return "x days ago".
-        elseif ($ago >= ($period = 60 * 60 * 24)) {
-            $days = floor($ago / $period);
-            if ($days == 1) return $this->modx->lexicon('modxtalks.d_day_ago');
-            if ($days <= 4) return $this->modx->lexicon('modxtalks.d_daysago',array('d' => $days));
-            return $this->modx->lexicon('modxtalks.d_days_ago',array('d' => $days));
-        }
-
-        // If this happened over an hour ago, return "x hours ago".
-        elseif ($ago >= ($period = 60 * 60)) {
-            $hours = floor($ago / $period);
-            if($hours > 9) return $this->modx->lexicon('modxtalks.d_hours_today');
-            if($hours == 1) return $this->modx->lexicon('modxtalks.d_hour_ago');
-            if($hours < 5) return $this->modx->lexicon('modxtalks.d_hoursago',array('d' => $hours));
-            return $this->modx->lexicon('modxtalks.d_hours_ago',array('d' => $hours));
-        }
-
-        // Otherwise, just return "date now".
-        return $this->modx->lexicon('modxtalks.date_now');
     }
 
 

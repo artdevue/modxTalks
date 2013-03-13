@@ -27,11 +27,11 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
             $this->failure($this->modx->lexicon('modxtalks.bad_context'));
             return false;
         }
-        
+
         if ($slug = (string) $this->getProperty('slug')) {
             $this->modx->modxtalks->config['slug'] = $slug;
         }
-        
+
         return parent::initialize();
     }
 
@@ -142,9 +142,9 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
                 }
             }
         }
-        
 
-        
+
+
         $restore = $this->modx->lexicon('modxtalks.restore');
         $idx = (int) $this->object->idx;
         $data = array(
@@ -155,7 +155,7 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
             'name'              => $name,
             'index'             => date('Ym',$this->object->time),
             'date'              => date($this->modx->modxtalks->config['dateFormat'].' O',$this->object->time),
-            'funny_date'        => $this->modx->modxtalks->date_format(array('date' => $this->object->time)),
+            'funny_date'        => $this->modx->modxtalks->date_format($this->object->time),
             'id'                => (int) $this->object->id,
             'idx'               => (int) $idx,
             'userId'            => md5($this->object->userId.$email),

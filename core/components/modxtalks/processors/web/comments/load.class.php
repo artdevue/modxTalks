@@ -151,7 +151,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
         }
 
         foreach ($data['results'] as $k => $comment) {
-            $funny_date = $this->modx->modxtalks->date_format(array('date' => $comment['time']));
+            $funny_date = $this->modx->modxtalks->date_format($comment['time']);
             $index = date('Ym',$comment['time']);
             $date = date($date_format.' O',$comment['time']);
             $timeMarker = '';
@@ -166,7 +166,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
 
             $userId = md5($comment['userId'].$email);
 
-            $relativeTimeComment = $this->modx->modxtalks->relativeTime($comment['time']);
+            $relativeTimeComment = $this->modx->modxtalks->date_format($comment['time'], true);
             if ($relativeTime != $relativeTimeComment) {
                 $timeMarker = '<div class="mt_timeMarker" data-now="1">'.$relativeTimeComment.'</div>';
                 $relativeTime = $relativeTimeComment;
@@ -182,7 +182,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
                 $tmp = array(
                     'deleteUser'        => $users[$comment['deleteUserId']]['name'],
                     'delete_date'       => date($date_format.' O',$comment['deleteTime']),
-                    'funny_delete_date' => $this->modx->modxtalks->date_format(array('date' => $comment['deleteTime'])),
+                    'funny_delete_date' => $this->modx->modxtalks->date_format($comment['deleteTime']),
                     'name'              => $name,
                     'index'             => $index,
                     'date'              => $date,
@@ -270,7 +270,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
                     $hideAvatarEmail = $email;
                 }
                 if ($comment['editTime'] && $comment['editUserId'] && !$comment['deleteTime']) {
-                    $tmp['funny_edit_date'] = $this->modx->modxtalks->date_format(array('date' => $comment['editTime']));
+                    $tmp['funny_edit_date'] = $this->modx->modxtalks->date_format($comment['editTime']);
                     $tmp['edit_name'] = $this->modx->lexicon('modxtalks.edited_by',array('name' => $users[$comment['editUserId']]['name']));
                     ;
                 }
