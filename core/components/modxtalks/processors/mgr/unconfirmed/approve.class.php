@@ -24,13 +24,13 @@ class modxTalksTempPostApproveProcessor extends modObjectRemoveProcessor {
             'unconfirmed' => $cProperties['unconfirmed'] > 0 ? --$cProperties['unconfirmed'] : 0
         ),'comments',false);
 
-        $q = $this->modx->newQuery('modxTalksPost',array('conversationId' => $this->conversationId));
+        $q = $this->modx->newQuery('modxTalksPost', array('conversationId' => $this->conversationId));
         $q->sortby('idx','DESC');
-        if (!$lastComment = $this->modx->getObject('modxTalksPost',$q)) {
-            return $this->modx->lexicon('modxtalks.error');
+        $idx = 0;
+        if ($lastComment = $this->modx->getObject('modxTalksPost',$q)) {
+            $idx = $lastComment->get('idx');
         }
 
-        $idx = $lastComment->get('idx');
         $this->comment = $this->modx->newObject('modxTalksPost');
         $time = time();
         $commentParams = array(
