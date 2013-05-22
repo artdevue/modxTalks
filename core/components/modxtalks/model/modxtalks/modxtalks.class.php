@@ -385,8 +385,8 @@ class modxTalks {
         "webPath": "'.MODX_BASE_URL.'",
         "token": "",
         "lang": "'.$this->lang.'",
-        "revers": '.var_export($this->revers,true).',
-        "debug": '.var_export($this->config['debug'],true).',
+        "revers": '.var_export($this->revers, true).',
+        "debug": '.var_export($this->config['debug'], true).',
         "commentTpl": "ejs/'.$this->config['commentTpl'].'.ejs'.'",
         "deletedCommentTpl": "ejs/'.$this->config['deletedCommentTpl'].'.ejs'.'",
         "scrubberOffsetTop": '.$this->config['scrubberOffsetTop'].',
@@ -875,7 +875,9 @@ class modxTalks {
             return $path;
         }
 
-        return $_REQUEST[$this->modx->getOption('request_param_alias')].'&comment='.$link;
+        $link = isset($_REQUEST[$this->modx->getOption('request_param_alias')]) ? $_REQUEST[$this->modx->getOption('request_param_alias')].'&comment='.$link : '?comment='.$link;
+
+        return $link;
     }
 
     /**

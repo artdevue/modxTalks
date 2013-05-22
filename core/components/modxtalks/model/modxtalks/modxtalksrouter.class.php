@@ -3,9 +3,9 @@
  * This file is part of modxTalks, a simple commenting component for MODx Revolution.
  *
  * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
- * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <npobolka@gmail.com>
- * @license http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
- * @package modxtalks
+ * @author    Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <npobolka@gmail.com>
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
+ * @package   modxtalks
  *
  */
 
@@ -14,12 +14,15 @@ class modxTalksRouter {
     public $modx;
     /** @var array $config */
     public $config = array();
+    /** @var array $config */
+    public $aliasMap;
 
-    function __construct(modX &$modx,array $config = array()) {
+    function __construct(modX &$modx, array $config = array()) {
         $this->modx =& $modx;
+        $this->aliasMap =& $this->modx->aliasMap;
         $this->config = array_merge(array(
-
-        ),$config);
+            'some_option' => true
+        ), $config);
     }
 
     /**
@@ -31,12 +34,14 @@ class modxTalksRouter {
         /**
          * If disabled caching return False
          */
-        if (!$this->modx->getCacheManager()) return false;
+        if (!$this->modx->getCacheManager()) {
+            return false;
+        }
         /**
          * If a map is present in the cache, then just return it
          */
-        if ($map = $this->modx->cacheManager->get('conversations_map', array(
-            xPDO::OPT_CACHE_KEY => 'modxtalks'))) {
+        $map = $this->modx->cacheManager->get('conversations_map', array(xPDO::OPT_CACHE_KEY => 'modxtalks'));
+        if ($map) {
             return $map;
         }
         /**
@@ -44,7 +49,11 @@ class modxTalksRouter {
          */
         $map = array();
         $c = $this->modx->newQuery('modxTalksConversation');
-        $c->select(array('id','rid','conversation'));
+        $c->select(array(
+            'id',
+            'rid',
+            'conversation'
+        ));
         if ($c->prepare() && $c->stmt->execute()) {
             $conversations = $c->stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($conversations as $c) {
@@ -62,11 +71,14 @@ class modxTalksRouter {
      * Check resource have conversations
      *
      * @param integer $id Resource ID
+     *
      * @access private
      * @return boolean True if resource have a conversation
      */
     private function _hasConversations($id) {
-        if (!intval($id)) return false;
+        if (!intval($id)) {
+            return false;
+        }
         /**
          * Checking through the map so the cache
          */
@@ -74,13 +86,14 @@ class modxTalksRouter {
             /**
              * If the resource contains at least one topic return true
              */
-            if (array_key_exists($id, $map)) return true;
+            if (array_key_exists($id, $map)) {
+                return true;
+            }
             return false;
-        }
-        /**
-         * If the conversationsMap () returned false (with the cache enabled), on-base
-         */
-        elseif ($this->modx->getCount('modxTalksConversation',array('rid' => $id))) {
+        } elseif ($this->modx->getCount('modxTalksConversation', array('rid' => $id))) {
+            /**
+             * If the conversationsMap () returned false (with the cache enabled), on-base
+             */
             return true;
         }
 
@@ -89,16 +102,16 @@ class modxTalksRouter {
 
     /**
      * Route the URL request based on the container IDs
+     *
      * @return boolean
      */
     public function route() {
-        $serveruri = $this->modx->request->parameters['REQUEST'];
-        $qmt = $serveruri[$this->modx->getOption('request_param_alias')];
-        $aliasMap = $this->modx->aliasMap;
+        $serverUri = $this->modx->request->parameters['REQUEST'];
+        $qmt = $serverUri[$this->modx->getOption('request_param_alias')];
 
         // check to see there is a link rss comments
-        if (preg_match("@comments-(.*?).rss@si",$qmt,$data)) {
-            if(in_array($data[1],$aliasMap) && $data[0] == $qmt && $this->_hasConversations($data[1])) {
+        if (preg_match("@comments-(.*?).rss@si", $qmt, $data)) {
+            if (in_array($data[1], $this->aliasMap) && $data[0] == $qmt && $this->_hasConversations($data[1])) {
                 $_REQUEST['comment'] = $data[1];
                 $_REQUEST['rss'] = 'true';
                 $this->modx->sendForward($data[1]);
@@ -106,10 +119,13 @@ class modxTalksRouter {
         }
 
         // check to see there is a link to a comment
-        if (!preg_match("@/comment-(.*?)-mt@si",$qmt,$data))
+        if (!preg_match("@/?comment-(.*?)-mt@si", $qmt, $data)) {
             return true;
+        }
 
-        if ($id = $aliasMap[str_replace($data[0],'',$qmt)]) {
+        $alias = str_replace($data[0], '', $qmt);
+        $id = $alias === '/' ? $this->modx->getOption('site_start', 1) : $this->aliasMap[$alias];
+        if ($id) {
             if (isset($data[1]) && $this->_hasConversations($id)) {
                 if ($data[1] == 'last' || intval($data[1]) || date('Y-m', strtotime($data[1]))) {
                     $_REQUEST['comment'] = $data[1];

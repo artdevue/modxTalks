@@ -5,7 +5,7 @@
  */
 switch ($modx->event->name) {
     case 'OnSiteRefresh':
-        $assetsUrl = $modx->getOption('modxtalks.assets_url',$config,$modx->getOption('assets_url').'components/modxtalks/');
+        $assetsUrl = $modx->getOption('modxtalks.assets_url',array(),$modx->getOption('assets_url').'components/modxtalks/');
         $ejsTemplatesPath = $_SERVER['DOCUMENT_ROOT'].$assetsUrl.'ejs/';
 
         if ($modx->cacheManager->deleteTree($ejsTemplatesPath, array(
@@ -19,13 +19,13 @@ switch ($modx->event->name) {
         if ($modx->cacheManager->refresh(array('/modxtalks'=> array()))) {
             $modx->log(modX::LOG_LEVEL_INFO,'modxTalks clear cache. '.$modx->lexicon('refresh_success'));
         }
-    break;
+        break;
     case 'OnUserFormSave':
         $user =& $modx->event->params['user'];
         if (is_object($user)) {
             $modx->cacheManager->delete($user->id, array(xPDO::OPT_CACHE_KEY => 'modxtalks/users'));
         }
-    break;
+        break;
     case 'OnManagerPageInit':
         $mtAccets = $modx->getOption('modxtalks.assets_url',null,$modx->getOption('assets_url').'components/modxtalks/');
         $modx->regClientStartupScript($mtAccets.'js/mgr/comments/mrg.js');

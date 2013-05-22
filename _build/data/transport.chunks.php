@@ -31,15 +31,8 @@ $chunks[1]= $modx->newObject('modChunk');
 $chunks[1]->fromArray(array(
     'id' => 1,
     'name' => 'comment_auth_tpl',
-    'description' => 'This tpl for displaying information not authorized users..',
+    'description' => 'This tpl for displaying information not authorized users.',
     'snippet' => file_get_contents($sources['chunks'].'comment_auth_tpl.chunk.tpl'),
-));
-$chunks[2]= $modx->newObject('modChunk');
-$chunks[2]->fromArray(array(
-    'id' => 2,
-    'name' => 'chankModxTalksStreak',
-    'description' => 'Chunk The layer serves to bring the necessary html code or your data between the context and by the comments.',
-    'snippet' => file_get_contents($sources['chunks'].'chankmodxtalksstreak.chunk.tpl'),
 ));
 
 return $chunks;
