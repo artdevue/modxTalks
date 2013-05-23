@@ -133,6 +133,8 @@ class modxTalks {
             // Scrubber position
             'scrubberTop' => (boolean) $this->modx->getOption('modxtalks.scrubberTop',null,false),
             'scrubberOffsetTop' => (int) $this->modx->getOption('modxtalks.scrubberOffsetTop',null,0),
+
+            'fullDeleteComment' => (boolean) $this->modx->getOption('modxtalks.fullDeleteComment', null, false),
         );
 
         // if videoSize not array
@@ -412,6 +414,7 @@ class modxTalks {
         "conversationUpdateIntervalLimit": 512,
         "mentions": true,
         "time": "'.time().'",
+        "fullDeleteComment": '.var_export($this->config['fullDeleteComment'], true).',
         "mtconversation": {
             "conversationId": "'.$this->config['conversation'].'",
             "slug": "'.$this->config['slug'].'",
@@ -1914,6 +1917,40 @@ class modxTalks {
     }
 
     /**
+     * Delete comment cache
+     *
+     * @access public
+     * @param object $comment Comment object
+     * @return true
+     */
+    public function deleteCommentCache(modxTalksPost & $comment) {
+        $cache = $this->modx->getCacheManager();
+        if ($this->mtCache && $cache) {
+            if (!$this->modx->cacheManager->delete($comment->idx, array(xPDO::OPT_CACHE_KEY => 'modxtalks/conversation/'.$comment->conversationId))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Delete all comments cache
+     *
+     * @access public
+     * @param int $id Conversation ID
+     * @return true
+     */
+    public function deleteAllCommentsCache($id = 0) {
+        $cache = $this->modx->getCacheManager();
+        if ($this->mtCache && $cache) {
+            if ($this->modx->cacheManager->refresh(array('modxtalks/conversation/'.$id => array()))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Get user or users
      *
      * @access public
@@ -2223,10 +2260,10 @@ class modxTalks {
     public function refreshCommentCache(modxTalksPost & $comment, modxTalksConversation & $conversation) {
         if ($this->mtCache === true) {
             if (!$this->cacheComment($comment)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/create] Error cache the comment with ID '.$comment->id);
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks::refreshCommentCache] Error cache the comment with ID '.$comment->id);
             }
             if (!$this->cacheConversation($conversation)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/create] Error cache the conversation with ID '.$conversation->id);
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks::refreshCommentCache] Error cache the conversation with ID '.$conversation->id);
             }
         }
         return true;

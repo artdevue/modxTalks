@@ -159,4 +159,52 @@ class modxTalksConversation extends xPDOSimpleObject {
         }
         return $changed;
     }
+
+    /**
+     * Recalculate comments indexes
+     *
+     * @return boolean If success return True
+     **/
+    public function recalculateIndexes($idx = 0) {
+        $success = false;
+        $q = $this->xpdo->newQuery('modxTalksPost');
+        $q->select('id');
+        if ($idx = intval($idx)) {
+            $q->andCondition(array(
+                'idx:>' => $idx,
+                'conversationId' => $this->id
+            ));
+        }
+
+        $q->sortby('idx', 'ASC');
+
+        $q->prepare(); $q->stmt->execute();
+        $result = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$result) return $success;
+
+        $indexes = array();
+        if (!$idx) {
+            $idx = 1;
+        }
+        foreach ($result as $r) {
+            $indexes[$r['id']] = $idx;
+            $idx += 1;
+        }
+
+        $ids = implode(',', array_keys($indexes));
+        $table = $this->xpdo->getTableName('modxTalksPost');
+        $sql = "UPDATE {$table} SET idx = CASE id ";
+        foreach ($indexes as $id => $new_idx) {
+            $sql .= sprintf("WHEN %d THEN %d ", $id, $new_idx);
+        }
+        $sql .= "END WHERE id IN ($ids)";
+
+        $sql = $this->xpdo->query($sql);
+        if ($sql->execute()) {
+            $success = true;
+        }
+
+        return $success;
+    }
 }

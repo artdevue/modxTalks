@@ -11,7 +11,7 @@
 
 class modxTalksPost extends xPDOSimpleObject {
     public function __construct(& $xpdo) {
-        parent :: __construct($xpdo);
+        parent::__construct($xpdo);
     }
 
     /**
@@ -20,7 +20,7 @@ class modxTalksPost extends xPDOSimpleObject {
      * @return object
      **/
     public function getConversation() {
-        return $this->xpdo->getObject('modxTalksConversation',$this->conversationId);
+        return $this->xpdo->getObject('modxTalksConversation', $this->conversationId);
     }
 
     /**
@@ -29,8 +29,8 @@ class modxTalksPost extends xPDOSimpleObject {
      * @return object
      **/
     public function getResourceTitle(modxTalksConversation & $conversation, $type = 'pagetitle') {
-        if (!($conversation instanceof modxTalksConversation)) return false;
-        $resource = $this->xpdo->getObject('modResource',$conversation->rid);
+        if (!$conversation instanceof modxTalksConversation) return false;
+        $resource = $this->xpdo->getObject('modResource', $conversation->rid);
         $title = $type === 'longtitle' ? $type : 'pagetitle';
         return $resource->{$title};
     }
@@ -141,7 +141,7 @@ class modxTalksPost extends xPDOSimpleObject {
     public function getProperties($namespace = 'value') {
         $properties = $this->get('properties');
         $properties = !empty($properties) ? $properties : array();
-        return array_key_exists($namespace,$properties) ? $properties[$namespace] : array();
+        return array_key_exists($namespace, $properties) ? $properties[$namespace] : array();
     }
 
     /**
@@ -154,9 +154,9 @@ class modxTalksPost extends xPDOSimpleObject {
     public function setProperty($key, $value, $namespace = 'value') {
         $properties = $this->get('properties');
         $properties = !empty($properties) ? $properties : array();
-        if (!array_key_exists($namespace,$properties)) $properties[$namespace] = array();
+        if (!array_key_exists($namespace, $properties)) $properties[$namespace] = array();
         $properties[$namespace][$key] = $value;
-        return $this->set('properties',$properties);
+        return $this->set('properties', $properties);
     }
 
     /**
@@ -169,9 +169,9 @@ class modxTalksPost extends xPDOSimpleObject {
     public function setProperties(array $newProperties, $namespace = 'value', $merge = true) {
         $properties = $this->get('properties');
         $properties = !empty($properties) ? $properties : array();
-        if (!array_key_exists($namespace,$properties)) $properties[$namespace] = array();
-        $properties[$namespace] = $merge ? array_merge($properties[$namespace],$newProperties) : $newProperties;
-        return $this->set('properties',$properties);
+        if (!array_key_exists($namespace, $properties)) $properties[$namespace] = array();
+        $properties[$namespace] = $merge ? array_merge($properties[$namespace], $newProperties) : $newProperties;
+        return $this->set('properties', $properties);
     }
 
     /**
@@ -184,10 +184,10 @@ class modxTalksPost extends xPDOSimpleObject {
         $total = 'votes';
         $votes = $this->get('votes');
         $votes = !empty($votes) ? $votes : array($users => array(), $total => 0);
-        if (!array_key_exists($users,$votes)) $votes[$users] = array();
+        if (!array_key_exists($users, $votes)) $votes[$users] = array();
         $votes[$users][] = (int) $userId;
         $votes[$total] = count($votes[$users]);
-        return $this->set('votes',$votes);
+        return $this->set('votes', $votes);
     }
 
     /**
@@ -200,13 +200,13 @@ class modxTalksPost extends xPDOSimpleObject {
         $total = 'votes';
         $votes = $this->get('votes');
         $votes = !empty($votes) ? $votes : array($users => array(), $total => 0);
-        if (!array_key_exists($users,$votes)) $votes[$users] = array();
+        if (!array_key_exists($users, $votes)) $votes[$users] = array();
         if (in_array($userId, $votes[$users])) {
             $key = array_search($userId, $votes[$users]);
             unset($votes[$users][$key]);
         }
         $votes[$total] = count($votes[$users]);
-        return $this->set('votes',$votes);
+        return $this->set('votes', $votes);
     }
 
     /**
@@ -218,7 +218,7 @@ class modxTalksPost extends xPDOSimpleObject {
         $total = 'votes';
         $votes = $this->get('votes');
         $votes = !empty($votes) ? $votes : array($users => array(), $total => 0);
-        if (!array_key_exists($users,$votes)) $votes[$users] = array();
+        if (!array_key_exists($users, $votes)) $votes[$users] = array();
         return $votes;
     }
 

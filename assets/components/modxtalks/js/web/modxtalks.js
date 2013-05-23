@@ -1085,13 +1085,12 @@ var MTConversation = {
 
     // Delete a post.
     deletePost: function (postId) {
-        //jQuery.hideToolTip();
         // Make the ajax request.
         jQuery.MTAjax({
             headers: {
                 Action: 'delete'
             },
-            type: "post",
+            type: 'POST',
             data: {
                 id: postId
             },
@@ -1102,8 +1101,14 @@ var MTConversation = {
                 hideLoadingOverlay("comment-" + postId, true);
             },
             success: function (data) {
+                if (MT.fullDeleteComment === true) {
+                    MTMessages.showMessage(data.message);
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 500)
+                    return false;
+                }
                 if (data.message === false) return;
-                //jQuery("#comment-"+postId).replaceWith(data.view);
                 data.object.link_restore = MTConversation.slug.replace("$$$", 'mt_restore-' + postId);
                 data.object.timeMarker = ''
                 jQuery("#comment-" + postId).replaceWith(new EJS({

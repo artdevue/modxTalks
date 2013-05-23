@@ -8,6 +8,7 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
     public $languageTopics = array('modxtalks:default');
     public $objectType = 'modxtalks.post';
     public $context = '';
+    protected $theme;
     protected $defaultProprties = array(
         'total' => 0,
         'deleted' => 0,
@@ -23,7 +24,7 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
             $this->failure($this->modx->lexicon('modxtalks.empty_context'));
             return false;
         }
-        elseif (!$this->modx->getCount('modContext',$this->context)) {
+        elseif (!$this->modx->getCount('modContext', $this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.bad_context'));
             return false;
         }
@@ -36,6 +37,14 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
     }
 
     public function beforeSet() {
+        $this->theme = $this->modx->getObject('modxTalksConversation', array(
+            'id' => $this->object->conversationId
+        ));
+
+        if (!$this->theme) {
+            return false;
+        }
+
         if ($this->object->deleteTime > 0 || $this->object->deleteUserId) {
             $this->failure($this->modx->lexicon('modxtalks.already_deleted'));
             return false;
@@ -83,14 +92,14 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
             $this->failure($this->modx->lexicon('modxtalks.delete_error'));
             return false;
         }
-        if ($this->theme = $this->modx->getObject('modxTalksConversation',array('id' => $this->object->conversationId))) {
-            if (!$this->theme->getProperties('comments')) {
-                $this->theme->setProperties($this->defaultProprties,'comments',false);
-            }
-            $deleted = $this->theme->getProperty('deleted','comments',0);
-            $this->theme->setProperty('deleted',++$deleted,'comments');
-            $this->theme->save();
+
+        if (!$this->theme->getProperties('comments')) {
+            $this->theme->setProperties($this->defaultProprties, 'comments', false);
         }
+        $deleted = $this->theme->getProperty('deleted', 'comments',0);
+        $this->theme->setProperty('deleted', ++$deleted, 'comments');
+        $this->theme->save();
+
         return parent::beforeSave();
     }
 
@@ -103,10 +112,10 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
     public function afterSave() {
         if ($this->modx->modxtalks->mtCache === true) {
             if (!$this->modx->modxtalks->cacheComment($this->object)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/create] Error cache the comment with ID '.$this->object->id);
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/remove] Error cache the comment with ID '.$this->object->id);
             }
             if (!$this->modx->modxtalks->cacheConversation($this->theme)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/create] Error cache the conversation with ID '.$this->theme->id);
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/remove] Error cache the conversation with ID '.$this->theme->id);
             }
         }
         return parent::afterSave();
@@ -143,8 +152,6 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
             }
         }
 
-
-
         $restore = $this->modx->lexicon('modxtalks.restore');
         $idx = (int) $this->object->idx;
         $data = array(
@@ -164,6 +171,76 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
             'link'              => $this->modx->modxtalks->getLink($idx),
         );
         return $data;
+    }
+
+    public function process() {
+        /* Run the beforeSet method before setting the fields, and allow stoppage */
+        $canSave = $this->beforeSet();
+        if ($canSave !== true) {
+            return $this->failure($canSave);
+        }
+
+        if ($this->modx->modxtalks->config['fullDeleteComment'] === true) {
+            if (!$this->theme->getProperties('comments')) {
+                $this->theme->setProperties($this->defaultProprties, 'comments', false);
+            }
+
+            $total = $this->theme->getProperty('total', 'comments', 0);
+            $this->theme->setProperty('total', ($total - 1), 'comments');
+            $this->theme->save();
+
+            if (!$this->modx->modxtalks->cacheConversation($this->theme)) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/remove] Error cache the conversation with ID '.$this->theme->id);
+            }
+
+            $idx = $this->object->idx;
+
+            if (!$this->object->remove()) {
+                return $this->failure('Error delete the post');
+            }
+
+            $this->modx->modxtalks->deleteAllCommentsCache($this->theme->id);
+
+            $recalculated = $this->theme->recalculateIndexes($idx);
+            if ($recalculated !== true) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error recalculate comments indexes '.$this->theme->id);
+            }
+
+            return $this->success($this->modx->lexicon('modxtalks.successfully_deleted'));
+        }
+
+        $this->object->fromArray($this->getProperties());
+
+        /* Run the beforeSave method and allow stoppage */
+        $canSave = $this->beforeSave();
+        if ($canSave !== true) {
+            return $this->failure($canSave);
+        }
+
+        /* run object validation */
+        if (!$this->object->validate()) {
+            /** @var modValidator $validator */
+            $validator = $this->object->getValidator();
+            if ($validator->hasMessages()) {
+                foreach ($validator->getMessages() as $message) {
+                    $this->addFieldError($message['field'],$this->modx->lexicon($message['message']));
+                }
+            }
+        }
+
+        /* run the before save event and allow stoppage */
+        $preventSave = $this->fireBeforeSaveEvent();
+        if (!empty($preventSave)) {
+            return $this->failure($preventSave);
+        }
+
+        if ($this->saveObject() == false) {
+            return $this->failure($this->modx->lexicon($this->objectType.'_err_save'));
+        }
+        $this->afterSave();
+        $this->fireAfterSaveEvent();
+        $this->logManagerAction();
+        return $this->cleanup();
     }
 
 }

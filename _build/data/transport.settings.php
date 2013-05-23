@@ -228,5 +228,13 @@ $settings['modxtalks.add_timeout']->fromArray(array(
     'namespace' => 'modxtalks',
     'area' => 'settings',
 ),'',true,true);
+$settings['modxtalks.fullDeleteComment']= $modx->newObject('modSystemSetting');
+$settings['modxtalks.fullDeleteComment']->fromArray(array(
+    'key' => 'modxtalks.fullDeleteComment',
+    'value' => false,
+    'xtype' => 'combo-boolean',
+    'namespace' => 'modxtalks',
+    'area' => 'settings',
+),'',true,true);
 
 return $settings;

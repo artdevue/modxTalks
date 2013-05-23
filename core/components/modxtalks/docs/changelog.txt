@@ -1,5 +1,12 @@
 Changelog file for modxTalks component.
 
+modxTalks 1.0.2 beta
+======================================
+- New. Full remove comment from database with recalculate other comments indexes
+- Fixed. Approve comment if conversation has no comments
+- Fixed. Comment link if resource has no ".html" suffix
+- Other small fixes
+
 modxTalks 1.0.0
 ======================================
 - [FS#6] New. Displaying Comments reverse, new top, if select NO, the new comments are below.
