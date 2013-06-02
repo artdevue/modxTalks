@@ -45,7 +45,7 @@ switch ($modx->event->name) {
         $routermt->route();
         break;
     case 'OnWebPagePrerender':
-        if($modx->mt_mtCount === true) {
+        if(isset($modx->mt_mtCount)&&$modx->mt_mtCount === true){
             $corePath = $modx->getOption('modxtalks.core_path',null,$modx->getOption('core_path').'components/modxtalks/');
             require_once $corePath.'model/modxtalks/modxtalkscount.class.php';
             $counts = new modxTalksCount($modx);
