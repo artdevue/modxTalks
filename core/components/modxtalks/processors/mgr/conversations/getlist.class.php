@@ -31,10 +31,10 @@ class getConversationsListProcessor extends modObjectGetListProcessor {
             if (!empty($objectArray) && is_array($objectArray)) {
                 unset($objectArray['properties']);
                 $objectArray['link'] = 0;
-                if ($this->modx->getCount('modResource',$id)) {
+                if ($this->modx->getCount('modResource', $id)) {
                     $objectArray['link'] = $this->modx->makeUrl($id);
                 }
-                $list[] = array_merge($objectArray,$properties);
+                $list[] = array_merge($objectArray, $properties);
                 $this->currentIndex++;
             }
         }
