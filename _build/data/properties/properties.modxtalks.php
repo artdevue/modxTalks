@@ -3,5 +3,6 @@
  * @package modxtalks
  * @subpackage build
  */
-$properties = array();
-return $properties;
+return array(
+
+);

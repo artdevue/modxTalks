@@ -3,30 +3,29 @@
  * @package modxtalks
  * @subpackage build
  */
-$properties = array(
+return array(
     array(
-        'name' => 'commentLatestTpl',
-        'desc' => 'modxtalks.prop_commentLatestTpl_desc',
-        'type' => 'textfield',
+        'name'    => 'commentLatestTpl',
+        'desc'    => 'modxtalks.prop_commentLatestTpl_desc',
+        'type'    => 'textfield',
         'options' => '',
-        'value' => 'comment_latest',
+        'value'   => 'comment_latest',
         'lexicon' => 'modxtalks:properties',
     ),
     array(
-        'name' => 'commentsLatestOutTpl',
-        'desc' => 'modxtalks.prop_commentsLatestOutTpl_desc',
-        'type' => 'textfield',
+        'name'    => 'commentsLatestOutTpl',
+        'desc'    => 'modxtalks.prop_commentsLatestOutTpl_desc',
+        'type'    => 'textfield',
         'options' => '',
-        'value' => 'comments_latest_out',
+        'value'   => 'comments_latest_out',
         'lexicon' => 'modxtalks:properties',
     ),
     array(
-        'name' => 'commentsLatestLimit',
-        'desc' => 'modxtalks.prop_commentsLatestLimit_desc',
-        'type' => 'numberfield',
+        'name'    => 'commentsLatestLimit',
+        'desc'    => 'modxtalks.prop_commentsLatestLimit_desc',
+        'type'    => 'numberfield',
         'options' => '',
-        'value' => '20',
+        'value'   => '20',
         'lexicon' => 'modxtalks:properties',
-    ),        
+    ),
 );
-return $properties;

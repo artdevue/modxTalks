@@ -2,23 +2,33 @@
 /**
  * Build the setup options form.
  *
- * @package doodles
+ * @package modxtalks
  * @subpackage build
  */
 /* set some default values */
 $values = array(
-    'emailsFrom' => 'my@emailhere.com',
+    'emailsFrom'    => 'my@emailhere.com',
     'emailsReplyTo' => 'my@emailhere.com',
 );
 /* get values based on mode */
 switch ($options[xPDOTransport::PACKAGE_ACTION]) {
-    case xPDOTransport::ACTION_INSTALL:    
-        $setting = $modx->getObject('modSystemSetting',array('key' => 'modxtalks.emailsFrom'));
-        if ($setting != null) { $values['emailsFrom'] = $setting->get('value'); }
+    case xPDOTransport::ACTION_INSTALL:
+        $setting = $modx->getObject('modSystemSetting', array(
+            'key' => 'modxtalks.emailsFrom'
+        ));
+
+        if ($setting != null) {
+            $values['emailsFrom'] = $setting->get('value');
+        }
         unset($setting);
 
-        $setting = $modx->getObject('modSystemSetting',array('key' => 'modxtalks.emailsReplyTo'));
-        if ($setting != null) { $values['emailsReplyTo'] = $setting->get('value'); }
+        $setting = $modx->getObject('modSystemSetting', array(
+            'key' => 'modxtalks.emailsReplyTo'
+        ));
+
+        if ($setting != null) {
+            $values['emailsReplyTo'] = $setting->get('value');
+        }
         unset($setting);
     break;
     case xPDOTransport::ACTION_UPGRADE: break;
