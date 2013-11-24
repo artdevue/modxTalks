@@ -1,11 +1,11 @@
 --------------------
-Extra: modxTalks
+Extra: MODXTalks
 --------------------
-Version: 0.0.1 beta
-Since: April 20th, 2010
-Author: Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <npobolka@gmail.com>
+Version: 1.0.3 beta
+Since: January, 2013
+Author: Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
 
-modxTalks flexible extension of voting for MODX Revolution. This component allows you to install a fully AJAX commenting system on any webpage.
+MODXTalsk flexible extension of voting for MODX Revolution. This component allows you to install a fully AJAX commenting system on any webpage.
 
 See the documentation here: http://modxtalks.artdevue.com/en/help.html
 The source code: http://github.com/artdevue/modxTalks
