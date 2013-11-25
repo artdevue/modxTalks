@@ -2,8 +2,8 @@
 /**
  * @package modxtalks
  */
-if (!isset($modx->modxtalks) || !($modx->modxtalks instanceof modxTalks)) {
-    $modx->modxtalks = $modx->getService('modxtalks','modxTalks',$modx->getOption('modxtalks.core_path',null,$modx->getOption('core_path').'components/modxtalks/').'model/modxtalks/',$scriptProperties);
+if (!isset($modx->modxtalks) || !$modx->modxtalks instanceof modxTalks) {
+    $modx->modxtalks = $modx->getService('modxtalks', 'modxTalks', $modx->getOption('modxtalks.core_path', null, $modx->getOption('core_path') . 'components/modxtalks/') . 'model/modxtalks/', $scriptProperties);
 }
 
 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
@@ -43,24 +43,26 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
     /**
      * Чистим контент комментаия от тегов MODX
      */
-    $tags = array('[[', ']]','<?','?>');
-    $rTags = array('[_[',']_]','&lt;?','?&gt;');
+    $tags = array('[[', ']]', '<?', '?>');
+    $rTags = array('[_[',']_]', '&lt;?', '?&gt;');
     foreach ($_POST as $key => &$value) {
         if (!is_array($_POST[$key]))
             $_POST[$key] = str_replace($tags, $rTags, $value);
     }
 
-    $path = $modx->getOption('modxtalks.core_path',null,$modx->getOption('core_path').'components/modxtalks/').'processors/';
+    $path = $modx->getOption('modxtalks.core_path', null, $modx->getOption('core_path') . 'components/modxtalks/') . 'processors/';
 
     $modx->modxtalks->ajaxInit();
-    $config = array_merge($_POST,$modx->modxtalks->config);
-    $response = $modx->runProcessor($action,$config,array('processors_path' => $path));
+    $config = array_merge($_POST, $modx->modxtalks->config);
+    $response = $modx->runProcessor($action, $config, array(
+        'processors_path' => $path
+    ));
 
     if ($response->isError()) {
         $output = json_encode($response->response['message']);
     }
     if (is_array($response->response)) {
-        $output = json_encode($response->response,true);
+        $output = json_encode($response->response, true);
     }
     else {
         $output = $response->response;

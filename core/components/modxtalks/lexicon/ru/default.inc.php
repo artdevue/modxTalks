@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * This file is part of modxTalks, a simple commenting component for MODx Revolution.
+ * This file is part of MODXTalks, a simple commenting component for MODx Revolution.
  *
  * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
  * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
@@ -10,13 +10,13 @@
  *
  */
 /**
- * Default Russian Lexicon Entries for modxTalks
+ * Default Russian Lexicon Entries for MODXTalks
  *
  * @package modxtalks
  * @subpackage lexicon
  */
 
-$_lang['modxtalks'] = 'modxTalks';
+$_lang['modxtalks'] = 'MODXTalks';
 $_lang['modxtalks.add'] = 'Добавить';
 $_lang['modxtalks.add_comment'] = 'Добавить комментарий';
 $_lang['modxtalks.atributes'] = 'Атрибуты';
@@ -55,7 +55,7 @@ $_lang['modxtalks.delet_conversation'] = 'Удалить тему.';
 $_lang['modxtalks.delet_conversation_desc'] = '<strong>ВНИМАНИЕ!</strong> При удалении темы, все комментарии будут удалены. <br /><strong>Удалить эту тему?</strong>';
 $_lang['modxtalks.desc'] = 'Управление MODXTalks.';
 $_lang['modxtalks.demo'] = 'Демо сайт';
-$_lang['modxtalks.demo_desc'] = 'Демо сайт комментариев modxTalks.';
+$_lang['modxtalks.demo_desc'] = 'Демо сайт комментариев MODXTalks.';
 $_lang['modxtalks.description'] = 'Описание';
 $_lang['modxtalks.desc_titl'] = 'Настройка комментариев для вашего ресурса. <br/>Вы можете изменить значения по-умолчанию, которые заданы в системных настройках комментариев, для каждого ресурса индивидуально. <br /><strong class="alert-mt">Примечание.</strong> Вы можете просмотреть документацию во <a class="link-mt helpmodxtalks" href="#settings:modxtalks-settings" onClick="javascript:modxTalks.loadHelpPaneMT(\'ru/help.html\');">всплывающем окне</a> или <a class="link-mt" target="_blank" href="http://modxtalks.artdevue.com/ru/help.html">открыть в новой вкладке</a>.';
 $_lang['modxtalks.deleteTime'] = 'Дата удаления';
@@ -77,7 +77,7 @@ $_lang['modxtalks.email_removes_confirm'] = 'Вы действительно х�
 $_lang['modxtalks.goto_web'] = 'Перейти на страницу сайта.';
 
 $_lang['modxtalks.help'] = 'Документация';
-$_lang['modxtalks.help_desc'] = 'Документация по modxTalks комментариям.';
+$_lang['modxtalks.help_desc'] = 'Документация по MODXTalks комментариям.';
 
 $_lang['modxtalks.items_empty_conversation_msg'] = '<h4>Нет записей, удовлетворяющих вашим критериям поиска</h4><p>Либо вы еще не создали ни одной Темы с комментариями.</p>';
 $_lang['modxtalks.items_empty_ip_msg'] = '<h4>Нет записей, удовлетворяющих вашим критериям поиска</h4><p>Либо вы еще не добавили ни одного IP-адреса.</p>';
@@ -96,12 +96,12 @@ $_lang['modxtalks.ip_removes_confirm'] = 'Вы действительно хот
 
 $_lang['modxtalks.loading'] = 'Загрузка';
 
-$_lang['modxtalks.management'] = 'modxTalks. Управление комментариями';
+$_lang['modxtalks.management'] = 'MODXTalks. Управление комментариями';
 $_lang['modxtalks.management_desc'] = 'Здесь вы можете просмотреть информацию по каждой отельной теме комментария. Просмотреть не потверждённые комментарии и при необходимости <a class="link-mt" href="#homeTab:not-confirmed">подтвердить</a> в соответствующем разделе. В <a class="link-mt" href="#homeTab:ip-blocking">IP блокировки</a> вы можете ввести IP адрес для запрета голосовать пользователю с таким IP адресом.';
 $_lang['modxtalks.management_unconfirmed_desc'] = '<strong>Неподтвержденные комментарии.</strong> Вы можете управлять непотверждёнными комментариями, потвердить или удалить комментарий.<br />После потверждения комментарий сразу появиться на вашем веб ресурсе, а пользователь, отправивший комментарий, получит уведомление о добавлении на веб ресурс.';
 $_lang['modxtalks.moderators'] = 'Модераторы';
 $_lang['modxtalks.moderators_desc'] = 'Перечислите через запятую модераторов, имеющих возможность модерировать комментарии этого ресурса.';
-$_lang['modxtalks.menu_desc'] = 'Управления и подтверждение комментариев modxTalks.';
+$_lang['modxtalks.menu_desc'] = 'Управления и подтверждение комментариев MODXTalks.';
 $_lang['modxtalks.more_text'] = 'Загрузить ещё';
 $_lang['modxtalks.mute_conversation'] = 'Закрыть разговор';
 
@@ -136,7 +136,7 @@ $_lang['modxtalks.search...'] = 'Поиск...';
 
 $_lang['modxtalks.time'] = 'Дата создания';
 $_lang['modxtalks.title'] = 'Название';
-$_lang['modxtalks.top_downloaded'] = 'Top Downloaded modxTalks';
+$_lang['modxtalks.top_downloaded'] = 'Top Downloaded MODXTalks';
 $_lang['modxtalks.talks_selected_delete'] = 'Удалить выбранные';
 $_lang['modxtalks.total'] = 'Всего';
 $_lang['modxtalks.template_comment'] = 'Шаблон комментария';
