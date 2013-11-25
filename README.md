@@ -1,6 +1,6 @@
-# MODXTalks
+# MODXTalks Lite
 
-**MODXTalks flexible MODX Revolution extension for make comment system on your site. This component allows you to install a fully AJAX commenting system on any webpage.**
+**MODXTalks Lite flexible MODX Revolution extension for make comment system on your site. This component allows you to install a fully AJAX commenting system on any webpage.**
 
 [Homepage](http://modxtalks.artdevue.com)
 
