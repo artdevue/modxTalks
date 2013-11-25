@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * This file is part of modxTalks, a simple commenting component for MODx Revolution.
+ * This file is part of MODXTalks, a simple commenting component for MODx Revolution.
  *
  * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
  * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>. Translation by Viktorminator
@@ -23,7 +23,7 @@ $_lang['area_settings'] = 'General Settings';
 $_lang['area_temlates'] = 'Templates';
 $_lang['area_comment'] = 'Comment';
 
-/* modxTalks */
+/* MODXTalks */
 $_lang['modxtalks.prop_conversation_desc'] = 'Unique name for the block outputs a comment by default <code><span style="color: #009900;">[</span><span style="color: #009900;">[</span><span style="color: #339933;">*</span>class_key<span style="color: #009900;">]</span><span style="color: #009900;">]</span><span style="color: #339933;">-</span><span style="color: #009900;">[</span><span style="color: #009900;">[</span><span style="color: #339933;">*</span>id<span style="color: #009900;">]</span><span style="color: #009900;">]</span></code>';
 $_lang['modxtalks.prop_moderator_desc'] = 'Moderator groups separated by commas.';
 $_lang['modxtalks.prop_onlyAuthUsers_desc'] = 'Only authorised users. Comments can be left only by authorised users.';

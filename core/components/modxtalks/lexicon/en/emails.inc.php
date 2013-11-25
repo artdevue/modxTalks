@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * This file is part of modxTalks, a simple commenting component for MODx Revolution.
+ * This file is part of MODXTalks, a simple commenting component for MODx Revolution.
  *
  * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
  * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>. Translation by Viktorminator

@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * This file is part of modxTalks, a simple commenting component for MODx Revolution.
+ * This file is part of MODXTalks, a simple commenting component for MODx Revolution.
  *
  * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
  * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>. Translation by Viktorminator
@@ -10,13 +10,13 @@
  *
  */
 /**
- * Default English Lexicon Entries for modxTalks
+ * Default English Lexicon Entries for MODXTalks
  *
  * @package modxtalks
  * @subpackage lexicon
  */
 
-$_lang['modxtalks'] = 'modxTalks';
+$_lang['modxtalks'] = 'MODXTalks';
 $_lang['modxtalks.add'] = 'Add';
 $_lang['modxtalks.add_comment'] = 'Add comment';
 $_lang['modxtalks.atributes'] = 'Attributes';
@@ -55,7 +55,7 @@ $_lang['modxtalks.delet_conversation'] = 'Delete topic.';
 $_lang['modxtalks.delet_conversation_desc'] = '<strong>NOTE!</strong> When you delete topics, all comments will be deleted. <br /><strong>Delete this topic?</strong>';
 $_lang['modxtalks.desc'] = 'Manage your modxtalks here.';
 $_lang['modxtalks.demo'] = 'Demo site';
-$_lang['modxtalks.demo_desc'] = 'Demo site comments modxTalks.';
+$_lang['modxtalks.demo_desc'] = 'Demo site comments MODXTalks.';
 $_lang['modxtalks.description'] = 'Description';
 $_lang['modxtalks.desc_titl'] = 'Comment settings for your resource. <br/>You can change the default values ​​that are specified in the system settings comments for each resource by its. <br /><strong class="alert-mt">NOTE.</strong> You can view the documentation in a <a class="link-mt helpmodxtalks" href="#settings:modxtalks-settings" onClick="javascript:modxTalks.loadHelpPaneMT(\'en/help.html\');">popup window</a>, or <a class="link-mt" target="_blank" href="http://modxtalks.artdevue.com/en/help.html">open in new windows</a>.';
 $_lang['modxtalks.deleteTime'] = 'Delete date';
@@ -77,7 +77,7 @@ $_lang['modxtalks.email_removes_confirm'] = 'Do you really want to delete all th
 $_lang['modxtalks.goto_web'] = 'Go to the page.';
 
 $_lang['modxtalks.help'] = 'Documentation';
-$_lang['modxtalks.help_desc'] = 'Documentation comments on modxTalks.';
+$_lang['modxtalks.help_desc'] = 'Documentation comments on MODXTalks.';
 
 $_lang['modxtalks.items_empty_conversation_msg'] = '<h4>There are no records that match your search criteria</h4><p>Or you have not created any topics with comments.</p>';
 $_lang['modxtalks.items_empty_ip_msg'] = '<h4>There are no records that match your search criteria</h4><p>Or you have not added a single IP-address.</p>';
@@ -97,12 +97,12 @@ $_lang['modxtalks.ip_removes_confirm'] = 'Do you really want to delete all the I
 
 $_lang['modxtalks.loading'] = 'Loading';
 
-$_lang['modxtalks.management'] = 'modxTalks. Manage Comments';
+$_lang['modxtalks.management'] = 'MODXTalks. Manage Comments';
 $_lang['modxtalks.management_desc'] = 'Here you can view information about each topic. List comments are waiting for approval and, if necessary, <a class="link-mt" href="#homeTab:not-confirmed">approve</a> in relative topic/ In <a class="link-mt" href="#homeTab:ip-blocking">Blocking IP addresses tab</a> you can assign IP for blocking to disallow voting for the User with that IP.';
 $_lang['modxtalks.management_unconfirmed_desc'] = '<strong>Comments not confirmed.</strong> You can not manage Confirmation comments Confirm or delete successfully.<br />After Confirmation, the comment will appear on your web portal, and the user who has sent successfully, will be notified about how to add a Web resource.';
 $_lang['modxtalks.moderators'] = 'Moderators';
 $_lang['modxtalks.moderators_desc'] = 'Comma-separated list of moderators who have the ability to moderate comments on this resource.';
-$_lang['modxtalks.menu_desc'] = 'Control and validation of comments modxTalks.';
+$_lang['modxtalks.menu_desc'] = 'Control and validation of comments MODXTalks.';
 $_lang['modxtalks.more_text'] = 'Load more';
 $_lang['modxtalks.mute_conversation'] = 'Hide conversation';
 

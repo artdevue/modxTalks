@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * This file is part of modxTalks, a simple commenting component for MODx Revolution.
+ * This file is part of MODXTalks, a simple commenting component for MODx Revolution.
  *
  * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
  * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
@@ -23,7 +23,7 @@ $_lang['area_settings'] = 'Загальні настройки';
 $_lang['area_temlates'] = 'Шаблони';
 $_lang['area_comment'] = 'Коментар';
 
-/* modxTalks */
+/* MODXTalks */
 $_lang['modxtalks.prop_conversation_desc'] = 'Унікальну назву для блоку виведення коментарів, за замовчуванням <code><span style="color: #009900;">[</span><span style="color: #009900;">[</span><span style="color: #339933;">*</span>class_key<span style="color: #009900;">]</span><span style="color: #009900;">]</span><span style="color: #339933;">-</span><span style="color: #009900;">[</span><span style="color: #009900;">[</span><span style="color: #339933;">*</span>id<span style="color: #009900;">]</span><span style="color: #009900;">]</span></code>';
 $_lang['modxtalks.prop_moderator_desc'] = 'Вкажіть через кому групи модераторів, які можуть модерувати коментарі';
 $_lang['modxtalks.prop_onlyAuthUsers_desc'] = 'Залишати коментарі можуть тільки авторизовані користувачі.';
