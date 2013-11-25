@@ -73,7 +73,96 @@ $menu->fromArray(array(
     'description' => 'modxtalks.comments_unconfirmed_desc',
     'icon'        => 'images/icons/plugin.gif',
     'menuindex'   => 0,
-    'params'      => '#homeTab:not-confirmed',
+    'params'      => '#modxTalks:not-confirmed',
+    'handler'     => ''
+), '', true, true);
+$menu->addOne($action);
+
+$vehicle = $builder->createVehicle($menu, array(
+    xPDOTransport::PRESERVE_KEYS   => true,
+    xPDOTransport::UPDATE_OBJECT   => true,
+    xPDOTransport::UNIQUE_KEY      => 'text',
+    xPDOTransport::RELATED_OBJECTS => true,
+    xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array(
+        'Action' => array(
+            xPDOTransport::PRESERVE_KEYS => false,
+            xPDOTransport::UPDATE_OBJECT => true,
+            xPDOTransport::UNIQUE_KEY    => array('namespace', 'controller'),
+        )
+    )
+));
+$builder->putVehicle($vehicle);
+unset($menu, $vehicle);
+
+// Create conversations submenu
+$menu = $modx->newObject('modMenu');
+$menu->fromArray(array(
+    'text'        => 'modxtalks.conversations',
+    'parent'      => 'modxtalks',
+    'description' => '',
+    'icon'        => 'images/icons/plugin.gif',
+    'menuindex'   => 0,
+    'params'      => '#modxTalks:home',
+    'handler'     => ''
+), '', true, true);
+$menu->addOne($action);
+
+$vehicle = $builder->createVehicle($menu, array(
+    xPDOTransport::PRESERVE_KEYS   => true,
+    xPDOTransport::UPDATE_OBJECT   => true,
+    xPDOTransport::UNIQUE_KEY      => 'text',
+    xPDOTransport::RELATED_OBJECTS => true,
+    xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array(
+        'Action' => array(
+            xPDOTransport::PRESERVE_KEYS => false,
+            xPDOTransport::UPDATE_OBJECT => true,
+            xPDOTransport::UNIQUE_KEY    => array('namespace', 'controller'),
+        )
+    )
+));
+$builder->putVehicle($vehicle);
+unset($menu, $vehicle);
+
+
+// Create IP Blocking submenu
+$menu = $modx->newObject('modMenu');
+$menu->fromArray(array(
+    'text'        => 'modxtalks.blocking_ip',
+    'parent'      => 'modxtalks',
+    'description' => '',
+    'icon'        => 'images/icons/plugin.gif',
+    'menuindex'   => 0,
+    'params'      => '#modxTalks:ip-blocking',
+    'handler'     => ''
+), '', true, true);
+$menu->addOne($action);
+
+$vehicle = $builder->createVehicle($menu, array(
+    xPDOTransport::PRESERVE_KEYS   => true,
+    xPDOTransport::UPDATE_OBJECT   => true,
+    xPDOTransport::UNIQUE_KEY      => 'text',
+    xPDOTransport::RELATED_OBJECTS => true,
+    xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array(
+        'Action' => array(
+            xPDOTransport::PRESERVE_KEYS => false,
+            xPDOTransport::UPDATE_OBJECT => true,
+            xPDOTransport::UNIQUE_KEY    => array('namespace', 'controller'),
+        )
+    )
+));
+$builder->putVehicle($vehicle);
+unset($menu, $vehicle);
+
+
+// Create Email Blocking submenu
+$menu = $modx->newObject('modMenu');
+$menu->fromArray(array(
+    'text'        => 'modxtalks.blocking_email',
+    'parent'      => 'modxtalks',
+    'description' => '',
+    'icon'        => 'images/icons/plugin.gif',
+    'menuindex'   => 0,
+    'params'      => '#modxTalks:email-blocking',
     'handler'     => ''
 ), '', true, true);
 $menu->addOne($action);
