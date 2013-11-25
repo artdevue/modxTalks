@@ -84,7 +84,7 @@ if (!in_array($action, array('latest','vote','votes_info','ban_ip','ban_email'))
 }
 
 /**
- * Initialize modxTalks
+ * Initialize MODXTalks
  */
 $modx->modxtalks = $modx->getService('modxtalks','modxTalks',$modx->getOption($requestCorePath,null,$modx->getOption('core_path').'components/modxtalks/').'model/modxtalks/',$config);
 if (!($modx->modxtalks instanceof modxTalks)) return;

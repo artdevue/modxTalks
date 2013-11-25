@@ -31,7 +31,7 @@ $snippets[0] = $modx->newObject('modSnippet');
 $snippets[0]->fromArray(array(
     'id' => 0,
     'name' => 'modxTalks',
-    'description' => '[modxTalks] Snippet.',
+    'description' => '[MODXTalks] Snippet.',
     'snippet' => file_get_contents($sources['snippets'].'snippet.modxtalks.php'),
 ));
 $properties = include $sources['properties'].'properties.modxtalks.php';

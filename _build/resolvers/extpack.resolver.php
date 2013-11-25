@@ -21,7 +21,7 @@
  * @package modxtalks
  */
 /**
- * Handles adding modxTalks to Extension Packages
+ * Handles adding MODXTalks to Extension Packages
  *
  * @var xPDOObject $object
  * @var array $options

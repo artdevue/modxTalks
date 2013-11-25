@@ -1,11 +1,12 @@
 <?php
 /**
- * Get a list of modxTalks
+ * Get a list of Conversations
  *
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalkCommentsGetListProcessor extends modObjectGetListProcessor {
+class modxTalkCommentsGetListProcessor extends modObjectGetListProcessor
+{
     public $classKey = 'modxTalksConversation';
     public $languageTopics = array('modxtalks:default');
 
@@ -21,7 +22,9 @@ class modxTalkCommentsGetListProcessor extends modObjectGetListProcessor {
             'unconfirmed'  => 0,
         );
 
-        if ($conversation = $this->modx->getObject($this->classKey, array('conversation' => $cid))) {
+        if ($conversation = $this->modx->getObject($this->classKey, array(
+            'conversation' => $cid
+        ))) {
             $data = $conversation->getProperties('comments');
         }
 
@@ -41,4 +44,5 @@ class modxTalkCommentsGetListProcessor extends modObjectGetListProcessor {
     }
 
 }
+
 return 'modxTalkCommentsGetListProcessor';

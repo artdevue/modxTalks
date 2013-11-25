@@ -5,7 +5,8 @@
  * @package modxTalks
  * @subpackage processors
  */
-class modxTalksEmailBlockUpdateProcessor extends modObjectUpdateProcessor {
+class modxTalksEmailBlockUpdateProcessor extends modObjectUpdateProcessor
+{
     public $classKey = 'modxTalksEmailBlock';
     public $languageTopics = array('modxtalks:default');
     public $objectType = 'modxtalks.email';
@@ -26,4 +27,5 @@ class modxTalksEmailBlockUpdateProcessor extends modObjectUpdateProcessor {
         return parent::beforeSave();
     }
 }
+
 return 'modxTalksEmailBlockUpdateProcessor';

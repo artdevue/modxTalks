@@ -5,7 +5,8 @@
  * @package modxtalks
  * @subpackage processors
  */
-class getIpBlockListProcessor extends modObjectGetListProcessor {
+class getIpBlockListProcessor extends modObjectGetListProcessor
+{
     public $classKey = 'modxTalksIpBlock';
     public $defaultSortField = 'id';
     public $languageTopics = array('modxtalks:default');
@@ -17,7 +18,7 @@ class getIpBlockListProcessor extends modObjectGetListProcessor {
      * @return xPDOQuery
      */
     public function prepareQueryBeforeCount(xPDOQuery $c) {
-        if ($query = $this->getProperty('query',null)) {
+        if ($query = $this->getProperty('query', null)) {
             $c->where(array(
                 'ip:LIKE' => '%'.$query.'%'
             ));
@@ -33,8 +34,8 @@ class getIpBlockListProcessor extends modObjectGetListProcessor {
         $resourceArray = parent::prepareRow($object);
 
         if (!empty($resourceArray['date'])) {
-            $resourceArray['publishedon_date'] = date('j M Y',$resourceArray['date']);
-            $resourceArray['publishedon_time'] = date('g:s A',$resourceArray['date']);
+            $resourceArray['publishedon_date'] = date('j M Y', $resourceArray['date']);
+            $resourceArray['publishedon_time'] = date('g:s A', $resourceArray['date']);
             $resourceArray['actions'] = array();
             $resourceArray['actions'][] = array(
                 'text' => $this->modx->lexicon('delete'),
@@ -43,7 +44,6 @@ class getIpBlockListProcessor extends modObjectGetListProcessor {
 
         return $resourceArray;
     }
-
 }
 
 return 'getIpBlockListProcessor';

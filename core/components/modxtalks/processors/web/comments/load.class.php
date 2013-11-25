@@ -1,9 +1,12 @@
 <?php
 /**
+ * Get Comments list
+ *
  * @package modxtalks
  * @subpackage processors
  */
-class getCommentsListProcessor extends modObjectGetListProcessor {
+class getCommentsListProcessor extends modObjectGetListProcessor
+{
     public $classKey = 'modxTalksPost';
     public $languageTopics = array('modxtalks:default');
     public $limit = 20;
@@ -26,6 +29,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
         if ($data['results']) {
             $list = $this->iterate($data);
         }
+
         return $this->outputArray($list,$data['total']);
     }
 
@@ -45,16 +49,22 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
          */
         if (!$this->theme = $this->modx->modxtalks->getConversation($this->conversation)) {
             $this->failure($this->modx->lexicon('modxtalks.empty_conversationId'));
+
             return false;
         }
+
         $this->conversationId = $this->theme->id;
+
         return parent::beforeQuery();
     }
 
     public function getData() {
-        $data = array('total' => 0, 'results' => array());
+        $data = array(
+            'total'   => 0,
+            'results' => array()
+        );
 
-        $count = $this->theme->getProperty('total','comments');
+        $count = $this->theme->getProperty('total', 'comments');
         $data['total'] = $count;
         if ($count < 1) {
             return $data;
@@ -66,7 +76,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
 
         $this->start = $this->getProperty('start');
         if ($this->start == date('Y-m', strtotime($this->start))) {
-            $idx = $this->modx->modxtalks->getDateIndex($this->conversationId,date('Y-m',strtotime($this->start)));
+            $idx = $this->modx->modxtalks->getDateIndex($this->conversationId, date('Y-m', strtotime($this->start)));
             if (!$this->revers) {
                 $range = range($idx, $idx + $this->limit);
             }
@@ -95,7 +105,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
             }
         }
 
-        $comments = $this->modx->modxtalks->getCommentsArray($range,$this->conversationId);
+        $comments = $this->modx->modxtalks->getCommentsArray($range, $this->conversationId);
 
         $usersIds =& $comments[1];
         $users = array();
@@ -111,6 +121,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
 
         $data['results'] =& $comments[0];
         $data['users'] =& $users;
+
         return $data;
     }
 
@@ -153,7 +164,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
         foreach ($data['results'] as $k => $comment) {
             $funny_date = $this->modx->modxtalks->date_format($comment['time']);
             $index = date('Ym',$comment['time']);
-            $date = date($date_format.' O',$comment['time']);
+            $date = date($date_format.' O', $comment['time']);
             $timeMarker = '';
             if ($comment['userId'] > 0) {
                 $name = $users[$comment['userId']]['name'];
@@ -174,14 +185,14 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
             /**
              * Timeago date format
              */
-            $timeago = date('c',$comment['time']);
+            $timeago = date('c', $comment['time']);
             /**
              * Prepare data for deleted comment
              */
             if ($comment['deleteTime'] > 0 && $comment['deleteUserId'] > 0) {
                 $tmp = array(
                     'deleteUser'        => $users[$comment['deleteUserId']]['name'],
-                    'delete_date'       => date($date_format.' O',$comment['deleteTime']),
+                    'delete_date'       => date($date_format.' O', $comment['deleteTime']),
                     'funny_delete_date' => $this->modx->modxtalks->date_format($comment['deleteTime']),
                     'name'              => $name,
                     'index'             => $index,
@@ -279,9 +290,9 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
             $list[] = $tmp;
 
         }
+
         return $list;
     }
-
 }
 
 return 'getCommentsListProcessor';

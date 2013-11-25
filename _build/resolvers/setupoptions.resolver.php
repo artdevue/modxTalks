@@ -43,7 +43,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
                     $setting->set('value', $options[$key]);
                     $setting->save();
                 } else {
-                    $object->xpdo->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks] ' . $key . ' setting could not be found, so the setting could not be changed.');
+                    $object->xpdo->log(xPDO::LOG_LEVEL_ERROR, '[MODXTalks] ' . $key . ' setting could not be found, so the setting could not be changed.');
                 }
             }
         }

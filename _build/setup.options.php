@@ -35,7 +35,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
     case xPDOTransport::ACTION_UNINSTALL: break;
 }
 
-$output = '<img class="img-polaroid" alt="modxTalks" src="http://modxtalks.artdevue.com/assets/img/install.png">
+$output = '<img class="img-polaroid" alt="MODXTalks" src="http://modxtalks.artdevue.com/assets/img/install.png">
 <label for="quip-emailsFrom">Emails From:</label>
 <input type="text" name="emailsFrom" id="quip-emailsFrom" width="300" value="'.$values['emailsFrom'].'" />
 <br /><br />

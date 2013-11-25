@@ -1,6 +1,6 @@
 <?php
 /**
- * modxTalks Connector
+ * MODXTalks Connector
  *
  * @package modxtalks
  */

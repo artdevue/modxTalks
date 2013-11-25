@@ -5,7 +5,8 @@
  * @package modxtalks
  * @subpackage processors
  */
-class getLatestCommentsListProcessor extends modObjectGetListProcessor {
+class getLatestCommentsListProcessor extends modObjectGetListProcessor
+{
     public $classKey = 'modxTalksLatestPost';
     public $languageTopics = array('modxtalks:default');
     public $objectType = 'modxtalks.latestpost';
@@ -25,8 +26,9 @@ class getLatestCommentsListProcessor extends modObjectGetListProcessor {
             foreach ($data['results'] as $r) {
                 $output[$r['cid']] = $this->modx->modxtalks->_parseTpl($this->modx->modxtalks->config['commentLatestTpl'], $r, true);
             }
-            return $this->outputArray($output,$data['total']);
+            return $this->outputArray($output, $data['total']);
         }
+
         return $data;
     }
 
@@ -41,14 +43,14 @@ class getLatestCommentsListProcessor extends modObjectGetListProcessor {
             $q->where(array('time:>' => $this->time));
         }
 
-        $count = $this->modx->getCount('modxTalksLatestPost',$q);
+        $count = $this->modx->getCount('modxTalksLatestPost', $q);
 
         if ($count == 0) {
             return $data;
         }
 
         $q->select($this->modx->getSelectColumns('modxTalksLatestPost'));
-        $q->sortby('time','DESC');
+        $q->sortby('time', 'DESC');
         $q->limit($this->limit);
 
         $comments = array();
@@ -67,7 +69,7 @@ class getLatestCommentsListProcessor extends modObjectGetListProcessor {
             $list[] = array(
                 'name'       => $comment['name'],
                 'avatar'     => $this->modx->modxtalks->getAvatar($comment['email']),
-                'date'       => date($date_format.' O',$comment['time']),
+                'date'       => date($date_format.' O', $comment['time']),
                 'funny_date' => $this->modx->modxtalks->date_format($comment['time']),
                 'id'         => $comment['pid'],
                 'cid'        => $comment['cid'],
@@ -83,9 +85,9 @@ class getLatestCommentsListProcessor extends modObjectGetListProcessor {
 
         $data['total'] = $count;
         $data['results'] =& $list;
+
         return $data;
     }
-
 }
 
 return 'getLatestCommentsListProcessor';

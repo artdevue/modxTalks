@@ -1,9 +1,12 @@
 <?php
 /**
+ * Update blocked IP address
+ *
  * @package modxTalks
  * @subpackage processors
  */
-class modxTalksIpBlockUpdateProcessor extends modObjectUpdateProcessor {
+class modxTalksIpBlockUpdateProcessor extends modObjectUpdateProcessor
+{
     public $classKey = 'modxTalksIpBlock';
     public $languageTopics = array('modxtalks:default');
     public $objectType = 'modxtalks.ip';
@@ -18,10 +21,11 @@ class modxTalksIpBlockUpdateProcessor extends modObjectUpdateProcessor {
 
     public function beforeSave() {
         $this->properties = array(
-            'ip' => $this->getProperty('ip'),
+            'ip'    => $this->getProperty('ip'),
             'intro' => $this->getProperty('intro'),
         );
         return parent::beforeSave();
     }
 }
+
 return 'modxTalksIpBlockUpdateProcessor';

@@ -5,7 +5,8 @@
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor {
+class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor
+{
     public $classKey = 'modxTalksTempPost';
     public $languageTopics = array('modxtalks:default');
     public $defaultSortField = 'id';
@@ -39,12 +40,14 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor {
         /** @var array $conversations Conversations - Name and Url */
         $conversations = array();
         if (count($cIds) > 0) {
-            $q = $this->modx->newQuery('modxTalksConversation',array('id:IN' => $cIds));
-            $q->select(array('id','conversation','properties'));
+            $q = $this->modx->newQuery('modxTalksConversation', array(
+                'id:IN' => $cIds
+            ));
+            $q->select(array('id', 'conversation', 'properties'));
             if ($q->prepare() && $q->stmt->execute()) {
                 $tmp = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($tmp as $c) {
-                    $properties = $this->modx->fromJSON($c['properties'],true);
+                    $properties = $this->modx->fromJSON($c['properties'], true);
                     $url = $this->modx->makeUrl($properties['id']);
                     $conversations[$c['id']] = array(
                         'name' => $c['conversation'],
@@ -57,9 +60,11 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor {
         /** @var array $users Registered Users - Name and Email */
         $users = array();
         if (count($uIds) > 0) {
-            $q = $this->modx->newQuery('modUser',array('modUser.id:IN' => $uIds));
-            $q->select(array('modUser.id','modUser.username','p.email','p.fullname'));
-            $q->leftjoin('modUserProfile','p','modUser.id = p.internalKey');
+            $q = $this->modx->newQuery('modUser', array(
+                'modUser.id:IN' => $uIds
+            ));
+            $q->select(array('modUser.id', 'modUser.username', 'p.email', 'p.fullname'));
+            $q->leftjoin('modUserProfile', 'p', 'modUser.id = p.internalKey');
             if ($q->prepare() && $q->stmt->execute()) {
                 $tmp = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($tmp as $a) {
@@ -70,14 +75,14 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor {
                 }
             }
         }
-        $this->modx->modxtalks->config['videoSize'] = array(300,250);
+
+        $this->modx->modxtalks->config['videoSize'] = array(300, 250);
         foreach ($data['results'] as $object) {
             if ($this->checkListPermission && $object instanceof modAccessibleObject && !$object->checkPolicy('list')) continue;
             /** @var array $c Comment Object to Array */
             $c = $this->prepareRow($object);
             if (!empty($c) && is_array($c)) {
                 $c['content'] = $this->modx->modxtalks->bbcode($c['content']);
-                // $c['content'] = htmlentities($c['content'],null,'UTF-8');
 
                 $userId = $c['userId'];
                 if ($userId > 0) {
@@ -88,7 +93,6 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor {
                 $c['avatar'] = $this->modx->modxtalks->getAvatar($c['useremail']);
                 $c['funny_date'] = $this->modx->modxtalks->date_format($c['time']);
                 $c['date'] = date('j-m-Y, G:i O', $c['time']);
-                // $c['datmon'] = strftime('%m-%d-%y %R', $c['time']);
 
                 $c['conversationName'] = $c['conversationUrl'] = '';
                 if (isset($conversations[$c['conversationId']])) {
@@ -104,6 +108,6 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor {
         $list = $this->afterIteration($list);
         return $list;
     }
-
 }
+
 return 'modxTalksTempPostGetListProcessor';

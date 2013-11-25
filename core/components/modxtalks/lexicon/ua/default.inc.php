@@ -1,11 +1,11 @@
 <?php
 /**
- * ModxTalks
+ * MODXTalks
  *
  * This file is part of modxTalks, a simple commenting component for MODx Revolution.
  *
  * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
- * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <npobolka@gmail.com>
+ * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  * @license http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
  *
  */
@@ -53,7 +53,7 @@ $_lang['modxtalks.delet'] = 'Видалити';
 $_lang['modxtalks.delet_comment'] = 'Видалити коментар';
 $_lang['modxtalks.delet_conversation'] = 'Видалити тему.';
 $_lang['modxtalks.delet_conversation_desc'] = '<strong>ВНИМАНИЕ!</strong> При видаленні теми, всі коментарі будуть видалені. <br /><strong>Удалить эту тему?</strong>';
-$_lang['modxtalks.desc'] = 'Управління ModxTalks.';
+$_lang['modxtalks.desc'] = 'Управління MODXTalks.';
 $_lang['modxtalks.demo'] = 'Демо сайт';
 $_lang['modxtalks.demo_desc'] = 'Демо сайт коментарів modxTalks.';
 $_lang['modxtalks.description'] = 'Опис';

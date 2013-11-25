@@ -5,7 +5,8 @@
  * @package modxtalks
  * @subpackage processors
  */
-class getEmailBlockListProcessor extends modObjectGetListProcessor {
+class getEmailBlockListProcessor extends modObjectGetListProcessor
+{
     public $classKey = 'modxTalksEmailBlock';
     public $defaultSortField = 'id';
     public $languageTopics = array('modxtalks:default');
@@ -17,7 +18,7 @@ class getEmailBlockListProcessor extends modObjectGetListProcessor {
      * @return xPDOQuery
      */
     public function prepareQueryBeforeCount(xPDOQuery $c) {
-        if ($query = $this->getProperty('query',null)) {
+        if ($query = $this->getProperty('query', null)) {
             $c->where(array(
                 'email:LIKE' => '%'.$query.'%'
             ));
