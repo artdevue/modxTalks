@@ -2597,7 +2597,7 @@ class modxTalks
 
 
     /**
-     * Send Email
+     * Send Mail
      *
      * @param $commentId
      * @return bool
