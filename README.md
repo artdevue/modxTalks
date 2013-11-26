@@ -8,6 +8,8 @@
 
 [Issues Tracker](https://github.com/artdevue/modxTalks/issues)
 
+[Download Latest Version](https://www.dropbox.com/s/8haf9ge2l6xoxpj/modxtalks-1.0.3-beta.transport.zip)
+
 ### Comments idea took [esoTalk](http://esotalk.org)
 
 ### Authors
