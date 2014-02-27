@@ -76,4 +76,18 @@ $events['OnModxTalksCommentAfterAdd']->fromArray(array(
     'propertyset' => 0,
 ), '', true, true);
 
+$events['OnModxTalksCommentAfterRemove'] = $modx->newObject('modPluginEvent');
+$events['OnModxTalksCommentAfterRemove']->fromArray(array(
+    'event'       => 'OnModxTalksCommentAfterRemove',
+    'priority'    => 0,
+    'propertyset' => 0,
+), '', true, true);
+
+$events['OnModxTalksCommentBeforeRemove'] = $modx->newObject('modPluginEvent');
+$events['OnModxTalksCommentBeforeRemove']->fromArray(array(
+    'event'       => 'OnModxTalksCommentBeforeRemove',
+    'priority'    => 0,
+    'propertyset' => 0,
+), '', true, true);
+
 return $events;

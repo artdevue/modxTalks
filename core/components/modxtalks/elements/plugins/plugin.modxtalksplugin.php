@@ -94,4 +94,14 @@ switch ($modx->event->name) {
 
         $latest->save();
         break;
+
+    case 'OnModxTalksCommentAfterRemove':
+        $comment =& $modx->event->params['modxtalks.post'];
+
+        if ($latest = $modx->getObject('modxTalksLatestPost', array(
+            'cid' => $comment->conversationId
+        ))) {
+            if ($latest->remove() == false) $modx->log(modX::LOG_LEVEL_ERROR, 'MODXTalks not removed latest entry for comment id - '.$comment->conversationId);
+        }
+        break;
 }
