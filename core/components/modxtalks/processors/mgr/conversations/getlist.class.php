@@ -45,7 +45,7 @@ class getConversationsListProcessor extends modObjectGetListProcessor
 
                 $objectArray['link'] = 0;
                 if ($this->modx->getCount('modResource', $id)) {
-                    $objectArray['link'] = $this->modx->makeUrl($id);
+                    $objectArray['link'] = $this->modx->makeUrl($id,'','',$scheme = 'full');
                 }
                 $list[] = array_merge($objectArray, $properties);
                 $this->currentIndex++;
