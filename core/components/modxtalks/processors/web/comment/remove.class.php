@@ -7,6 +7,8 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
     public $classKey = 'modxTalksPost';
     public $languageTopics = array('modxtalks:default');
     public $objectType = 'modxtalks.post';
+    public $afterSaveEvent = 'OnModxTalksCommentAfterRemove';
+    public $beforeSaveEvent = 'OnModxTalksCommentBeforeRemove';
     public $context = '';
     protected $theme;
     protected $defaultProprties = array(

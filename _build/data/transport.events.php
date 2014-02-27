@@ -41,4 +41,20 @@ $events[1]->fromArray(array (
     'groupname' => 'MODXTalks',
 ), '', true, true);
 
+
+$events[1] = $modx->newObject('modEvent');
+$events[1]->fromArray(array (
+    'name'      => 'OnModxTalksCommentAfterRemove',
+    'service'   => 6,
+    'groupname' => 'MODXTalks',
+), '', true, true);
+
+
+$events[1] = $modx->newObject('modEvent');
+$events[1]->fromArray(array (
+    'name'      => 'OnModxTalksCommentBeforeRemove',
+    'service'   => 6,
+    'groupname' => 'MODXTalks',
+), '', true, true);
+
 return $events;
