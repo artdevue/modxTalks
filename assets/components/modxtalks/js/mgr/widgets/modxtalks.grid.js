@@ -22,7 +22,7 @@ modxTalks.grid.posts = function(config) {
             ,sortable: true
             ,cls:'conver'
             ,renderer : function(v,md,rec) {
-                linrec = rec.data.link != 0 ? '<a class="linkconv" target="_blank" href="/'+rec.data.link+'">'+rec.data.link+'</a>' : '<p class="linkconv">'+_('modxtalks.resources_no')+'</p>';
+                linrec = rec.data.link != 0 ? '<a class="linkconv" target="_blank" href="'+rec.data.link+'">'+rec.data.link+'</a>' : '<p class="linkconv">'+_('modxtalks.resources_no')+'</p>';
                 return '<div class="talks-ip-column"><h3 class="main-column grey">' + v + '</h3></div>' +linrec;
             }
         },{
