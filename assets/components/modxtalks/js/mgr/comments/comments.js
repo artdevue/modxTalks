@@ -1,5 +1,5 @@
 Ext.onReady(function() {
-    document.getElementById("modx-resource-header").className += " headmodxtalks";    
+    document.getElementById("modx-resource-header").className += " headmodxtalks";
 
     var tabpanel = Ext.getCmp('modx-resource-tabs');
     var res = tabpanel.ownerCt.config.record;
@@ -7,7 +7,7 @@ Ext.onReady(function() {
     if (Ext.isEmpty(res.pagetitle)) {
                 Ext.getCmp('modx-resource-header').getEl().update('<h2>' + _('document_new') + _('modxtalks.with_comments') + '</h2>');
             }
-    var rec = res.properties;    
+    var rec = res.properties;
     if (!rec) var rec = {modxtalks:{}};
     var total = 0;
     Ext.Ajax.request({
@@ -24,22 +24,6 @@ Ext.onReady(function() {
         }
     });
 
-    /*var modxTalksStore = new Ext.data.JsonStore({
-        url: modxTalks.config.connector_url,
-        baseParams: { action: 'mgr/comments/getList', 'conversationName': res.class_key + '-' + res.id },
-        autoLoad: true,
-        // root:'reader',
-        listeners: {
-            load: {
-                fn: function(record) {
-                    console.log(record);
-                    total = a.totalLength;
-                    document.getElementById('totaltalks').textContent = total;
-                },scope:this
-            }
-        }
-    });*/
-    // console.log(modxTalksStore.reader);
     tabpanel.add({
         title: _('modxtalks.comments_menu'),
         forceLayout: true,
@@ -141,7 +125,7 @@ Ext.onReady(function() {
             }]
         }]
     })
-    
+
 
 
     modxTalks.loadHelpPaneMT = function(b) {

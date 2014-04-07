@@ -1,4 +1,3 @@
-
 Ext.apply(Ext.form.VTypes, {
     //  vtype validation function
     IPAddress: function(v) {
@@ -9,13 +8,22 @@ Ext.apply(Ext.form.VTypes, {
     // vtype Mask property: The keystroke filter mask
     IPAddressMask: /[\d\.]/i
 });
+
 var modxTalks = function(config) {
     config = config || {};
-    modxTalks.superclass.constructor.call(this,config);
+    modxTalks.superclass.constructor.call(this, config);
 };
-Ext.extend(modxTalks,Ext.Component,{
-    page:{},window:{},grid:{},tree:{},panel:{},combo:{},config: {}
+
+Ext.extend(modxTalks, Ext.Component, {
+    page: {},
+    window: {},
+    grid: {},
+    tree: {},
+    panel: {},
+    combo: {},
+    config: {}
 });
-Ext.reg('modxtalks',modxTalks);
+
+Ext.reg('modxtalks', modxTalks);
 
 modxTalks = new modxTalks();

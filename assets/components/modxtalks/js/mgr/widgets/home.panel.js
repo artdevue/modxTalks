@@ -11,13 +11,14 @@ function hashCheck() {
         return 0;
     }
 }
+
 window.onhashchange = function () {
     Ext.getCmp('homeTab').setActiveTab(hashCheck());
-}
+};
 
-modxTalks.panel.Home = function(config) { 
-    config = config || {};   
-     Ext.apply(config,{
+modxTalks.panel.Home = function(config) {
+    config = config || {};
+     Ext.apply(config, {
         cls: 'container'
         ,renderTo: Ext.getBody()
         ,unstyled: true
@@ -41,15 +42,15 @@ modxTalks.panel.Home = function(config) {
             ,enableTabScroll : true
             ,activeTab: acTab
                 ,defaults: {
-                    bodyCssClass: 'vertical-tabs tabs-modxtalks'
-            ,autoScroll: true
-            ,autoHeight: true
-            ,autoWidth: true
-            ,layout: 'form'
-        }           
-            ,items: [{
+                bodyCssClass: 'vertical-tabs tabs-modxtalks'
+                ,autoScroll: true
+                ,autoHeight: true
+                ,autoWidth: true
+                ,layout: 'form'
+            },
+            items: [{
                 title: _('modxtalks.conversations')
-        ,id: 'home'
+                ,id: 'home'
                 ,defaults: { autoHeight: true }
                 ,items: [{
                     html: '<p>'+ _('modxtalks.menu_desc') + ' ' + _('modxtalks.management_desc') +'</p>'
@@ -101,38 +102,40 @@ modxTalks.panel.Home = function(config) {
             }],
         listeners: {
             'tabchange': function(tabPanel, tab){
-                    Ext.History.add('modxTalks' + tokenDelimiter + tab.id);                    
+                    Ext.History.add('modxTalks' + tokenDelimiter + tab.id);
             }
         }
         }]
-    });        
-    modxTalks.panel.Home.superclass.constructor.call(this,config);    
+    });
+    modxTalks.panel.Home.superclass.constructor.call(this, config);
 };
-Ext.extend(modxTalks.panel.Home,MODx.Panel,{
+
+Ext.extend(modxTalks.panel.Home, MODx.Panel, {
     getButtons: function(cfg) {
         var btns = [];
         btns.push({
-            text: _('help_ex')
-            ,handler: this.loadHelpPane
-            ,id: 'modx-abtn-help'
+            text: _('help_ex'),
+            handler: this.loadHelpPane,
+            id: 'modx-abtn-help'
         });
         return btns;
-    }
-    ,loadHelpPane: function(b) {
+    },
+    loadHelpPane: function(b) {
         var url = 'http://modxtalks.artdevue.com/' + MODx.config.manager_language;
-        if (!url) { return false; }
+        if (!url) return false;
         MODx.helpWindow = new Ext.Window({
-            title: _('help')
-            ,width: 850
-            ,height: 500
-            ,resizable: true
-            ,maximizable: true
-            ,modal: false
-            ,layout: 'fit'
-            ,html: '<iframe src="' + url + '" width="100%" height="100%" frameborder="0"></iframe>'
+            title: _('help'),
+            width: 850,
+            height: 500,
+            resizable: true,
+            maximizable: true,
+            modal: false,
+            layout: 'fit',
+            html: '<iframe src="' + url + '" width="100%" height="100%" frameborder="0"></iframe>'
         });
         MODx.helpWindow.show(b);
         return true;
     }
 });
-Ext.reg('modxtalks-panel-home',modxTalks.panel.Home);
+
+Ext.reg('modxtalks-panel-home', modxTalks.panel.Home);
