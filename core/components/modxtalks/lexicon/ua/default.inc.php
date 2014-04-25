@@ -180,8 +180,6 @@ $_lang['setting_modxtalks.detectUrls_desc'] = 'Переводити адреси
 // setting
 $_lang['setting_modxtalks.add_timeout'] = 'Таймаут між відправленням коментарів';
 $_lang['setting_modxtalks.add_timeout_desc'] = 'Час в секундах, між відправленням коментарів';
-$_lang['setting_modxtalks.jquery'] = 'Включити jQuery';
-$_lang['setting_modxtalks.jquery_desc'] = 'Якщо ви використовуєте своє підключення jQuery для сторінки, або використовуєте сторонній сервіс, оберіть НІ, і переконайтеся, що версія jQuery не нижче v1.7';
 $_lang['setting_modxtalks.emailsFrom'] = 'Відправник листа';
 $_lang['setting_modxtalks.emailsFrom_desc'] = 'Адреса електронної пошти, для вказівки відправника в заголовку листа';
 $_lang['setting_modxtalks.emailsReplyTo'] = 'Відповісти на адресу';

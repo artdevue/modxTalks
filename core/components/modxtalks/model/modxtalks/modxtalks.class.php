@@ -336,9 +336,12 @@ class modxTalks
             $this->config['jsUrl'].'web/highlight.pack.js',
         );
 
-        if ($this->modx->getOption('modxtalks.jquery', null, true)) {
-            $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery-1.9.min.js');
-        }
+        // Add jquery if not exist
+        $this->modx->regClientHTMLBlock('<script type="text/javascript">
+    if(typeof jQuery == "undefined") {
+        document.write("<script src=\"'.$this->config['jsUrl'].'web/lib/jquery-1.9.min.js\" type=\"text/javascript\"><\/script>");
+    }
+</script>');
 
         $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.history.js');
         $this->modx->regClientScript($this->config['jsUrl'].'web/lib/jquery.autogrow.js');
