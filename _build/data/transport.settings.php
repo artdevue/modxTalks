@@ -162,15 +162,6 @@ $settings['modxtalks.moderator']->fromArray(array(
     'area'      => 'settings',
 ), '', true, true);
 
-$settings['modxtalks.jquery'] = $modx->newObject('modSystemSetting');
-$settings['modxtalks.jquery']->fromArray(array(
-    'key'       => 'modxtalks.jquery',
-    'value'     => true,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'modxtalks',
-    'area'      => 'settings',
-), '', true, true);
-
 $settings['modxtalks.gravatarSize'] = $modx->newObject('modSystemSetting');
 $settings['modxtalks.gravatarSize']->fromArray(array(
     'key'       => 'modxtalks.gravatarSize',

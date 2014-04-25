@@ -184,8 +184,6 @@ $_lang['setting_modxtalks.detectUrls_desc'] = 'Transfer of resources to the web 
 // setting
 $_lang['setting_modxtalks.add_timeout'] = 'Timeout between sending comments';
 $_lang['setting_modxtalks.add_timeout_desc'] = 'The time in seconds between sending comments';
-$_lang['setting_modxtalks.jquery'] = 'Include jQuery';
-$_lang['setting_modxtalks.jquery_desc'] = 'If you are using your connection for jQuery page, or use a third-party service, choose NO, and make sure that the version of jQuery not lower v1.7';
 $_lang['setting_modxtalks.edit_time'] = 'Edit comment period';
 $_lang['setting_modxtalks.edit_time_desc'] = 'Time after which the user can not edit a comment';
 $_lang['setting_modxtalks.emailsFrom'] = 'Email From';
