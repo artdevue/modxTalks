@@ -59,7 +59,8 @@ class modxTalksCount {
             }
 
             foreach ($r as $n) {
-                if ($k = array_search('r_' . $n, $mt_list[1], true)) {
+                $k = array_search('r_' . $n, $mt_list[1], true)
+                if ($k !== false) {
                     $mt_list[1][$k] = 0;
                 }
             }
