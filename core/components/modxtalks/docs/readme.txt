@@ -1,7 +1,7 @@
 --------------------
 Extra: MODXTalks
 --------------------
-Version: 1.0.3 beta
+Version: 1.2.0 pl
 Since: January, 2013
 Author: Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
 

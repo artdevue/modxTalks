@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * Copyright 2012-2013 by
+ * Copyright 2012-2014 by
  * Valentin Rasulov <artdevue.com@yahoo.com> & Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  *
  * This file is part of MODXTalks, a simple commenting component for MODx Revolution.
@@ -35,16 +35,16 @@ $tstart = $mtime;
 set_time_limit(0);
 
 /* define package name and sources */
-define('PKG_NAME','MODXTalks');
-define('PKG_NAME_LOWER','modxtalks');
+define('PKG_NAME', 'MODXTalks');
+define('PKG_NAME_LOWER', 'modxtalks');
 
 $root = dirname(dirname(__FILE__)) . '/';
-$sources = array(
-    'root'   => $root,
-    'core'   => $root . 'core/components/' . PKG_NAME_LOWER . '/',
-    'model'  => $root . 'core/components/' . PKG_NAME_LOWER . '/model/',
-    'assets' => $root . 'assets/components/' . PKG_NAME_LOWER . '/',
-);
+$sources = [
+	'root' => $root,
+	'core' => $root . 'core/components/' . PKG_NAME_LOWER . '/',
+	'model' => $root . 'core/components/' . PKG_NAME_LOWER . '/model/',
+	'assets' => $root . 'assets/components/' . PKG_NAME_LOWER . '/',
+];
 
 /* load modx and configs */
 require_once 'build.config.php';
@@ -52,35 +52,36 @@ include_once MODX_CORE_PATH . 'model/modx/modx.class.php';
 require_once 'build.properties.php';
 $modx = new modX();
 $modx->initialize('mgr');
-$modx->loadClass('transport.modPackageBuilder','',false, true);
+$modx->loadClass('transport.modPackageBuilder', '', false, true);
 
 echo '<pre>';
 $modx->setLogLevel(modX::LOG_LEVEL_INFO);
 $modx->setLogTarget('ECHO');
 
-foreach (array('mysql', 'sqlsrv') as $driver) {
-    $xpdo = new xPDO(
-        $properties["{$driver}_string_dsn_nodb"],
-        $properties["{$driver}_string_username"],
-        $properties["{$driver}_string_password"],
-        $properties["{$driver}_array_options"],
-        $properties["{$driver}_array_driverOptions"]
-    );
-    $xpdo->setPackage('modx', dirname(XPDO_CORE_PATH) . '/model/');
-    $xpdo->setDebug(true);
+foreach (['mysql', 'sqlsrv'] as $driver)
+{
+	$xpdo = new xPDO(
+		$properties["{$driver}_string_dsn_nodb"],
+		$properties["{$driver}_string_username"],
+		$properties["{$driver}_string_password"],
+		$properties["{$driver}_array_options"],
+		$properties["{$driver}_array_driverOptions"]
+	);
+	$xpdo->setPackage('modx', dirname(XPDO_CORE_PATH) . '/model/');
+	$xpdo->setDebug(true);
 
-    $manager = $xpdo->getManager();
-    $generator = $manager->getGenerator();
+	$manager = $xpdo->getManager();
+	$generator = $manager->getGenerator();
 
-    $manager = $xpdo->getManager();
-    $generator = $manager->getGenerator();
+	$manager = $xpdo->getManager();
+	$generator = $manager->getGenerator();
 
-    $generator->classTemplate = <<<EOD
+	$generator->classTemplate = <<<EOD
 <?php
 /**
  * MODXTalks
  *
- * Copyright 2012-2013 by
+ * Copyright 2012-2014 by
  * Valentin Rasulov <artdevue.com@yahoo.com> & Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  *
  * This file is part of MODXTalks, a simple commenting component for MODx Revolution.
@@ -107,12 +108,12 @@ foreach (array('mysql', 'sqlsrv') as $driver) {
 class [+class+] extends [+extends+] {}
 ?>
 EOD;
-    $generator->platformTemplate= <<<EOD
+	$generator->platformTemplate = <<<EOD
 <?php
 /**
  * MODXTalks
  *
- * Copyright 2012-2013 by
+ * Copyright 2012-2014 by
  * Valentin Rasulov <artdevue.com@yahoo.com> & Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  *
  * This file is part of MODXTalks, a simple commenting component for MODx Revolution.
@@ -140,12 +141,12 @@ require_once (strtr(realpath(dirname(dirname(__FILE__))), '\\\\', '/') . '/[+cla
 class [+class+]_[+platform+] extends [+class+] {}
 ?>
 EOD;
-    $generator->mapHeader = <<<EOD
+	$generator->mapHeader = <<<EOD
 <?php
 /**
  * MODXTalks
  *
- * Copyright 2012-2013 by
+ * Copyright 2012-2014 by
  * Valentin Rasulov <artdevue.com@yahoo.com> & Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  *
  * This file is part of MODXTalks, a simple commenting component for MODx Revolution.
@@ -170,9 +171,8 @@ EOD;
  * [+phpdoc-subpackage+]
  */
 EOD;
-    $generator->parseSchema($sources['model'] . 'schema/'.PKG_NAME_LOWER.'.'.$driver.'.schema.xml', $sources['model']);
+	$generator->parseSchema($sources['model'] . 'schema/' . PKG_NAME_LOWER . '.' . $driver . '.schema.xml', $sources['model']);
 }
-
 
 $mtime = microtime();
 $mtime = explode(" ", $mtime);

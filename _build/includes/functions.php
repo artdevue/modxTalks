@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * Copyright 2012-2013 by
+ * Copyright 2012-2014 by
  * Valentin Rasulov <artdevue.com@yahoo.com> & Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  *
  * This file is part of MODXTalks, a simple commenting component for MODx Revolution.
@@ -26,10 +26,12 @@
  * @package modxtalks
  * @subpackage build
  */
-function getSnippetContent($filename) {
-    $o = file_get_contents($filename);
-    $o = str_replace('<?php', '', $o);
-    $o = str_replace('?>', '', $o);
-    $o = trim($o);
-    return $o;
+function getSnippetContent($filename)
+{
+	$o = file_get_contents($filename);
+	$o = str_replace('<?php', '', $o);
+	$o = str_replace('?>', '', $o);
+	$o = trim($o);
+
+	return $o;
 }

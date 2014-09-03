@@ -1,4 +1,7 @@
 <?php
+
+require_once dirname(dirname(dirname(__FILE__))) . '/modxtalksprocessor.trait.php';
+
 /**
  * Remove selected Email addresses from Block List
  *
@@ -7,26 +10,31 @@
  */
 class modxTalksEmailBlockMultipleProcessor extends modObjectProcessor
 {
-    public $classKey = 'modxTalksEmailBlock';
-    public $languageTopics = array('modxtalks:default');
+	use modxTalksProcessorTrait;
 
-    public function process() {
-        if (!$ids = $this->getProperty('ids', null)) {
-            return $this->failure($this->modx->lexicon('modxtalks.post_err_ns_multiple'));
-        }
+	public $classKey = 'modxTalksEmailBlock';
+	public $languageTopics = ['modxtalks:default'];
 
-        $ids = is_array($ids) ? $ids : explode(',', $ids);
+	public function process()
+	{
+		if ( ! $ids = $this->getProperty('ids', null))
+		{
+			return $this->failure($this->app()->lang('post_err_ns_multiple'));
+		}
 
-        $addresses = $this->modx->removeCollection($this->classKey, array(
-            'id:IN' => $ids
-        ));
+		$ids = is_array($ids) ? $ids : explode(',', $ids);
 
-        if (!$addresses) {
-            return $this->failure($this->modx->lexicon('modxtalks.post_err_ns_multiple'));
-        }
+		$addresses = $this->modx->removeCollection($this->classKey, [
+			'id:IN' => $ids
+		]);
 
-        return $this->success();
-    }
+		if ( ! $addresses)
+		{
+			return $this->failure($this->app()->lang('post_err_ns_multiple'));
+		}
+
+		return $this->success();
+	}
 }
 
 return 'modxTalksEmailBlockMultipleProcessor';

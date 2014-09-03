@@ -1,4 +1,7 @@
 <?php
+
+require_once dirname(dirname(dirname(__FILE__))) . '/modxtalksprocessor.trait.php';
+
 /**
  * Ban IP address from unconfirmed comment
  *
@@ -7,57 +10,70 @@
  */
 class modxTalksTempPostBanProcessor extends modObjectRemoveProcessor
 {
-    public $classKey = 'modxTalksTempPost';
-    public $objectType = 'modxtalks.temppost';
-    public $languageTopics = array('modxtalks:default');
-    public $beforeRemoveEvent = '';
-    public $afterRemoveEvent = '';
+	use modxTalksProcessorTrait;
 
-    public function beforeRemove() {
-        $this->conversationId = $this->object->conversationId;
+	public $classKey = 'modxTalksTempPost';
+	public $objectType = 'modxtalks.temppost';
+	public $languageTopics = ['modxtalks:default'];
+	public $beforeRemoveEvent = '';
+	public $afterRemoveEvent = '';
 
-        if (!$conversation = $this->modx->getObject('modxTalksConversation', $this->conversationId)) {
-            return $this->modx->lexicon('modxtalks.empty_conversation');
-        }
-        $cProperties = $conversation->getProperty('unconfirmed', 'comments', 0);
-        $unconfirmed = $cProperties['unconfirmed'] > 0 ? --$cProperties['unconfirmed'] : 0;
-        $conversation->setProperty('unconfirmed', $unconfirmed);
+	public function beforeRemove()
+	{
+		$conversation = $this->modx->getObject('modxTalksConversation', $this->object->conversationId);
 
-        if ($conversation->save() !== true) {
-            return $this->modx->lexicon('modxtalks.error');
-        }
+		if ( ! $conversation)
+		{
+			return $this->app()->lang('empty_conversation');
+		}
 
-        if ($this->modx->getCount('modxTalksIpBlock', array('ip' => $this->object->ip))) {
-            return $this->modx->lexicon('modxtalks.ip_blocked');
-        }
+		if ($conversation->unconfirmed)
+		{
+			$conversation->unconfirmed -= 1;
+		}
 
-        $ip = $this->modx->newObject('modxTalksIpBlock',array(
-            'ip'    => $this->object->ip,
-            'date'  => time(),
-            'intro' => '',
-        ));
+		if ($conversation->save() !== true)
+		{
+			return $this->app()->lang('error');
+		}
 
-        if ($ip->save() !== true) {
-            return $this->modx->lexicon('modxtalks.ip_save_error');
-        }
+		if ($this->modx->getCount('modxTalksIpBlock', ['ip' => $this->object->ip]))
+		{
+			return $this->app()->lang('ip_blocked');
+		}
 
-        if ($this->object->userId > 0) {
-            if ($user = $this->modx->getObject('modUser', $this->object->userId)) {
-                $user->set('active', false);
-                if ($user->save() !== true) {
-                    return $this->modx->lexicon('modxtalks.error');
-                }
-            }
-        }
+		$ip = $this->modx->newObject('modxTalksIpBlock', [
+			'ip' => $this->object->ip,
+			'date' => time(),
+			'intro' => '',
+		]);
 
-        return parent::beforeRemove();
-    }
+		if ( ! $ip->save())
+		{
+			return $this->app()->lang('ip_save_error');
+		}
 
-    public function afterRemove() {
-        $this->success($this->modx->lexicon('modxtalks.ip_ban_success'));
+		if ($this->object->userId > 0)
+		{
+			if ($user = $this->modx->getObject('modUser', $this->object->userId))
+			{
+				$user->set('active', false);
+				if ( ! $user->save())
+				{
+					return $this->app()->lang('error');
+				}
+			}
+		}
 
-        return parent::afterRemove();
-    }
+		return parent::beforeRemove();
+	}
 
+	public function afterRemove()
+	{
+		$this->success($this->app()->lang('ip_ban_success'));
+
+		return parent::afterRemove();
+	}
 }
+
 return 'modxTalksTempPostBanProcessor';

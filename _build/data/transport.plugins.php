@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * Copyright 2012-2013 by
+ * Copyright 2012-2014 by
  * Valentin Rasulov <artdevue.com@yahoo.com> & Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  *
  * MODXTalks is free software; you can redistribute it and/or modify it under the
@@ -25,7 +25,7 @@
  * @package modxtalks
  * @subpackage build
  */
-$plugins = array();
+$plugins = [];
 
 /* create the plugin object */
 $plugins[0] = $modx->newObject('modPlugin');
@@ -36,12 +36,15 @@ $plugins[0]->set('plugincode', getSnippetContent($sources['plugins'] . 'plugin.m
 $plugins[0]->set('category', 0);
 
 $events = include $sources['events'] . 'events.modxtalks.php';
-if (is_array($events) && !empty($events)) {
-    $plugins[0]->addMany($events);
-    $modx->log(xPDO::LOG_LEVEL_INFO, 'Packaged in ' . count($events) . ' Plugin Events for MODXTalksPlugin.');
-    flush();
-} else {
-    $modx->log(xPDO::LOG_LEVEL_ERROR, 'Could not find plugin events for MODXTalksPlugin!');
+if (is_array($events) && ! empty($events))
+{
+	$plugins[0]->addMany($events);
+	$modx->log(xPDO::LOG_LEVEL_INFO, 'Packaged in ' . count($events) . ' Plugin Events for MODXTalksPlugin.');
+	flush();
+}
+else
+{
+	$modx->log(xPDO::LOG_LEVEL_ERROR, 'Could not find plugin events for MODXTalksPlugin!');
 }
 
 unset($events);

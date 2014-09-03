@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Get blocked Email address
  *
@@ -7,8 +8,8 @@
  */
 class modxTalksEmailBlockGetProcessor extends modObjectGetProcessor
 {
-    public $classKey = 'modxTalksEmailBlock';
-    public $languageTopics = array('modxtalks:default');
+	public $classKey = 'modxTalksEmailBlock';
+	public $languageTopics = ['modxtalks:default'];
 }
 
 return 'modxTalksEmailBlockGetProcessor';

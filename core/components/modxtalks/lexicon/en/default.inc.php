@@ -64,6 +64,9 @@ $_lang['modxtalks.default_template'] = 'default template';
 $_lang['modxtalks.deleteUserId'] = 'Removed';
 $_lang['modxtalks.date_create'] = 'Date';
 
+$_lang['modxtalks.edit'] = 'Edit';
+$_lang['modxtalks.remove'] = 'Remove';
+
 $_lang['modxtalks.editUserId'] = 'Edited';
 $_lang['modxtalks.editTime'] = 'Editing date';
 $_lang['modxtalks.email_adress'] = 'Email address';

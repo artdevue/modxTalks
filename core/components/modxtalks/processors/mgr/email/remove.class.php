@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Remove blocked Email address
  *
@@ -7,9 +8,8 @@
  */
 class modxTalksEmailBlockRemoveProcessor extends modObjectRemoveProcessor
 {
-    public $classKey = 'modxTalksEmailBlock';
-    public $languageTopics = array('modxtalks:default');
-
+	public $classKey = 'modxTalksEmailBlock';
+	public $languageTopics = ['modxtalks:default'];
 }
 
 return 'modxTalksEmailBlockRemoveProcessor';

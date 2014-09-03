@@ -4,13 +4,13 @@ background-image: url(../../img/mrg/modxTalks_s_16.png) !important;
 .icon-commentsmodxtalks.haschildren .x-tree-node-icon {
 background-image: url(../../img/mrg/forum.gif) !important;
 }*/
-.alert-mt {padding-left: 20px; background: url(../../img/mrg/16-Alert-b.png) no-repeat 0 center;}
-a.link-mt:hover {background: url(../../img/mrg/16-Link-z.png) no-repeat right center; color: #658F1A}
-a.link-mt {padding-right: 20px;background: url(../../img/mrg/16-Link-b.png) no-repeat right center; color: #666666; text-decoration: none}
-a.helpmodxtalks {background: url(../../img/mrg/16-Computer_iMac-z.png) no-repeat right center;}
-a.helpmodxtalks:hover {background: url(../../img/mrg/16-Computer_iMac-b.png) no-repeat right center;}
+.alert-mt {padding-left: 20px; background: url(../../img/mgr/16-Alert-b.png) no-repeat 0 center;}
+a.link-mt:hover {background: url(../../img/mgr/16-Link-z.png) no-repeat right center; color: #658F1A}
+a.link-mt {padding-right: 20px;background: url(../../img/mgr/16-Link-b.png) no-repeat right center; color: #666666; text-decoration: none}
+a.helpmodxtalks {background: url(../../img/mgr/16-Computer_iMac-z.png) no-repeat right center;}
+a.helpmodxtalks:hover {background: url(../../img/mgr/16-Computer_iMac-b.png) no-repeat right center;}
 .modtalks_desc {position: relative;min-height: 70px;}
-.headmodxtalks {padding-left: 44px; background: url('../../img/mrg/logo_modxTalks_32.png') no-repeat 0 0 transparent;}
+.headmodxtalks {padding-left: 44px; background: url('../../img/mgr/logo_modxTalks_32.png') no-repeat 0 0 transparent;}
 .desc_comment {float: left;
 display: inline-block;
 position: relative;
@@ -85,6 +85,6 @@ font-weight: bold;
 .modxtalkstab .informer > a > span.totaltalks {color: #658F1A;}
 .modxtalkstab .informer > a > span.delet {color: #931111;}
 
-input.commentsPerPage, .ext-strict .x-form-field-trigger-wrap .commentsPerPage {padding-left: 30px !important; background: url('../../img/mrg/16-mt-List-Images.png') no-repeat 5px 8px transparent;}
-input.moderators, .ext-strict .moderators {padding-left: 30px !important; background: url('../../img/mrg/16-mt-Group.png') no-repeat 5px 8px transparent;}
-input.commentTpl, .ext-strict .commentTpl {padding-left: 30px !important; background: url('../../img/mrg/16-mt-Applications.png') no-repeat 5px 8px transparent;}
+input.commentsPerPage, .ext-strict .x-form-field-trigger-wrap .commentsPerPage {padding-left: 30px !important; background: url('../../img/mgr/16-mt-List-Images.png') no-repeat 5px 8px transparent;}
+input.moderators, .ext-strict .moderators {padding-left: 30px !important; background: url('../../img/mgr/16-mt-Group.png') no-repeat 5px 8px transparent;}
+input.commentTpl, .ext-strict .commentTpl {padding-left: 30px !important; background: url('../../img/mgr/16-mt-Applications.png') no-repeat 5px 8px transparent;}

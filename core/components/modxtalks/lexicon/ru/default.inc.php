@@ -64,6 +64,9 @@ $_lang['modxtalks.default_template'] = 'шаблон по-умолчанию';
 $_lang['modxtalks.deleteUserId'] = 'Удалил';
 $_lang['modxtalks.date_create'] = 'Дата добавления';
 
+$_lang['modxtalks.edit'] = 'Изменить';
+$_lang['modxtalks.remove'] = 'Удалить';
+
 $_lang['modxtalks.editUserId'] = 'Отредактировал';
 $_lang['modxtalks.editTime'] = 'Дата редактирования';
 $_lang['modxtalks.email_adress'] = 'Email адрес';
@@ -97,8 +100,8 @@ $_lang['modxtalks.ip_removes_confirm'] = 'Вы действительно хот
 $_lang['modxtalks.loading'] = 'Загрузка';
 
 $_lang['modxtalks.management'] = 'MODXTalks. Управление комментариями';
-$_lang['modxtalks.management_desc'] = 'Здесь вы можете просмотреть информацию по каждой отельной теме комментария. Просмотреть не потверждённые комментарии и при необходимости <a class="link-mt" href="#homeTab:not-confirmed">подтвердить</a> в соответствующем разделе. В <a class="link-mt" href="#homeTab:ip-blocking">IP блокировки</a> вы можете ввести IP адрес для запрета голосовать пользователю с таким IP адресом.';
-$_lang['modxtalks.management_unconfirmed_desc'] = '<strong>Неподтвержденные комментарии.</strong> Вы можете управлять непотверждёнными комментариями, потвердить или удалить комментарий.<br />После потверждения комментарий сразу появиться на вашем веб ресурсе, а пользователь, отправивший комментарий, получит уведомление о добавлении на веб ресурс.';
+$_lang['modxtalks.management_desc'] = 'Здесь вы можете просмотреть информацию по каждой отельной теме комментария. Просмотреть не подтвержденные комментарии и при необходимости <a class="link-mt" href="#homeTab:not-confirmed">подтвердить</a> в соответствующем разделе. В <a class="link-mt" href="#homeTab:ip-blocking">IP блокировки</a> вы можете ввести IP адрес для запрета голосовать пользователю с таким IP адресом.';
+$_lang['modxtalks.management_unconfirmed_desc'] = '<strong>Неподтвержденные комментарии.</strong> Вы можете управлять не подтверждёнными комментариями, подтвердить или удалить комментарий.<br />После подтверждения комментарий сразу появиться на вашем веб ресурсе, а пользователь, отправивший комментарий, получит уведомление о добавлении на веб ресурс.';
 $_lang['modxtalks.moderators'] = 'Модераторы';
 $_lang['modxtalks.moderators_desc'] = 'Перечислите через запятую модераторов, имеющих возможность модерировать комментарии этого ресурса.';
 $_lang['modxtalks.menu_desc'] = 'Управления и подтверждение комментариев MODXTalks.';
@@ -313,7 +316,7 @@ $_lang['modxtalks.temppost_err_nfs'] = 'Комментарий не найден
 $_lang['modxtalks.unallowed_symbols'] = 'Запрещенные символы!';
 $_lang['modxtalks.user_exists'] = 'Вы использовали Email зарегистрированого пользователя, пожалуйста, авторизуйтесь для добавления комментария с таким Email адресом!';
 $_lang['modxtalks.unknown_error'] = 'Неизвестная ошибка!';
-$_lang['modxtalks.write_comment'] = 'Написать ответ...';
+$_lang['modxtalks.write_comment'] = 'Оставить комментарий...';
 $_lang['modxtalks.save_changes'] = 'Сохранить изменения';
 $_lang['modxtalks.cancel'] = 'Отмена';
 $_lang['modxtalks.nobody_leave_comment'] = 'Пока ещё никто не оставил свой комментарий';

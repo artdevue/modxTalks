@@ -1,7 +1,7 @@
-<div class="mt_mtComment" data-index="[[+index]]" data-idx="[[+idx]]">
+<div class="mt_mtComment [[+hideAvatar]]" data-index="[[+index]]" data-idx="[[+idx]]">
 	[[+timeMarker]]
 	<div class="mt_post mt_hasControls[[+deleted]]" id="comment-[[+id]]" data-id="[[+id]]" data-memberid="[[+userId]]">
-		<div class="mt_avatar"[[+hideAvatar]]><img src="[[+avatar]]" alt="" class="mt_avatar_img" /></div>
+		<div class="mt_avatar"><img src="[[+avatar]]" alt="" class="mt_avatar_img" /></div>
 		<div class="mt_postContent mt_thing">
 			<div class="mt_postHeader">
 				<div class="mt_info">

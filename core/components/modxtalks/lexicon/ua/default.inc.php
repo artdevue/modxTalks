@@ -64,6 +64,9 @@ $_lang['modxtalks.default_template'] = 'шаблон за замовчуванн
 $_lang['modxtalks.deleteUserId'] = 'Видалив';
 $_lang['modxtalks.date_create'] = 'Дата додавання';
 
+$_lang['modxtalks.edit'] = 'Змінити';
+$_lang['modxtalks.remove'] = 'Видалити';
+
 $_lang['modxtalks.editUserId'] = 'Відредагував';
 $_lang['modxtalks.editTime'] = 'Дата редагування';
 $_lang['modxtalks.email_adress'] = 'Email адреса';

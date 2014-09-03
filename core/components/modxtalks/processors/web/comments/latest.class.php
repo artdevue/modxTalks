@@ -1,4 +1,7 @@
 <?php
+
+require_once dirname(dirname(dirname(__FILE__))) . '/modxtalksprocessor.trait.php';
+
 /**
  * Get Latest Comments
  *
@@ -7,87 +10,98 @@
  */
 class getLatestCommentsListProcessor extends modObjectGetListProcessor
 {
-    public $classKey = 'modxTalksLatestPost';
-    public $languageTopics = array('modxtalks:default');
-    public $objectType = 'modxtalks.latestpost';
-    public $limit;
-    public $time;
-    public $action;
+	use modxTalksProcessorTrait;
 
-    /**
-     * {@inheritDoc}
-     * @return mixed
-     */
-    public function process() {
-        $this->action = $this->getProperty('action');
-        $data = $this->getData();
-        if ($this->action === 'latest') {
-            $output = array();
-            foreach ($data['results'] as $r) {
-                $output[$r['cid']] = $this->modx->modxtalks->_parseTpl($this->modx->modxtalks->config['commentLatestTpl'], $r, true);
-            }
-            return $this->outputArray($output, $data['total']);
-        }
+	public $classKey = 'modxTalksLatestPost';
+	public $languageTopics = ['modxtalks:default'];
+	public $objectType = 'modxtalks.latestpost';
+	public $limit;
+	public $time;
+	public $action;
 
-        return $data;
-    }
+	/**
+	 * {@inheritDoc}
+	 * @return mixed
+	 */
+	public function process()
+	{
+		$this->action = $this->getProperty('action');
+		$data = $this->getData();
+		if ($this->action === 'latest')
+		{
+			$output = [];
+			foreach ($data['results'] as $r)
+			{
+				$output[$r['cid']] = $this->app()->_parseTpl($this->app()->config['commentLatestTpl'], $r, true);
+			}
 
-    public function getData() {
-        $this->time = (int) $this->getProperty('time');
-        $this->limit = (int) $this->modx->modxtalks->config['commentsLatestLimit'];
+			return $this->outputArray($output, $data['total']);
+		}
 
-        $data = array('total' => 0, 'results' => array());
+		return $data;
+	}
 
-        $q = $this->modx->newQuery('modxTalksLatestPost');
-        if ($this->action === 'latest') {
-            $q->where(array('time:>' => $this->time));
-        }
+	public function getData()
+	{
+		$this->time = (int) $this->getProperty('time');
+		$this->limit = (int) $this->app()->config['commentsLatestLimit'];
 
-        $count = $this->modx->getCount('modxTalksLatestPost', $q);
+		$data = ['total' => 0, 'results' => []];
 
-        if ($count == 0) {
-            return $data;
-        }
+		$q = $this->modx->newQuery('modxTalksLatestPost');
+		if ($this->action === 'latest')
+		{
+			$q->where(['time:>' => $this->time]);
+		}
 
-        $q->select($this->modx->getSelectColumns('modxTalksLatestPost'));
-        $q->sortby('time', 'DESC');
-        $q->limit($this->limit);
+		$count = $this->modx->getCount('modxTalksLatestPost', $q);
 
-        $comments = array();
-        if ($q->prepare() && $q->stmt->execute()) {
-            $comments = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
+		if ($count == 0)
+		{
+			return $data;
+		}
 
-        $list = array();
-        $date_format = $this->modx->modxtalks->config['dateFormat'];
+		$q->select($this->modx->getSelectColumns('modxTalksLatestPost'));
+		$q->sortby('time', 'DESC');
+		$q->limit($this->limit);
 
-        foreach ($comments as $k => $comment) {
-            /**
-             * Prepare data for published comment
-             */
-            $comment['content'] = $this->modx->stripTags($comment['content']);
-            $list[] = array(
-                'name'       => $comment['name'],
-                'avatar'     => $this->modx->modxtalks->getAvatar($comment['email']),
-                'date'       => date($date_format.' O', $comment['time']),
-                'funny_date' => $this->modx->modxtalks->date_format($comment['time']),
-                'id'         => $comment['pid'],
-                'cid'        => $comment['cid'],
-                'idx'        => $comment['idx'],
-                'link'       => $comment['link'],
-                'timeago'    => date('c',$comment['time']),
-                'time'       => $comment['time'],
-                'content'    => $this->modx->modxtalks->slice($comment['content']),
-                'total'      => $comment['total'],
-                'title'      => $comment['title'],
-            );
-        }
+		$comments = [];
+		if ($q->prepare() && $q->stmt->execute())
+		{
+			$comments = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
+		}
 
-        $data['total'] = $count;
-        $data['results'] =& $list;
+		$list = [];
+		$date_format = $this->app()->config['dateFormat'];
 
-        return $data;
-    }
+		foreach ($comments as $k => $comment)
+		{
+			/**
+			 * Prepare data for published comment
+			 */
+			$comment['content'] = $this->modx->stripTags($comment['content']);
+			$list[] = [
+				'name' => $comment['name'],
+				'avatar' => $this->app()->getAvatar($comment['email']),
+				'date' => date($date_format . ' O', $comment['time']),
+				'funny_date' => $this->app()->date_format($comment['time']),
+				'id' => $comment['pid'],
+				'cid' => $comment['cid'],
+				'idx' => $comment['idx'],
+				'link' => $comment['link'],
+				'timeago' => date('c', $comment['time']),
+				'time' => $comment['time'],
+				'content' => $this->app()->slice($comment['content']),
+				'total' => $comment['total'],
+				'title' => $comment['title'],
+			];
+		}
+
+		$data['total'] = $count;
+		$data['results'] =& $list;
+
+		return $data;
+	}
 }
 
 return 'getLatestCommentsListProcessor';

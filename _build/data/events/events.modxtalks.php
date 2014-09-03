@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * Copyright 2012-2013 by
+ * Copyright 2012-2014 by
  * Valentin Rasulov <artdevue.com@yahoo.com> & Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  *
  * MODXTalks is free software; you can redistribute it and/or modify it under the
@@ -25,69 +25,69 @@
  * @package modxtalks
  * @subpackage build
  */
-$events = array();
+$events = [];
 
 $events['OnSiteRefresh'] = $modx->newObject('modPluginEvent');
-$events['OnSiteRefresh']->fromArray(array(
-    'event'       => 'OnSiteRefresh',
-    'priority'    => 0,
-    'propertyset' => 0,
-), '', true, true);
+$events['OnSiteRefresh']->fromArray([
+	'event' => 'OnSiteRefresh',
+	'priority' => 0,
+	'propertyset' => 0,
+], '', true, true);
 
 $events['OnUserFormSave'] = $modx->newObject('modPluginEvent');
-$events['OnUserFormSave']->fromArray(array(
-    'event'       => 'OnUserFormSave',
-    'priority'    => 0,
-    'propertyset' => 0,
-), '', true, true);
+$events['OnUserFormSave']->fromArray([
+	'event' => 'OnUserFormSave',
+	'priority' => 0,
+	'propertyset' => 0,
+], '', true, true);
 
 $events['OnPageNotFound'] = $modx->newObject('modPluginEvent');
-$events['OnPageNotFound']->fromArray(array(
-    'event'       => 'OnPageNotFound',
-    'priority'    => 0,
-    'propertyset' => 0,
-), '', true, true);
+$events['OnPageNotFound']->fromArray([
+	'event' => 'OnPageNotFound',
+	'priority' => 0,
+	'propertyset' => 0,
+], '', true, true);
 
 $events['OnManagerPageInit'] = $modx->newObject('modPluginEvent');
-$events['OnManagerPageInit']->fromArray(array(
-    'event'       => 'OnManagerPageInit',
-    'priority'    => 0,
-    'propertyset' => 0,
-), '', true, true);
+$events['OnManagerPageInit']->fromArray([
+	'event' => 'OnManagerPageInit',
+	'priority' => 0,
+	'propertyset' => 0,
+], '', true, true);
 
 $events['OnDocFormPrerender'] = $modx->newObject('modPluginEvent');
-$events['OnDocFormPrerender']->fromArray(array(
-    'event'       => 'OnDocFormPrerender',
-    'priority'    => 0,
-    'propertyset' => 0,
-), '', true, true);
+$events['OnDocFormPrerender']->fromArray([
+	'event' => 'OnDocFormPrerender',
+	'priority' => 0,
+	'propertyset' => 0,
+], '', true, true);
 
 $events['OnWebPagePrerender'] = $modx->newObject('modPluginEvent');
-$events['OnWebPagePrerender']->fromArray(array(
-    'event'       => 'OnWebPagePrerender',
-    'priority'    => 0,
-    'propertyset' => 0,
-), '', true, true);
+$events['OnWebPagePrerender']->fromArray([
+	'event' => 'OnWebPagePrerender',
+	'priority' => 0,
+	'propertyset' => 0,
+], '', true, true);
 
 $events['OnModxTalksCommentAfterAdd'] = $modx->newObject('modPluginEvent');
-$events['OnModxTalksCommentAfterAdd']->fromArray(array(
-    'event'       => 'OnModxTalksCommentAfterAdd',
-    'priority'    => 0,
-    'propertyset' => 0,
-), '', true, true);
+$events['OnModxTalksCommentAfterAdd']->fromArray([
+	'event' => 'OnModxTalksCommentAfterAdd',
+	'priority' => 0,
+	'propertyset' => 0,
+], '', true, true);
 
 $events['OnModxTalksCommentAfterRemove'] = $modx->newObject('modPluginEvent');
-$events['OnModxTalksCommentAfterRemove']->fromArray(array(
-    'event'       => 'OnModxTalksCommentAfterRemove',
-    'priority'    => 0,
-    'propertyset' => 0,
-), '', true, true);
+$events['OnModxTalksCommentAfterRemove']->fromArray([
+	'event' => 'OnModxTalksCommentAfterRemove',
+	'priority' => 0,
+	'propertyset' => 0,
+], '', true, true);
 
 $events['OnModxTalksCommentBeforeRemove'] = $modx->newObject('modPluginEvent');
-$events['OnModxTalksCommentBeforeRemove']->fromArray(array(
-    'event'       => 'OnModxTalksCommentBeforeRemove',
-    'priority'    => 0,
-    'propertyset' => 0,
-), '', true, true);
+$events['OnModxTalksCommentBeforeRemove']->fromArray([
+	'event' => 'OnModxTalksCommentBeforeRemove',
+	'priority' => 0,
+	'propertyset' => 0,
+], '', true, true);
 
 return $events;

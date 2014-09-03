@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Remove Post
  *
@@ -7,9 +8,9 @@
  */
 class modxTalkRemoveProcessor extends modObjectRemoveProcessor
 {
-    public $classKey = 'Post';
-    public $languageTopics = array('modxtalks:default');
-    // public $objectType = 'modxtalks.modxtalk';
+	public $classKey = 'Post';
+	public $languageTopics = ['modxtalks:default'];
+	// public $objectType = 'modxtalks.modxtalk';
 }
 
 return 'modxTalkRemoveProcessor';

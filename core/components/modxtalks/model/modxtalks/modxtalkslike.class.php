@@ -1,2 +1,5 @@
 <?php
-class modxTalksLike extends xPDOSimpleObject {}
+
+class modxTalksLike extends xPDOSimpleObject
+{
+}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Get blocked IP address
  *
@@ -7,8 +8,8 @@
  */
 class modxTalksIpBlockGetProcessor extends modObjectGetProcessor
 {
-    public $classKey = 'modxTalksIpBlock';
-    public $languageTopics = array('modxtalks:default');
+	public $classKey = 'modxTalksIpBlock';
+	public $languageTopics = ['modxtalks:default'];
 }
 
 return 'modxTalksIpBlockGetProcessor';

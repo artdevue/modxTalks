@@ -1,4 +1,7 @@
 <?php
+
+require_once dirname(dirname(dirname(__FILE__))) . '/modxtalksprocessor.trait.php';
+
 /**
  * Remove unconfirmed comment
  *
@@ -7,39 +10,46 @@
  */
 class modxTalksTempPostRemoveProcessor extends modObjectRemoveProcessor
 {
-    public $classKey = 'modxTalksTempPost';
-    public $objectType = 'modxtalks.temppost';
-    public $languageTopics = array('modxtalks:default');
-    public $beforeRemoveEvent = '';
-    public $afterRemoveEvent = '';
+	use modxTalksProcessorTrait;
 
-    public function beforeRemove() {
-        $this->conversationId = $this->object->conversationId;
+	public $classKey = 'modxTalksTempPost';
+	public $objectType = 'modxtalks.temppost';
+	public $languageTopics = ['modxtalks:default'];
+	public $beforeRemoveEvent = '';
+	public $afterRemoveEvent = '';
 
-        if (!$conversation = $this->modx->getObject('modxTalksConversation', $this->conversationId)) {
-            return $this->modx->lexicon('modxtalks.empty_conversation');
-        }
+	public function beforeRemove()
+	{
+		$conversation = $this->modx->getObject('modxTalksConversation', $this->object->conversationId);
 
-        $cProperties = $conversation->getProperty('unconfirmed', 'comments', 0);
-        $unconfirmed = $cProperties['unconfirmed'] > 0 ? --$cProperties['unconfirmed'] : 0;
-        $conversation->setProperty('unconfirmed', $unconfirmed);
+		if ( ! $conversation)
+		{
+			return $this->app()->lang('empty_conversation');
+		}
 
-        if ($conversation->save() !== true) {
-            return $this->modx->lexicon('modxtalks.error');
-        }
+		if ($conversation->unconfirmed)
+		{
+			$conversation->unconfirmed -= 1;
+		}
 
-        return parent::beforeRemove();
-    }
+		if ($conversation->save() !== true)
+		{
+			return $this->app()->lang('error');
+		}
 
-    /**
-     * Show success message after comment successfully remove
-     * @return bool
-     */
-    public function afterRemove() {
-        $this->success($this->modx->lexicon('modxtalks.successfully_deleted'));
+		return parent::beforeRemove();
+	}
 
-        return true;
-    }
+	/**
+	 * Show success message after comment successfully remove
+	 * @return bool
+	 */
+	public function afterRemove()
+	{
+		$this->success($this->app()->lang('successfully_deleted'));
+
+		return true;
+	}
 }
 
 return 'modxTalksTempPostRemoveProcessor';

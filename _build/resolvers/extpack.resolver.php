@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * Copyright 2012-2013 by
+ * Copyright 2012-2014 by
  * Valentin Rasulov <artdevue.com@yahoo.com> & Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  *
  * MODXTalks is free software; you can redistribute it and/or modify it under the
@@ -28,27 +28,32 @@
  * @package modxtalks
  * @subpackage build
  */
-if ($object->xpdo) {
-    switch ($options[xPDOTransport::PACKAGE_ACTION]) {
-        case xPDOTransport::ACTION_INSTALL:
-        case xPDOTransport::ACTION_UPGRADE:
-            /** @var modX $modx */
-            $modx =& $object->xpdo;
-            $modelPath = $modx->getOption('modxtalks.core_path');
-            if (empty($modelPath)) {
-                $modelPath = '[[++core_path]]components/modxtalks/model/';
-            }
-            if ($modx instanceof modX) {
-                $modx->addExtensionPackage('modxtalks', $modelPath);
-            }
-            break;
-        case xPDOTransport::ACTION_UNINSTALL:
-            $modx =& $object->xpdo;
-            $modelPath = $modx->getOption('modxtalks.core_path', null, $modx->getOption('core_path') . 'components/modxtalks/') . 'model/';
-            if ($modx instanceof modX) {
-                $modx->removeExtensionPackage('modxtalks');
-            }
-            break;
-    }
+if ($object->xpdo)
+{
+	switch ($options[xPDOTransport::PACKAGE_ACTION])
+	{
+		case xPDOTransport::ACTION_INSTALL:
+		case xPDOTransport::ACTION_UPGRADE:
+			/** @var modX $modx */
+			$modx =& $object->xpdo;
+			$modelPath = $modx->getOption('modxtalks.core_path');
+			if (empty($modelPath))
+			{
+				$modelPath = '[[++core_path]]components/modxtalks/model/';
+			}
+			if ($modx instanceof modX)
+			{
+				$modx->addExtensionPackage('modxtalks', $modelPath);
+			}
+			break;
+		case xPDOTransport::ACTION_UNINSTALL:
+			$modx =& $object->xpdo;
+			$modelPath = $modx->getOption('modxtalks.core_path', null, $modx->getOption('core_path') . 'components/modxtalks/') . 'model/';
+			if ($modx instanceof modX)
+			{
+				$modx->removeExtensionPackage('modxtalks');
+			}
+			break;
+	}
 }
 return true;

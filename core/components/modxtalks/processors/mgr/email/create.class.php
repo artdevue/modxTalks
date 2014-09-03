@@ -1,4 +1,7 @@
 <?php
+
+require_once dirname(dirname(dirname(__FILE__))) . '/modxtalksprocessor.trait.php';
+
 /**
  * Add Email to Block List
  *
@@ -7,35 +10,41 @@
  */
 class modxTalksEmailBlockCreateProcessor extends modObjectCreateProcessor
 {
-    public $classKey = 'modxTalksEmailBlock';
-    public $languageTopics = array('modxtalks:default');
-    public $objectType = 'modxtalks.email';
+	use modxTalksProcessorTrait;
 
-    public function beforeSet() {
-        $email = $this->getProperty('email');
-        $intro = $this->getProperty('intro');
+	public $classKey = 'modxTalksEmailBlock';
+	public $languageTopics = ['modxtalks:default'];
+	public $objectType = 'modxtalks.email';
 
-        if ($this->doesAlreadyExist(array('email' => $email))) {
-            $this->addFieldError('email', $this->modx->lexicon('modxtalks.email_already_banned'));
-        }
+	public function beforeSet()
+	{
+		$email = $this->getProperty('email');
+		$intro = $this->getProperty('intro');
 
-        $comment = $this->modx->newObject('modxTalksPost');
+		if ($this->doesAlreadyExist(['email' => $email]))
+		{
+			$this->addFieldError('email', $this->app()->lang('email_already_banned'));
+		}
 
-        if (!$comment->validateEmail($email)) {
-            $this->addFieldError('email', $this->modx->lexicon('modxtalks.bad_email'));
-        }
+		$comment = $this->modx->newObject('modxTalksPost');
 
-        $this->properties = array(
-            'email' => $email,
-            'date'  => time(),
-        );
+		if ( ! $comment->validateEmail($email))
+		{
+			$this->addFieldError('email', $this->app()->lang('bad_email'));
+		}
 
-        if (!empty($intro)) {
-            $this->properties['intro'] = $intro;
-        }
+		$this->properties = [
+			'email' => $email,
+			'date' => time(),
+		];
 
-        return parent::beforeSet();
-    }
+		if ( ! empty($intro))
+		{
+			$this->properties['intro'] = $intro;
+		}
 
+		return parent::beforeSet();
+	}
 }
+
 return 'modxTalksEmailBlockCreateProcessor';

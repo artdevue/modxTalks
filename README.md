@@ -4,11 +4,13 @@
 
 [Homepage](http://modxtalks.artdevue.com)
 
+[Demo](http://modxtalks.artdevue.com/en/demo.html)
+
 [MODX extras](http://modx.com/extras/package/modxtalks)
 
 [Issues Tracker](https://github.com/artdevue/modxTalks/issues)
 
-[Download Latest Version](https://www.dropbox.com/s/8haf9ge2l6xoxpj/modxtalks-1.0.3-beta.transport.zip)
+[Download Latest Version](https://www.dropbox.com/s/8haf9ge2l6xoxpj/modxtalks-1.2.0-pl.transport.zip)
 
 ### Comments idea took [esoTalk](http://esotalk.org)
 

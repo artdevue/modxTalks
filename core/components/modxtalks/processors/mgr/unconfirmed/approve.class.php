@@ -1,4 +1,7 @@
 <?php
+
+require_once dirname(dirname(dirname(__FILE__))) . '/modxtalksprocessor.trait.php';
+
 /**
  * Approve unconfirmed comment
  *
@@ -7,92 +10,109 @@
  */
 class modxTalksTempPostApproveProcessor extends modObjectRemoveProcessor
 {
-    public $classKey = 'modxTalksTempPost';
-    public $objectType = 'modxtalks.temppost';
-    public $languageTopics = array('modxtalks:default');
-    private $conversationId;
+	use modxTalksProcessorTrait;
 
-    public function beforeRemove() {
-        $this->conversationId = $this->object->conversationId;
+	public $classKey = 'modxTalksTempPost';
+	public $objectType = 'modxtalks.temppost';
+	public $languageTopics = ['modxtalks:default'];
+	/**
+	 * @var modxTalkCreateProcessor
+	 */
+	protected $conversation;
 
-        if (!$this->conversation = $this->modx->getObject('modxTalksConversation', $this->conversationId)) {
-            return $this->modx->lexicon('modxtalks.empty_conversation');
-        }
+	public function beforeRemove()
+	{
+		$this->conversation = $this->modx->getObject('modxTalksConversation', $this->object->conversationId);
 
-        $cProperties = $this->conversation->getProperties('comments');
-        $this->conversation->setProperties(array(
-            'total'       => ++$cProperties['total'],
-            'deleted'     => $cProperties['deleted'],
-            'unconfirmed' => $cProperties['unconfirmed'] > 0 ? --$cProperties['unconfirmed'] : 0
-        ), 'comments', false);
+		if ( ! $this->conversation)
+		{
+			return $this->app()->lang('empty_conversation');
+		}
 
-        $q = $this->modx->newQuery('modxTalksPost', array(
-            'conversationId' => $this->conversationId
-        ));
-        $q->sortby('idx','DESC');
+		$this->conversation->total += 1;
+		if ($this->conversation->unconfirmed)
+		{
+			$this->conversation->unconfirmed -= 1;
+		}
 
-        $idx = 0;
+		$q = $this->modx->newQuery('modxTalksPost', [
+			'conversationId' => $this->conversation->id
+		]);
+		$q->sortby('idx', 'DESC');
 
-        if ($lastComment = $this->modx->getObject('modxTalksPost', $q)) {
-            $idx = $lastComment->get('idx');
-        }
+		$idx = 0;
 
-        $this->comment = $this->modx->newObject('modxTalksPost');
-        $time = time();
-        $commentParams = array(
-            'idx'            => ++$idx,
-            'conversationId' => $this->conversationId,
-            'time'           => $time,
-            'date'           => strftime('%Y%m', $time),
-            'content'        => $this->object->content,
-            'ip'             => $this->object->ip,
-        );
+		if ($lastComment = $this->modx->getObject('modxTalksPost', $q))
+		{
+			$idx = $lastComment->get('idx');
+		}
 
-        if ($this->object->userId > 0) {
-            $commentParams['userId'] = $this->object->userId;
-        }
-        else {
-            $commentParams['username'] = $this->object->username;
-            $commentParams['useremail'] = $this->object->useremail;
-        }
+		$this->comment = $this->modx->newObject('modxTalksPost');
+		$time = time();
+		$commentParams = [
+			'idx' => ++$idx,
+			'conversationId' => $this->conversation->id,
+			'time' => $time,
+			'date' => strftime('%Y%m', $time),
+			'content' => $this->object->content,
+			'ip' => $this->object->ip,
+		];
 
-        $this->comment->fromArray($commentParams);
+		if ($this->object->userId > 0)
+		{
+			$commentParams['userId'] = $this->object->userId;
+		}
+		else
+		{
+			$commentParams['username'] = $this->object->username;
+			$commentParams['useremail'] = $this->object->useremail;
+		}
 
-        if ($this->comment->save() !== true) {
-            return $this->modx->lexicon('modxtalks.error');
-        }
+		$this->comment->fromArray($commentParams);
 
-        if ($this->conversation->save() !== true) {
-            return $this->modx->lexicon('modxtalks.error');
-        }
+		if ($this->comment->save() !== true)
+		{
+			return $this->app()->lang('error');
+		}
 
-        return parent::beforeRemove();
-    }
+		if ($this->conversation->save() !== true)
+		{
+			return $this->app()->lang('error');
+		}
 
-    public function afterRemove() {
-        /**
-         * Обновляем кэш комментария и темы
-         */
-        if ($this->modx->modxtalks->mtCache === true) {
-            if (!$this->modx->modxtalks->cacheComment($this->comment)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/restore] Error cache the comment with ID ' . $this->comment->id);
-            }
-            if (!$this->modx->modxtalks->cacheConversation($this->conversation)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/restore] Error cache conversation with ID ' . $this->conversation->id);
-            }
-        }
+		return parent::beforeRemove();
+	}
 
-        /**
-         * Отправляем уведомление о подтверждении комментария пользователю оставившему комментарий
-         */
-        if (!$this->modx->modxtalks->notifyUser($this->comment)) {
-            return $this->modx->lexicon('modxtalks.error');
-        }
+	public function afterRemove()
+	{
+		/**
+		 * Обновляем кэш комментария и темы
+		 */
+		if ($this->app()->mtCache === true)
+		{
+			if ( ! $this->app()->cacheComment($this->comment))
+			{
+				$this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/restore] Error cache the comment with ID ' . $this->comment->id);
+			}
 
-        $this->success($this->modx->lexicon('modxtalks.comment_approved'));
+			if ( ! $this->app()->cacheConversation($this->conversation))
+			{
+				$this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/restore] Error cache conversation with ID ' . $this->conversation->id);
+			}
+		}
 
-        return parent::afterRemove();
-    }
+		/**
+		 * Отправляем уведомление о подтверждении комментария пользователю оставившему комментарий
+		 */
+		if ( ! $this->app()->notifyUser($this->comment))
+		{
+			return $this->app()->lang('error');
+		}
+
+		$this->success($this->app()->lang('comment_approved'));
+
+		return parent::afterRemove();
+	}
 }
 
 return 'modxTalksTempPostApproveProcessor';

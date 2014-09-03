@@ -1,121 +1,150 @@
 <?php
+
+require_once dirname(dirname(dirname(__FILE__))) . '/modxtalksprocessor.trait.php';
+
 /**
  * @package post
  * @subpackage processors
  */
-class postAddVoteProcessor extends modObjectUpdateProcessor {
-    public $classKey = 'modxTalksPost';
-    public $languageTopics = array('modxtalks:default');
-    public $objectType = 'modxtalks.post';
-    public $context = '';
-    private $voted;
+class postAddVoteProcessor extends modObjectUpdateProcessor
+{
+	use modxTalksProcessorTrait;
 
-    /**
-     * Before set the fields on the post
-     *
-     * @return void
-     */
-    public function beforeSet() {
-        /**
-         * Check for voting
-         */
-        if (!$this->modx->modxtalks->config['voting']) {
-            $this->failure($this->modx->lexicon('modxtalks.voting_disabled'));
-            return false;
-        }
-        /**
-         * Check Context
-         */
-        $this->context = trim($this->getProperty('ctx'));
-        if (empty($this->context)) {
-            $this->failure($this->modx->lexicon('modxtalks.empty_context'));
-            return false;
-        }
-        elseif (!$this->modx->getCount('modContext',$this->context)) {
-            $this->failure($this->modx->lexicon('modxtalks.bad_context'));
-            return false;
-        }
+	public $classKey = 'modxTalksPost';
+	public $languageTopics = ['modxtalks:default'];
+	public $objectType = 'modxtalks.post';
+	public $context = '';
+	protected $voted;
 
-        $this->properties = array();
+	/**
+	 * Before set the fields on the post
+	 *
+	 * @return mixed
+	 */
+	public function beforeSet()
+	{
+		/**
+		 * Check for voting
+		 */
+		if ( ! $this->app()->config['voting'])
+		{
+			$this->failure($this->app()->lang('voting_disabled'));
 
-        /**
-         * Check user permission to add a vote
-         */
-        if (!$this->modx->user->isAuthenticated($this->context) && !$this->modx->modxtalks->isModerator()) {
-            $this->failure($this->modx->lexicon('modxtalks.cant_vote'));
-            $this->voted = false;
-            return false;
-        }
+			return false;
+		}
+		/**
+		 * Check Context
+		 */
+		$this->context = trim($this->getProperty('ctx'));
+		if (empty($this->context))
+		{
+			$this->failure($this->app()->lang('empty_context'));
 
-        $this->userId = $this->modx->user->id;
-        $this->votes = $this->object->getVotes();
+			return false;
+		}
+		else if ( ! $this->modx->getCount('modContext', $this->context))
+		{
+			$this->failure($this->app()->lang('bad_context'));
 
-        // Remove vote
-        if ($this->votes['votes'] > 0 && in_array($this->userId, $this->votes['users'])) {
-            $this->object->removeVote($this->userId);
-            return parent::beforeSet();
-        }
+			return false;
+		}
 
-        // Add vote
-        $this->object->addVote($this->userId);
-        $this->voted = true;
+		$this->properties = [];
 
-        return parent::beforeSet();
-    }
+		/**
+		 * Check user permission to add a vote
+		 */
+		if ( ! $this->modx->user->isAuthenticated($this->context) && ! $this->app()->isModerator())
+		{
+			$this->failure($this->app()->lang('cant_vote'));
+			$this->voted = false;
 
-    public function cleanup() {
-        $data = $this->_preparePostData();
+			return false;
+		}
 
-        // Remove vote message
-        if (!$this->voted) {
-            return $this->success($this->modx->lexicon('modxtalks.successfully_un_voted'), $data);
-        }
-        // Add vote message
-        return $this->success($this->modx->lexicon('modxtalks.successfully_voted'), $data);
-    }
+		$this->userId = $this->modx->user->id;
+		$this->votes = $this->object->getVotes();
 
-    /**
-     * After save
-     * Add comment to cache
-     *
-     * @return void
-     */
-    public function afterSave() {
-        if ($this->modx->modxtalks->mtCache === true) {
-            if (!$this->modx->modxtalks->cacheComment($this->object)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/vote] Cache comment error, ID '.$this->object->id);
-            }
-        }
-        return parent::afterSave();
-    }
+		// Remove vote
+		if ($this->votes['votes'] > 0 && in_array($this->userId, $this->votes['users']))
+		{
+			$this->object->removeVote($this->userId);
 
-    /**
-     * Override cleanup to send only back needed params
-     * @return array|string
-     */
-    private function _preparePostData() {
-        $this->votes = $this->object->getVotes();
-        $data = array(
-            'votes' => $this->votes['votes'],
-            'html'  => '',
-            'btn' => $this->modx->lexicon('modxtalks.i_like'),
-        );
-        if (in_array($this->userId, $this->votes['users'])) {
-            $total = count($this->votes['users']) - 1;
-            $data['btn'] = $this->modx->lexicon('modxtalks.not_like');
-            if ($total > 0) {
-                $data['html'] = $this->modx->modxtalks->decliner($total,$this->modx->lexicon('modxtalks.people_like_and_you', array('total' => $total)));
-            }
-            else {
-                $data['html'] = $this->modx->lexicon('modxtalks.you_like');
-            }
-        }
-        elseif ($this->votes['votes'] > 0) {
-            $data['html'] = $this->modx->modxtalks->decliner($this->votes['votes'],$this->modx->lexicon('modxtalks.people_like', array('total' => $this->votes['votes'])));
-        }
-        return $data;
-    }
+			return parent::beforeSet();
+		}
 
+		// Add vote
+		$this->object->addVote($this->userId);
+		$this->voted = true;
+
+		return parent::beforeSet();
+	}
+
+	public function cleanup()
+	{
+		$data = $this->_preparePostData();
+
+		// Remove vote message
+		if ( ! $this->voted)
+		{
+			return $this->success($this->app()->lang('successfully_un_voted'), $data);
+		}
+
+		// Add vote message
+		return $this->success($this->app()->lang('successfully_voted'), $data);
+	}
+
+	/**
+	 * After save
+	 * Add comment to cache
+	 *
+	 * @return void
+	 */
+	public function afterSave()
+	{
+		if ($this->app()->mtCache === true)
+		{
+			if ( ! $this->app()->cacheComment($this->object))
+			{
+				$this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/vote] Cache comment error, ID ' . $this->object->id);
+			}
+		}
+
+		return parent::afterSave();
+	}
+
+	/**
+	 * Override cleanup to send only back needed params
+	 * @return array|string
+	 */
+	private function _preparePostData()
+	{
+		$this->votes = $this->object->getVotes();
+		$data = [
+			'votes' => $this->votes['votes'],
+			'html' => '',
+			'btn' => $this->app()->lang('i_like'),
+		];
+		if (in_array($this->userId, $this->votes['users']))
+		{
+			$total = count($this->votes['users']) - 1;
+			$data['btn'] = $this->app()->lang('not_like');
+			if ($total > 0)
+			{
+				$data['html'] = $this->app()->decliner($total, $this->app()->lang('people_like_and_you', ['total' => $total]));
+			}
+			else
+			{
+				$data['html'] = $this->app()->lang('you_like');
+			}
+		}
+		elseif ($this->votes['votes'] > 0)
+		{
+			$data['html'] = $this->app()->decliner($this->votes['votes'], $this->app()->lang('people_like', ['total' => $this->votes['votes']]));
+		}
+
+		return $data;
+	}
 }
 
 return 'postAddVoteProcessor';

@@ -1,250 +1,297 @@
 <?php
+
+require_once dirname(dirname(dirname(__FILE__))) . '/modxtalksprocessor.trait.php';
+
 /**
  * @package post
  * @subpackage processors
  */
-class commentRemoveProcessor extends modObjectUpdateProcessor {
-    public $classKey = 'modxTalksPost';
-    public $languageTopics = array('modxtalks:default');
-    public $objectType = 'modxtalks.post';
-    public $afterSaveEvent = 'OnModxTalksCommentAfterRemove';
-    public $beforeSaveEvent = 'OnModxTalksCommentBeforeRemove';
-    public $context = '';
-    protected $theme;
-    protected $defaultProprties = array(
-        'total' => 0,
-        'deleted' => 0,
-        'unconfirmed' => 0,
-    );
+class commentRemoveProcessor extends modObjectUpdateProcessor
+{
+	use modxTalksProcessorTrait;
 
-    public function initialize() {
-        /**
-         * Check context
-         */
-        $this->context = trim($this->getProperty('ctx'));
-        if (empty($this->context)) {
-            $this->failure($this->modx->lexicon('modxtalks.empty_context'));
-            return false;
-        }
-        elseif (!$this->modx->getCount('modContext', $this->context)) {
-            $this->failure($this->modx->lexicon('modxtalks.bad_context'));
-            return false;
-        }
+	public $classKey = 'modxTalksPost';
+	public $languageTopics = ['modxtalks:default'];
+	public $objectType = 'modxtalks.post';
+	public $afterSaveEvent = 'OnModxTalksCommentAfterRemove';
+	public $beforeSaveEvent = 'OnModxTalksCommentBeforeRemove';
+	public $context = '';
+	/**
+	 * @var modxTalksConversation
+	 */
+	protected $conversation;
 
-        if ($slug = (string) $this->getProperty('slug')) {
-            $this->modx->modxtalks->config['slug'] = $slug;
-        }
+	public function initialize()
+	{
+		/**
+		 * Check context
+		 */
+		$this->context = trim($this->getProperty('ctx'));
+		if (empty($this->context))
+		{
+			$this->failure($this->modx->lexicon('modxtalks.empty_context'));
 
-        return parent::initialize();
-    }
+			return false;
+		}
+		else if ( ! $this->modx->getCount('modContext', $this->context))
+		{
+			$this->failure($this->modx->lexicon('modxtalks.bad_context'));
 
-    public function beforeSet() {
-        $this->theme = $this->modx->getObject('modxTalksConversation', array(
-            'id' => $this->object->conversationId
-        ));
+			return false;
+		}
 
-        if (!$this->theme) {
-            return false;
-        }
+		if ($slug = (string) $this->getProperty('slug'))
+		{
+			$this->app()->config['slug'] = $slug;
+		}
 
-        if ($this->object->deleteTime > 0 || $this->object->deleteUserId) {
-            $this->failure($this->modx->lexicon('modxtalks.already_deleted'));
-            return false;
-        }
+		return parent::initialize();
+	}
 
-        /**
-         * Set comments data
-         */
-        $this->properties = array(
-            'deleteTime' => time(),
-            'deleteUserId' => $this->modx->user->id,
-        );
+	public function beforeSet()
+	{
+		$this->conversation = $this->modx->getObject('modxTalksConversation', [
+			'id' => $this->object->conversationId
+		]);
 
-        /**
-         * If users is moderator
-         */
-        if ($this->modx->modxtalks->isModerator()) {
-            return parent::beforeSet();
-        }
+		if ( ! $this->conversation)
+		{
+			return false;
+		}
 
-        /**
-         * Check user permission to delete comment
-         */
-        $userId = $this->object->userId;
-        if (!$this->modx->user->isAuthenticated($this->context)) {
-            $this->failure($this->modx->lexicon('modxtalks.delete_permission'));
-            return false;
-        }
-        // Check comment owner
-        if ($this->modx->user->id != $userId) {
-            $this->failure($this->modx->lexicon('modxtalks.delete_permission'));
-            return false;
-        }
-        // Check time for delete comment
-        if ((time() - $this->object->time) > $this->modx->modxtalks->config['edit_time']) {
-            $this->failure($this->modx->lexicon('modxtalks.delete_timeout'));
-            return false;
-        }
+		if ($this->object->deleteTime > 0 || $this->object->deleteUserId)
+		{
+			$this->failure($this->modx->lexicon('modxtalks.already_deleted'));
 
-        return parent::beforeSet();
-    }
+			return false;
+		}
 
-    public function beforeSave() {
-        if (!$this->object->deleteUserId || !$this->object->deleteTime) {
-            $this->failure($this->modx->lexicon('modxtalks.delete_error'));
-            return false;
-        }
+		/**
+		 * Set comments data
+		 */
+		$this->properties = [
+			'deleteTime' => time(),
+			'deleteUserId' => $this->modx->user->id,
+		];
 
-        if (!$this->theme->getProperties('comments')) {
-            $this->theme->setProperties($this->defaultProprties, 'comments', false);
-        }
-        $deleted = $this->theme->getProperty('deleted', 'comments',0);
-        $this->theme->setProperty('deleted', ++$deleted, 'comments');
-        $this->theme->save();
+		/**
+		 * If users is moderator
+		 */
+		if ($this->app()->isModerator())
+		{
+			return parent::beforeSet();
+		}
 
-        return parent::beforeSave();
-    }
+		/**
+		 * Check user permission to delete comment
+		 */
+		$userId = $this->object->userId;
+		if ( ! $this->modx->user->isAuthenticated($this->context))
+		{
+			$this->failure($this->modx->lexicon('modxtalks.delete_permission'));
 
-    /**
-     * After save
-     * Add comment to cache
-     *
-     * @return void
-     **/
-    public function afterSave() {
-        if ($this->modx->modxtalks->mtCache === true) {
-            if (!$this->modx->modxtalks->cacheComment($this->object)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/remove] Error cache the comment with ID '.$this->object->id);
-            }
-            if (!$this->modx->modxtalks->cacheConversation($this->theme)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/remove] Error cache the conversation with ID '.$this->theme->id);
-            }
-        }
-        return parent::afterSave();
-    }
+			return false;
+		}
+		// Check comment owner
+		if ($this->modx->user->id != $userId)
+		{
+			$this->failure($this->modx->lexicon('modxtalks.delete_permission'));
 
-    public function cleanup() {
-        $data = $this->_prepareData();
-        return $this->success($this->modx->lexicon('modxtalks.successfully_deleted'),$data);
-    }
+			return false;
+		}
+		// Check time for delete comment
+		if ((time() - $this->object->time) > $this->app()->config['edit_time'])
+		{
+			$this->failure($this->modx->lexicon('modxtalks.delete_timeout'));
 
-    private function _prepareData() {
-        $name = $this->modx->lexicon('modxtalks.guest');
-        $email = 'anonym@anonym.com';
+			return false;
+		}
 
-        if (!$deleteUser = $this->modx->user->Profile->fullname) {
-            $deleteUser = $this->modx->user->username;
-        }
+		return parent::beforeSet();
+	}
 
-        if ($this->object->userId == $this->object->deleteUserId) {
-            $name = $deleteUser;
-            $email = $this->modx->user->Profile->email;
-        }
-        elseif (!$this->object->userId) {
-            $name = $this->object->username;
-            $email = $this->object->useremail;
-        }
-        else {
-            if ($user = $this->modx->getObject('modUser',$this->object->userId)) {
-                $profile = $user->getOne('Profile');
-                $email = $profile->email;
-                if (!$name = $profile->fullname) {
-                    $name = $user->username;
-                }
-            }
-        }
+	public function beforeSave()
+	{
+		if ( ! $this->object->deleteUserId || ! $this->object->deleteTime)
+		{
+			$this->failure($this->modx->lexicon('modxtalks.delete_error'));
 
-        $restore = $this->modx->lexicon('modxtalks.restore');
-        $idx = (int) $this->object->idx;
-        $data = array(
-            'deleteUser'        => $deleteUser,
-            'delete_date'       => date($this->modx->modxtalks->config['dateFormat'].' O',$this->object->deleteTime),
-            'deleted_by'        => $this->modx->lexicon('modxtalks.deleted_by'),
-            'funny_delete_date' => $this->modx->lexicon('modxtalks.date_now'),
-            'name'              => $name,
-            'index'             => date('Ym',$this->object->time),
-            'date'              => date($this->modx->modxtalks->config['dateFormat'].' O',$this->object->time),
-            'funny_date'        => $this->modx->modxtalks->date_format($this->object->time),
-            'id'                => (int) $this->object->id,
-            'idx'               => (int) $idx,
-            'userId'            => md5($this->object->userId.$email),
-            'restore'           => '<a href="'.$this->modx->modxtalks->getLink('restore-'.$idx).'" title="'.$restore.'" class="mt_control-restore">'.$restore.'</a>',
-            'timeago'           => date('c',$this->object->time),
-            'link'              => $this->modx->modxtalks->getLink($idx),
-        );
-        return $data;
-    }
+			return false;
+		}
 
-    public function process() {
-        /* Run the beforeSet method before setting the fields, and allow stoppage */
-        $canSave = $this->beforeSet();
-        if ($canSave !== true) {
-            return $this->failure($canSave);
-        }
+		$this->conversation->deleted += 1;
+		$this->conversation->save();
 
-        if ($this->modx->modxtalks->config['fullDeleteComment'] === true) {
-            if (!$this->theme->getProperties('comments')) {
-                $this->theme->setProperties($this->defaultProprties, 'comments', false);
-            }
+		return parent::beforeSave();
+	}
 
-            $total = $this->theme->getProperty('total', 'comments', 0);
-            $this->theme->setProperty('total', ($total - 1), 'comments');
-            $this->theme->save();
+	/**
+	 * After save
+	 * Add comment to cache
+	 *
+	 * @return void
+	 **/
+	public function afterSave()
+	{
+		if ($this->app()->mtCache === true)
+		{
+			if ( ! $this->app()->cacheComment($this->object))
+			{
+				$this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error cache the comment with ID ' . $this->object->id);
+			}
 
-            if (!$this->modx->modxtalks->cacheConversation($this->theme)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/remove] Error cache the conversation with ID '.$this->theme->id);
-            }
+			if ( ! $this->app()->cacheConversation($this->conversation))
+			{
+				$this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error cache the conversation with ID ' . $this->conversation->id);
+			}
+		}
 
-            $idx = $this->object->idx;
+		return parent::afterSave();
+	}
 
-            if (!$this->object->remove()) {
-                return $this->failure('Error delete the post');
-            }
+	public function cleanup()
+	{
+		$data = $this->_prepareData();
 
-            $this->modx->modxtalks->deleteAllCommentsCache($this->theme->id);
+		return $this->success($this->modx->lexicon('modxtalks.successfully_deleted'), $data);
+	}
 
-            $recalculated = $this->theme->recalculateIndexes($idx);
-            if ($recalculated !== true) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error recalculate comments indexes '.$this->theme->id);
-            }
+	private function _prepareData()
+	{
+		$name = $this->modx->lexicon('modxtalks.guest');
+		$email = 'anonym@anonym.com';
 
-            return $this->success($this->modx->lexicon('modxtalks.successfully_deleted'));
-        }
+		if ( ! $deleteUser = $this->modx->user->Profile->fullname)
+		{
+			$deleteUser = $this->modx->user->username;
+		}
 
-        $this->object->fromArray($this->getProperties());
+		if ($this->object->userId == $this->object->deleteUserId)
+		{
+			$name = $deleteUser;
+			$email = $this->modx->user->Profile->email;
+		}
+		elseif ( ! $this->object->userId)
+		{
+			$name = $this->object->username;
+			$email = $this->object->useremail;
+		}
+		else
+		{
+			if ($user = $this->modx->getObject('modUser', $this->object->userId))
+			{
+				$profile = $user->getOne('Profile');
+				$email = $profile->email;
+				if ( ! $name = $profile->fullname)
+				{
+					$name = $user->username;
+				}
+			}
+		}
 
-        /* Run the beforeSave method and allow stoppage */
-        $canSave = $this->beforeSave();
-        if ($canSave !== true) {
-            return $this->failure($canSave);
-        }
+		$restore = $this->modx->lexicon('modxtalks.restore');
+		$idx = (int) $this->object->idx;
+		$data = [
+			'deleteUser' => $deleteUser,
+			'delete_date' => date($this->app()->config['dateFormat'] . ' O', $this->object->deleteTime),
+			'deleted_by' => $this->modx->lexicon('modxtalks.deleted_by'),
+			'funny_delete_date' => $this->modx->lexicon('modxtalks.date_now'),
+			'name' => $name,
+			'index' => date('Ym', $this->object->time),
+			'date' => date($this->app()->config['dateFormat'] . ' O', $this->object->time),
+			'funny_date' => $this->app()->date_format($this->object->time),
+			'id' => (int) $this->object->id,
+			'idx' => (int) $idx,
+			'userId' => md5($this->object->userId . $email),
+			'restore' => '<a href="' . $this->app()->getLink('restore-' . $idx) . '" title="' . $restore . '" class="mt_control-restore">' . $restore . '</a>',
+			'timeago' => date('c', $this->object->time),
+			'link' => $this->app()->getLink($idx),
+		];
 
-        /* run object validation */
-        if (!$this->object->validate()) {
-            /** @var modValidator $validator */
-            $validator = $this->object->getValidator();
-            if ($validator->hasMessages()) {
-                foreach ($validator->getMessages() as $message) {
-                    $this->addFieldError($message['field'],$this->modx->lexicon($message['message']));
-                }
-            }
-        }
+		return $data;
+	}
 
-        /* run the before save event and allow stoppage */
-        $preventSave = $this->fireBeforeSaveEvent();
-        if (!empty($preventSave)) {
-            return $this->failure($preventSave);
-        }
+	public function process()
+	{
+		/* Run the beforeSet method before setting the fields, and allow stoppage */
+		$canSave = $this->beforeSet();
+		if ($canSave !== true)
+		{
+			return $this->failure($canSave);
+		}
 
-        if ($this->saveObject() == false) {
-            return $this->failure($this->modx->lexicon($this->objectType.'_err_save'));
-        }
-        $this->afterSave();
-        $this->fireAfterSaveEvent();
-        $this->logManagerAction();
-        return $this->cleanup();
-    }
+		if ($this->app()->config['fullDeleteComment'] === true)
+		{
+			if ($this->conversation->total)
+			{
+				$this->conversation->total -= 1;
+			}
 
+			$this->conversation->save();
+
+			if ( ! $this->app()->cacheConversation($this->conversation))
+			{
+				$this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error cache the conversation with ID ' . $this->conversation->id);
+			}
+
+			$idx = $this->object->idx;
+
+			if ( ! $this->object->remove())
+			{
+				return $this->failure('Error while deleting the post');
+			}
+
+			$this->app()->deleteAllCommentsCache($this->conversation->id);
+
+			$recalculated = $this->conversation->recalculateIndexes($idx);
+			if ($recalculated !== true)
+			{
+				$this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error recalculate comments indexes ' . $this->conversation->id);
+			}
+
+			return $this->success($this->modx->lexicon('modxtalks.successfully_deleted'));
+		}
+
+		$this->object->fromArray($this->getProperties());
+
+		/* Run the beforeSave method and allow stoppage */
+		$canSave = $this->beforeSave();
+		if ($canSave !== true)
+		{
+			return $this->failure($canSave);
+		}
+
+		/* run object validation */
+		if ( ! $this->object->validate())
+		{
+			/** @var modValidator $validator */
+			$validator = $this->object->getValidator();
+			if ($validator->hasMessages())
+			{
+				foreach ($validator->getMessages() as $message)
+				{
+					$this->addFieldError($message['field'], $this->modx->lexicon($message['message']));
+				}
+			}
+		}
+
+		/* run the before save event and allow stoppage */
+		$preventSave = $this->fireBeforeSaveEvent();
+		if ( ! empty($preventSave))
+		{
+			return $this->failure($preventSave);
+		}
+
+		if ($this->saveObject() == false)
+		{
+			return $this->failure($this->modx->lexicon($this->objectType . '_err_save'));
+		}
+		$this->afterSave();
+		$this->fireAfterSaveEvent();
+		$this->logManagerAction();
+
+		return $this->cleanup();
+	}
 }
 
 return 'commentRemoveProcessor';

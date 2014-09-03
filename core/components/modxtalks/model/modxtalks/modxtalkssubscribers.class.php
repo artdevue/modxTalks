@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of modxTalks, a simple commenting component for MODx Revolution.
  *
@@ -8,5 +9,6 @@
  * @package modxtalks
  *
  */
-
-class modxTalksSubscribers extends xPDOSimpleObject {}
+class modxTalksSubscribers extends xPDOSimpleObject
+{
+}

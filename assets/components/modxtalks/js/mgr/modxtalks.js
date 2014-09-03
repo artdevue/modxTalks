@@ -1,6 +1,6 @@
 Ext.apply(Ext.form.VTypes, {
     //  vtype validation function
-    IPAddress: function(v) {
+    IPAddress: function (v) {
         return /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(v);
     },
     // vtype Text property: The error text to display when the validation function returns false
@@ -9,7 +9,7 @@ Ext.apply(Ext.form.VTypes, {
     IPAddressMask: /[\d\.]/i
 });
 
-var modxTalks = function(config) {
+var modxTalks = function (config) {
     config = config || {};
     modxTalks.superclass.constructor.call(this, config);
 };

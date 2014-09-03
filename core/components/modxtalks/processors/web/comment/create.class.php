@@ -1,385 +1,440 @@
 <?php
+
+require_once dirname(dirname(dirname(__FILE__))) . '/modxtalksprocessor.trait.php';
+
 /**
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
-    public $classKey = 'modxTalksPost';
-    public $languageTopics = array('modxtalks:default');
-    public $objectType = 'modxtalks.post';
-    public $afterSaveEvent = 'OnModxTalksCommentAfterAdd';
-    public $beforeSaveEvent = 'OnModxTalksCommentBeforeAdd';
-    private $context;
-    private $preModarateComments;
-    private $preview;
-    private $timeout = 60;
-    private $hash = '';
-    private $theme;
-    private $defaultProprties = array(
-        'total' => 0,
-        'deleted' => 0,
-        'unconfirmed' => 0,
-    );
+class modxTalksPostCreateProcessor extends modObjectCreateProcessor
+{
+	use modxTalksProcessorTrait;
 
-    /**
-     * Process the Comment create processor
-     * {@inheritDoc}
-     * @return mixed
-     */
-    public function process() {
-        /* Run the beforeSet method before setting the fields, and allow stoppage */
-        $canSave = $this->beforeSet();
-        if ($canSave !== true) {
-            return $this->failure($canSave);
-        }
+	public $classKey = 'modxTalksPost';
+	public $languageTopics = ['modxtalks:default'];
+	public $objectType = 'modxtalks.post';
+	public $afterSaveEvent = 'OnModxTalksCommentAfterAdd';
+	public $beforeSaveEvent = 'OnModxTalksCommentBeforeAdd';
+	protected $context;
+	protected $preModarateComments;
+	protected $preview;
+	protected $timeout = 60;
+	protected $hash = '';
+	/**
+	 * @var modxTalksConversation
+	 */
+	protected $conversation;
 
-        $this->object->fromArray($this->getProperties());
+	/**
+	 * Process the Comment create processor
+	 * {@inheritDoc}
+	 * @return mixed
+	 */
+	public function process()
+	{
+		/* Run the beforeSet method before setting the fields, and allow stoppage */
+		$canSave = $this->beforeSet();
+		if ($canSave !== true)
+		{
+			return $this->failure($canSave);
+		}
 
-        $this->object->set('name',$this->name);
-        $this->object->set('email',$this->email);
-        $this->object->set('link',$this->modx->modxtalks->getLink($this->object->idx));
-        $this->object->set('processed_content',$this->modx->modxtalks->bbcode($this->object->content));
+		$this->object->fromArray($this->getProperties());
 
-        /* if Comment premodarate return custom message before save comment */
-        if ($this->preModarateComments && !$this->preview && !$this->modx->modxtalks->isModerator()) {
-            $data = array(
-                'success' => false,
-                'message' => $this->modx->lexicon('modxtalks.comment_premoderate'),
-                'premoderated' => true,
-            );
-            return $this->modx->toJSON($data);
-        }
-        elseif ($this->preview) {
-            /* if Comment preview return custom message before save comment */
-            $data = $this->_preparePostData();
-            return $this->success($data);
-        }
+		$this->object->set('name', $this->name);
+		$this->object->set('email', $this->email);
+		$this->object->set('link', $this->app()->getLink($this->object->idx));
+		$this->object->set('processed_content', $this->app()->bbcode($this->object->content));
 
-        /* run object validation */
-        if (!$this->object->validate()) {
-            /** @var modValidator $validator */
-            $validator = $this->object->getValidator();
-            if ($validator->hasMessages()) {
-                foreach ($validator->getMessages() as $message) {
-                    $this->addFieldError($message['field'],$this->modx->lexicon($message['message']));
-                }
-            }
-        }
+		/* if Comment premodarate return custom message before save comment */
+		if ($this->preModarateComments && ! $this->preview && ! $this->app()->isModerator())
+		{
+			$data = [
+				'success' => false,
+				'message' => $this->modx->lexicon('modxtalks.comment_premoderate'),
+				'premoderated' => true,
+			];
 
-        $preventSave = $this->fireBeforeSaveEvent();
-        if (!empty($preventSave)) {
-            return $this->failure($preventSave);
-        }
+			return $this->modx->toJSON($data);
+		}
+		else if ($this->preview)
+		{
+			/* if Comment preview return custom message before save comment */
+			$data = $this->_preparePostData();
 
-        /* save element */
-        if ($this->object->save() === false) {
-            $this->modx->error->checkValidation($this->object);
-            return $this->failure($this->modx->lexicon($this->objectType.'_err_save'));
-        }
+			return $this->success($data);
+		}
 
-        $this->afterSave();
+		/* run object validation */
+		if ( ! $this->object->validate())
+		{
+			/** @var modValidator $validator */
+			$validator = $this->object->getValidator();
+			if ($validator->hasMessages())
+			{
+				foreach ($validator->getMessages() as $message)
+				{
+					$this->addFieldError($message['field'], $this->modx->lexicon($message['message']));
+				}
+			}
+		}
 
-        $this->fireAfterSaveEvent();
-        $this->logManagerAction();
-        return $this->cleanup();
-    }
+		$preventSave = $this->fireBeforeSaveEvent();
+		if ( ! empty($preventSave))
+		{
+			return $this->failure($preventSave);
+		}
 
-    /**
-     * Override in your derivative class to do functionality before the fields are set on the object
-     * @return boolean
-     */
-    public function beforeSet() {
-        $this->preModarateComments = (boolean) $this->modx->getOption('modxtalks.preModarateComments',null,false);
-        $idx = 0;
-        $time = time();
-        $this->userId = 0;
-        $this->ip = $this->modx->modxtalks->get_client_ip();
-        $this->email = trim($this->getProperty('email'));
-        $this->name = trim($this->getProperty('name'));
-        $conversationId = 0;
-        $conversation = trim($this->getProperty('conversation'));
-        $content = trim($this->getProperty('content'));
-        // $this->context = trim($this->getProperty('ctx'));
-        $this->preview = $this->getProperty('preview');
-        $this->timeout = $this->modx->modxtalks->config['add_timeout'];
-        if ($slug = $this->getProperty('slug')) {
-            $this->modx->modxtalks->config['slug'] = $slug;
-        }
+		/* save element */
+		if ( ! $this->object->save())
+		{
+			$this->modx->error->checkValidation($this->object);
 
-        /**
-         * Check Context
-         */
-        $this->context = $this->modx->modxtalks->getContext();
-        /*if (empty($this->context)) {
-            $this->failure($this->modx->lexicon('modxtalks.empty_context'));
-            return false;
-        }
-        elseif (!$this->modx->getCount('modContext',$this->context)) {
-            $this->failure($this->modx->lexicon('modxtalks.bad_context'));
-            return false;
-        }*/
-        /**
-         * Check Conversation name
-         */
-        if (empty($conversation)) {
-            $this->addFieldError('conversation',$this->modx->lexicon('modxtalks.id_not_defined'));
-        }
-        elseif (!is_string($conversation)) {
-            $this->addFieldError('conversation',$this->modx->lexicon('modxtalks.bad_id'));
-        }
-        elseif (preg_match('@[^a-zA-z-_.0-9]@i', $conversation)) {
-            $this->addFieldError('conversation',$this->modx->lexicon('modxtalks.unallowed_symbols'));
-        }
-        elseif (strlen($conversation) < 2 || strlen($conversation) > 63) {
-            $this->addFieldError('conversation',$this->modx->lexicon('modxtalks.bad_id'));
-        }
-        elseif (!$this->theme = $this->modx->getObject('modxTalksConversation', array('conversation' => $conversation))) {
-            $this->failure($this->modx->lexicon('modxtalks.empty_conversation'));
-            return false;
-        }
+			return $this->failure($this->modx->lexicon($this->objectType . '_err_save'));
+		}
 
-        /**
-         * Check Comment Content
-         */
-        if (empty($content)) {
-            $this->addFieldError('content',$this->modx->lexicon('modxtalks.empty_content'));
-        }
-        elseif (!is_string($content)) {
-            $this->addFieldError('content',$this->modx->lexicon('modxtalks.bad_content'));
-        }
-        elseif (mb_strlen($content,'UTF-8') < 2) {
-            $this->addFieldError('content',$this->modx->lexicon('modxtalks.bad_content_length',array('length' => 2)));
-        }
+		$this->afterSave();
+		$this->fireAfterSaveEvent();
+		$this->logManagerAction();
 
-        $_SESSION['comment_time'] = !empty($_SESSION['comment_time']) ? $_SESSION['comment_time'] : 0;
+		return $this->cleanup();
+	}
 
-        /**
-         * Check user Email
-         */
-        if ($this->modx->user->isAuthenticated($this->context) || $this->modx->modxtalks->isModerator()) {
-            $this->userId = $this->modx->user->get('id');
-            $this->email = $this->modx->user->Profile->email;
-            if (!$this->name = $this->modx->user->Profile->fullname) {
-                $this->name = $this->modx->user->username;
-            }
-        }
-        else {
-            if (empty($this->email)) {
-                $this->addFieldError('email',$this->modx->lexicon('modxtalks.empty_email'));
-            }
-            elseif (!is_string($this->email) || !$this->object->validateEmail($this->email)) {
-                $this->addFieldError('email',$this->modx->lexicon('modxtalks.bad_email'));
-            }
-            if (!$this->hasErrors() && $this->modx->getCount('modUserProfile',array('email' => $this->email))) {
-                $this->failure($this->modx->lexicon('modxtalks.user_exists'));
-                return false;
-            }
-            /**
-             * Check user name
-             */
-            if (empty($this->name)) {
-                $this->addFieldError('name',$this->modx->lexicon('modxtalks.empty_name'));
-            }
-            elseif (mb_strlen($this->name,'UTF-8') < 2) {
-                $this->addFieldError('name',$this->modx->lexicon('modxtalks.bad_name_length',array('length' => 2)));
-            }
-        }
+	/**
+	 * Override in your derivative class to do functionality before the fields are set on the object
+	 * @return bool
+	 */
+	public function beforeSet()
+	{
+		$this->preModarateComments = (bool) $this->modx->getOption('modxtalks.preModarateComments', null, false);
+		$idx = 0;
+		$time = time();
+		$this->userId = 0;
+		$this->ip = $this->app()->get_client_ip();
+		$this->email = trim($this->getProperty('email'));
+		$this->name = trim($this->getProperty('name'));
+		$conversationId = 0;
+		$conversation = trim($this->getProperty('conversation'));
+		$content = trim($this->getProperty('content'));
+		// $this->context = trim($this->getProperty('ctx'));
+		$this->preview = $this->getProperty('preview');
+		$this->timeout = $this->app()->config['add_timeout'];
+		if ($slug = $this->getProperty('slug'))
+		{
+			$this->app()->config['slug'] = $slug;
+		}
 
-        /**
-         * Check if user email is banned
-         */
-        if ($this->modx->getCount('modxTalksEmailBlock',array('email' => $this->email))) {
-            $this->failure($this->modx->lexicon('modxtalks.email_banned'));
-            return false;
-        }
+		/**
+		 * Check Context
+		 */
+		$this->context = $this->app()->getContext();
+		/**
+		 * Check Conversation name
+		 */
+		if (empty($conversation))
+		{
+			$this->addFieldError('conversation', $this->modx->lexicon('modxtalks.id_not_defined'));
+		}
+		elseif ( ! is_string($conversation))
+		{
+			$this->addFieldError('conversation', $this->modx->lexicon('modxtalks.bad_id'));
+		}
+		elseif (preg_match('@[^a-zA-z-_.0-9]@i', $conversation))
+		{
+			$this->addFieldError('conversation', $this->modx->lexicon('modxtalks.unallowed_symbols'));
+		}
+		elseif (strlen($conversation) < 2 || strlen($conversation) > 63)
+		{
+			$this->addFieldError('conversation', $this->modx->lexicon('modxtalks.bad_id'));
+		}
+		elseif ( ! $this->conversation = $this->modx->getObject('modxTalksConversation', ['conversation' => $conversation]))
+		{
+			$this->failure($this->modx->lexicon('modxtalks.empty_conversation'));
 
-        if (!$this->hasErrors() && !$this->preview) {
-            $conversationId = $this->theme->get('id');
-            if (!$this->theme->getProperties('comments')) {
-                $this->theme->setProperties($this->defaultProprties,'comments',false);
-                $this->theme->save();
-            }
+			return false;
+		}
 
-            $this->hash = md5($content.$this->email.$conversationId);
+		/**
+		 * Check Comment Content
+		 */
+		if (empty($content))
+		{
+			$this->addFieldError('content', $this->modx->lexicon('modxtalks.empty_content'));
+		}
+		elseif ( ! is_string($content))
+		{
+			$this->addFieldError('content', $this->modx->lexicon('modxtalks.bad_content'));
+		}
+		elseif (mb_strlen($content, 'UTF-8') < 2)
+		{
+			$this->addFieldError('content', $this->modx->lexicon('modxtalks.bad_content_length', ['length' => 2]));
+		}
 
-            /**
-             * Premoderate comment
-             */
-            if ($this->preModarateComments === true && !$this->modx->modxtalks->isModerator()) {
-                // Check time before for add another comment
-                if ((time() - $_SESSION['comment_time']) < $this->timeout) {
-                    $seconds = $this->timeout - (time() - $_SESSION['comment_time']);
-                    $this->failure($this->modx->lexicon('modxtalks.add_comment_waiting',array('seconds' => $seconds)));
-                    return false;
-                }
-                if (!$this->hasErrors()) {
-                    $unconfirmed = $this->theme->getProperty('unconfirmed','comments',0);
-                    $this->theme->setProperty('unconfirmed',++$unconfirmed,'comments');
-                    $this->theme->save();
+		$_SESSION['comment_time'] = ! empty($_SESSION['comment_time']) ? $_SESSION['comment_time'] : 0;
 
-                    $params = array(
-                        'conversationId' => $conversationId,
-                        'hash'           => $this->hash,
-                        'time'           => $time,
-                        'content'        => $content,
-                        'ip'             => $this->ip,
-                    );
-                    if ($this->modx->user->isAuthenticated($this->context)) {
-                        $params['userId'] = $this->userId;
-                    }
-                    else {
-                        $params['useremail'] = $this->email;
-                        $params['username']  = $this->name;
-                    }
-                    $comment = $this->modx->newObject('modxTalksTempPost',$params);
-                    if ($comment->save() === false) {
-                        $this->failure($this->modx->lexicon('modxtalks.error_try_again'));
-                        return false;
-                    }
+		/**
+		 * Check user Email
+		 */
+		if ($this->modx->user->isAuthenticated($this->context) || $this->app()->isModerator())
+		{
+			$this->userId = $this->modx->user->get('id');
+			$this->email = $this->modx->user->Profile->email;
+			if ( ! $this->name = $this->modx->user->Profile->fullname)
+			{
+				$this->name = $this->modx->user->username;
+			}
+		}
+		else
+		{
+			if (empty($this->email))
+			{
+				$this->addFieldError('email', $this->modx->lexicon('modxtalks.empty_email'));
+			}
+			elseif ( ! is_string($this->email) || ! $this->object->validateEmail($this->email))
+			{
+				$this->addFieldError('email', $this->modx->lexicon('modxtalks.bad_email'));
+			}
+			if ( ! $this->hasErrors() && $this->modx->getCount('modUserProfile', ['email' => $this->email]))
+			{
+				$this->failure($this->modx->lexicon('modxtalks.user_exists'));
 
-                    /**
-                     * Send Notify to conversation moderators
-                     */
-                    if (!$this->modx->modxtalks->notifyModerators($comment)) {
-                        $this->failure($this->modx->lexicon('modxtalks.error_try_again'));
-                        return false;
-                    }
+				return false;
+			}
+			/**
+			 * Check user name
+			 */
+			if (empty($this->name))
+			{
+				$this->addFieldError('name', $this->modx->lexicon('modxtalks.empty_name'));
+			}
+			elseif (mb_strlen($this->name, 'UTF-8') < 2)
+			{
+				$this->addFieldError('name', $this->modx->lexicon('modxtalks.bad_name_length', ['length' => 2]));
+			}
+		}
 
-                    $_SESSION['comment_time'] = time();
-                }
+		/**
+		 * Check if user email is banned
+		 */
+		if ($this->modx->getCount('modxTalksEmailBlock', ['email' => $this->email]))
+		{
+			$this->failure($this->modx->lexicon('modxtalks.email_banned'));
 
-                return parent::beforeSet();
-            }
+			return false;
+		}
 
-            $q = $this->modx->newQuery($this->classKey);
-            $q->where(array('conversationId' => $conversationId));
-            $q->sortby('idx','DESC');
-            $q->limit(1);
-            $idx = 1;
-            if ($lastComment = $this->modx->getObject($this->classKey,$q)) {
-                $idx = $lastComment->idx + 1;
-            }
+		if ( ! $this->hasErrors() && ! $this->preview)
+		{
+			$conversationId = $this->conversation->get('id');
 
-            /**
-             * Check for comment double
-             */
-            if ((time() - $_SESSION['comment_time']) < $this->timeout && !$this->modx->modxtalks->isModerator()) {
-                $post = $this->modx->getObject($this->classKey,array('hash' => $this->hash, 'conversationId' => $conversationId, 'time' => $_SESSION['comment_time']));
-                $seconds = $this->timeout - (time() - $_SESSION['comment_time']);
-                if ($post && $seconds !== 0) {
-                    $this->failure($this->modx->lexicon('modxtalks.resend_comment_waiting',array('seconds' => $seconds)));
-                    return false;
-                }
-                else {
-                    $this->failure($this->modx->lexicon('modxtalks.add_comment_waiting',array('seconds' => $seconds)));
-                    return false;
-                }
-            }
-            $total = $this->theme->getProperty('total','comments',0);
-            $this->theme->setProperty('total',++$total,'comments');
-            $this->theme->save();
-        }
+			$this->hash = md5($content . $this->email . $conversationId);
 
-        $this->properties = array(
-            'idx'            => $idx,
-            'conversationId' => $conversationId,
-            'userId'         => $this->userId,
-            'time'           => $time,
-            'date'           => strftime('%Y%m', $time),
-            'hash'           => $this->hash,
-            'content'        => $content,
-            'username'       => NULL,
-            'useremail'      => NULL,
-            'ip'             => $this->ip,
-        );
-        if ($this->userId === 0) {
-            $this->properties['username']  = $this->name;
-            $this->properties['useremail'] = $this->email;
-        }
+			/**
+			 * Premoderate comment
+			 */
+			if ($this->preModarateComments === true && ! $this->app()->isModerator())
+			{
+				// Check time before for add another comment
+				if ((time() - $_SESSION['comment_time']) < $this->timeout)
+				{
+					$seconds = $this->timeout - (time() - $_SESSION['comment_time']);
+					$this->failure($this->modx->lexicon('modxtalks.add_comment_waiting', ['seconds' => $seconds]));
 
-        return parent::beforeSet();
-    }
+					return false;
+				}
+				if ( ! $this->hasErrors())
+				{
+					$this->conversation->unconfirmed += 1;
+					$this->conversation->save();
 
-    public function afterSave() {
-        $_SESSION['comment_time'] = time();
+					$params = [
+						'conversationId' => $conversationId,
+						'hash' => $this->hash,
+						'time' => $time,
+						'content' => $content,
+						'ip' => $this->ip,
+					];
+					if ($this->modx->user->isAuthenticated($this->context))
+					{
+						$params['userId'] = $this->userId;
+					}
+					else
+					{
+						$params['useremail'] = $this->email;
+						$params['username'] = $this->name;
+					}
+					$comment = $this->modx->newObject('modxTalksTempPost', $params);
+					if ($comment->save() === false)
+					{
+						$this->failure($this->modx->lexicon('modxtalks.error_try_again'));
 
-        /**
-         * Refresh comment and conversation cache
-         */
-        if ($this->modx->modxtalks->mtCache === true) {
-            if (!$this->modx->modxtalks->cacheComment($this->object)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/create] Error cache the comment with ID '.$this->object->id);
-            }
-            if (!$this->modx->modxtalks->cacheConversation($this->theme)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[modxTalks web/comment/create] Error cache the conversation with ID '.$this->theme->id);
-            }
-        }
+						return false;
+					}
 
-        /**
-         * Send Notify to conversation moderators
-         */
-        $checkExec = explode(' ', ini_get('disable_functions'));
-        $checkExec = array_map('trim', $checkExec);
-        $success = false;
-        if (!in_array('exec', $checkExec) && $this->modx->modxtalks->sendMail($this->object->id)) {
-            $success = true;
-        }
-        elseif ($this->modx->modxtalks->notifyModerators($this->object)) {
-            $success = true;
-        }
+					/**
+					 * Send Notify to conversation moderators
+					 */
+					if ( ! $this->app()->notifyModerators($comment))
+					{
+						$this->failure($this->modx->lexicon('modxtalks.error_try_again'));
 
-        if (!$success) {
-            $this->failure($this->modx->lexicon('modxtalks.error_try_again'));
-            return false;
-        }
+						return false;
+					}
 
-        return parent::afterSave();
-    }
+					$_SESSION['comment_time'] = time();
+				}
 
-    /**
-     * Override cleanup to send only back needed params
-     * @return array
-     */
-    public function cleanup() {
-        $data = $this->_preparePostData();
-        return $this->success('',$data);
-    }
+				return parent::beforeSet();
+			}
 
-    /**
-     * Override cleanup to send only back needed params
-     * @return array $data
-     */
-    private function _preparePostData() {
-        if ($this->preview) {
-            return array('content' => $this->object->processed_content);
-        }
+			$q = $this->modx->newQuery($this->classKey);
+			$q->where(['conversationId' => $conversationId]);
+			$q->sortby('idx', 'DESC');
+			$q->limit(1);
+			$idx = 1;
+			if ($lastComment = $this->modx->getObject($this->classKey, $q))
+			{
+				$idx = $lastComment->idx + 1;
+			}
 
-        $data = array(
-            'avatar'          => $this->modx->modxtalks->getAvatar($this->email),
-            'hideAvatar'      => '',
-            'name'            => $this->name,
-            'content'         => $this->object->processed_content,
-            'index'           => date('Ym',$this->object->time),
-            'date'            => date($this->modx->modxtalks->config['dateFormat'],$this->object->time),
-            'funny_date'      => $this->modx->lexicon('modxtalks.date_now'),
-            'link'            => $this->object->link,
-            'id'              => (int) $this->object->id,
-            'idx'             => (int) $this->object->idx,
-            'user'            => $this->modx->modxtalks->userButtons($this->userId,$this->object->time),
-            'userId'          => md5($this->userId.$this->email),
-            'timeago'         => date('c',$this->object->time),
-            'timeMarker'      => '',
-            'funny_edit_date' => '',
-            'edit_name'       => '',
-            'user_info'       => '',
-            'like_block'      => '',
-        );
-        if ($this->modx->modxtalks->isModerator()) {
-            $data['user_info'] = $this->modx->modxtalks->_parseTpl($this->modx->modxtalks->config['user_info'], array('email' => $this->email, 'ip' => $this->object->ip), true);
-        }
+			/**
+			 * Check for comment double
+			 */
+			if ((time() - $_SESSION['comment_time']) < $this->timeout && ! $this->app()->isModerator())
+			{
+				$post = $this->modx->getObject($this->classKey, ['hash' => $this->hash, 'conversationId' => $conversationId, 'time' => $_SESSION['comment_time']]);
+				$seconds = $this->timeout - (time() - $_SESSION['comment_time']);
+				if ($post && $seconds !== 0)
+				{
+					$this->failure($this->modx->lexicon('modxtalks.resend_comment_waiting', ['seconds' => $seconds]));
 
-        return $data;
-    }
+					return false;
+				}
+				else
+				{
+					$this->failure($this->modx->lexicon('modxtalks.add_comment_waiting', ['seconds' => $seconds]));
+
+					return false;
+				}
+			}
+			$this->conversation->total += 1;
+			$this->conversation->save();
+		}
+
+		$this->properties = [
+			'idx' => $idx,
+			'conversationId' => $conversationId,
+			'userId' => $this->userId,
+			'time' => $time,
+			'date' => strftime('%Y%m', $time),
+			'hash' => $this->hash,
+			'content' => $content,
+			'username' => null,
+			'useremail' => null,
+			'ip' => $this->ip,
+		];
+		if ($this->userId === 0)
+		{
+			$this->properties['username'] = $this->name;
+			$this->properties['useremail'] = $this->email;
+		}
+
+		return parent::beforeSet();
+	}
+
+	public function afterSave()
+	{
+		$_SESSION['comment_time'] = time();
+
+		/**
+		 * Refresh comment and conversation cache
+		 */
+		if ($this->app()->mtCache === true)
+		{
+			if ( ! $this->app()->cacheComment($this->object))
+			{
+				$this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/create] Error cache the comment with ID ' . $this->object->id);
+			}
+			if ( ! $this->app()->cacheConversation($this->conversation))
+			{
+				$this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/create] Error cache the conversation with ID ' . $this->conversation->id);
+			}
+		}
+
+		/**
+		 * Send Notify to conversation moderators
+		 */
+		$checkExec = explode(' ', ini_get('disable_functions'));
+		$checkExec = array_map('trim', $checkExec);
+		$success = false;
+		if ( ! in_array('exec', $checkExec) && $this->app()->sendMail($this->object->id))
+		{
+			$success = true;
+		}
+		elseif ($this->app()->notifyModerators($this->object))
+		{
+			$success = true;
+		}
+
+		if ( ! $success)
+		{
+			$this->failure($this->modx->lexicon('modxtalks.error_try_again'));
+
+			return false;
+		}
+
+		return parent::afterSave();
+	}
+
+	/**
+	 * Override cleanup to send only back needed params
+	 * @return array
+	 */
+	public function cleanup()
+	{
+		$data = $this->_preparePostData();
+
+		return $this->success('', $data);
+	}
+
+	/**
+	 * Override cleanup to send only back needed params
+	 * @return array $data
+	 */
+	private function _preparePostData()
+	{
+		if ($this->preview)
+		{
+			return ['content' => $this->object->processed_content];
+		}
+
+		$data = [
+			'avatar' => $this->app()->getAvatar($this->email),
+			'hideAvatar' => '',
+			'name' => $this->name,
+			'content' => $this->object->processed_content,
+			'index' => date('Ym', $this->object->time),
+			'date' => date($this->app()->config['dateFormat'], $this->object->time),
+			'funny_date' => $this->modx->lexicon('modxtalks.date_now'),
+			'link' => $this->object->link,
+			'id' => (int) $this->object->id,
+			'idx' => (int) $this->object->idx,
+			'user' => $this->app()->userButtons($this->userId, $this->object->time),
+			'userId' => md5($this->userId . $this->email),
+			'timeago' => date('c', $this->object->time),
+			'timeMarker' => '',
+			'funny_edit_date' => '',
+			'edit_name' => '',
+			'user_info' => '',
+			'like_block' => '',
+		];
+		if ($this->app()->isModerator())
+		{
+			$data['user_info'] = $this->app()->_parseTpl($this->app()->config['user_info'], ['email' => $this->email, 'ip' => $this->object->ip], true);
+		}
+
+		return $data;
+	}
 
 }
 

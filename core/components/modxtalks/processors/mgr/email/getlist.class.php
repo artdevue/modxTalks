@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Get list of blocked Email addresses
  *
@@ -7,47 +8,53 @@
  */
 class getEmailBlockListProcessor extends modObjectGetListProcessor
 {
-    public $classKey = 'modxTalksEmailBlock';
-    public $defaultSortField = 'id';
-    public $languageTopics = array('modxtalks:default');
+	public $classKey = 'modxTalksEmailBlock';
+	public $defaultSortField = 'id';
+	public $languageTopics = ['modxtalks:default'];
 
-    /**
-     * Can be used to adjust the query prior to the COUNT statement
-     *
-     * @param xPDOQuery $c
-     * @return xPDOQuery
-     */
-    public function prepareQueryBeforeCount(xPDOQuery $c) {
-        if ($query = $this->getProperty('query', null)) {
-            $c->where(array(
-                'email:LIKE' => '%'.$query.'%'
-            ));
-        }
-        return $c;
-    }
+	/**
+	 * Can be used to adjust the query prior to the COUNT statement
+	 *
+	 * @param xPDOQuery $c
+	 *
+	 * @return xPDOQuery
+	 */
+	public function prepareQueryBeforeCount(xPDOQuery $c)
+	{
+		if ($query = $this->getProperty('query', null))
+		{
+			$c->where([
+				'email:LIKE' => "%{$query}%"
+			]);
+		}
 
-     /**
-     * @param xPDOObject|R $object
-     * @return array
-     */
-    public function prepareRow(xPDOObject $object) {
-        $email = parent::prepareRow($object);
+		return $c;
+	}
 
-        if ($email['intro'] === null) {
-            $email['intro'] = '';
-        }
-        if (!empty($email['date'])) {
-            $email['publishedon_date'] = date('j M Y',$email['date']);
-            $email['publishedon_time'] = date('g:s A',$email['date']);
-            $email['actions'] = array();
-            $email['actions'][] = array(
-                'text' => $this->modx->lexicon('delete'),
-            );
-        }
+	/**
+	 * @param xPDOObject|modxTalksEmailBlock $object
+	 *
+	 * @return array
+	 */
+	public function prepareRow(xPDOObject $object)
+	{
+		$email = parent::prepareRow($object);
 
-        return $email;
-    }
+		if ( ! $email['intro'])
+		{
+			$email['intro'] = '';
+		}
+		if ( ! empty($email['date']))
+		{
+			$email['publishedon_date'] = date('j M Y', $email['date']);
+			$email['publishedon_time'] = date('g:s A', $email['date']);
+			$email['actions'] = [
+				'text' => $this->modx->lexicon('delete'),
+			];
+		}
 
+		return $email;
+	}
 }
 
 return 'getEmailBlockListProcessor';

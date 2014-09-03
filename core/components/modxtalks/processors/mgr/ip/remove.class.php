@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Remove blocked IP address
  *
@@ -7,9 +8,8 @@
  */
 class modxTalksIpBlockRemoveProcessor extends modObjectRemoveProcessor
 {
-    public $classKey = 'modxTalksIpBlock';
-    public $languageTopics = array('modxtalks:default');
-
+	public $classKey = 'modxTalksIpBlock';
+	public $languageTopics = ['modxtalks:default'];
 }
 
 return 'modxTalksIpBlockRemoveProcessor';

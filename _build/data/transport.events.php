@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * Copyright 2012-2013 by
+ * Copyright 2012-2014 by
  * Valentin Rasulov <artdevue.com@yahoo.com> & Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  *
  * MODXTalks is free software; you can redistribute it and/or modify it under the
@@ -25,36 +25,34 @@
  * @package modxtalks
  * @subpackage build
  */
-$events = array();
+$events = [];
 
 $events[0] = $modx->newObject('modEvent');
-$events[0]->fromArray(array (
-    'name'      => 'OnModxTalksCommentAfterAdd',
-    'service'   => 6,
-    'groupname' => 'MODXTalks',
-), '', true, true);
+$events[0]->fromArray([
+	'name' => 'OnModxTalksCommentAfterAdd',
+	'service' => 6,
+	'groupname' => 'MODXTalks',
+], '', true, true);
 
 $events[1] = $modx->newObject('modEvent');
-$events[1]->fromArray(array (
-    'name'      => 'OnModxTalksCommentBeforeAdd',
-    'service'   => 6,
-    'groupname' => 'MODXTalks',
-), '', true, true);
-
-
-$events[1] = $modx->newObject('modEvent');
-$events[1]->fromArray(array (
-    'name'      => 'OnModxTalksCommentAfterRemove',
-    'service'   => 6,
-    'groupname' => 'MODXTalks',
-), '', true, true);
-
+$events[1]->fromArray([
+	'name' => 'OnModxTalksCommentBeforeAdd',
+	'service' => 6,
+	'groupname' => 'MODXTalks',
+], '', true, true);
 
 $events[1] = $modx->newObject('modEvent');
-$events[1]->fromArray(array (
-    'name'      => 'OnModxTalksCommentBeforeRemove',
-    'service'   => 6,
-    'groupname' => 'MODXTalks',
-), '', true, true);
+$events[1]->fromArray([
+	'name' => 'OnModxTalksCommentAfterRemove',
+	'service' => 6,
+	'groupname' => 'MODXTalks',
+], '', true, true);
+
+$events[1] = $modx->newObject('modEvent');
+$events[1]->fromArray([
+	'name' => 'OnModxTalksCommentBeforeRemove',
+	'service' => 6,
+	'groupname' => 'MODXTalks',
+], '', true, true);
 
 return $events;

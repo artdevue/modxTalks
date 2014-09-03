@@ -2,7 +2,7 @@
 /**
  * MODXTalks
  *
- * Copyright 2012-2013 by
+ * Copyright 2012-2014 by
  * Valentin Rasulov <artdevue.com@yahoo.com> & Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  *
  * MODXTalks is free software; you can redistribute it and/or modify it under the
@@ -25,14 +25,14 @@
  * @package modxtalks
  * @subpackage build
  */
-$chunks = array();
+$chunks = [];
 
 $chunks[1] = $modx->newObject('modChunk');
-$chunks[1]->fromArray(array(
-    'id'          => 1,
-    'name'        => 'comment_auth_tpl',
-    'description' => 'This tpl for displaying information not authorized users.',
-    'snippet'     => file_get_contents($sources['chunks'] . 'comment_auth_tpl.chunk.tpl'),
-));
+$chunks[1]->fromArray([
+	'id' => 1,
+	'name' => 'comment_auth_tpl',
+	'description' => 'This tpl for displaying information not authorized users.',
+	'snippet' => file_get_contents($sources['chunks'] . 'comment_auth_tpl.chunk.tpl'),
+]);
 
 return $chunks;

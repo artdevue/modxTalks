@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Update Post
  *
@@ -7,9 +8,8 @@
  */
 class modxTalkUpdateProcessor extends modObjectUpdateProcessor
 {
-    public $classKey = 'Post';
-    public $languageTopics = array('modxtalks:default');
-    // public $objectType = 'modxtalks.post';
+	public $classKey = 'Post';
+	public $languageTopics = ['modxtalks:default'];
 }
 
 return 'modxTalkUpdateProcessor';
