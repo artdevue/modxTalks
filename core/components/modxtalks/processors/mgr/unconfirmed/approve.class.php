@@ -1,16 +1,20 @@
 <?php
+
 /**
  * Approve unconfirmed comment
  *
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalksTempPostApproveProcessor extends modObjectRemoveProcessor
-{
+class modxTalksTempPostApproveProcessor extends modObjectRemoveProcessor {
     public $classKey = 'modxTalksTempPost';
     public $objectType = 'modxtalks.temppost';
     public $languageTopics = array('modxtalks:default');
     private $conversationId;
+    /**
+     * @var modxTalksPost
+     */
+    private $comment;
 
     public function beforeRemove() {
         $this->conversationId = $this->object->conversationId;
@@ -21,15 +25,15 @@ class modxTalksTempPostApproveProcessor extends modObjectRemoveProcessor
 
         $cProperties = $this->conversation->getProperties('comments');
         $this->conversation->setProperties(array(
-            'total'       => ++$cProperties['total'],
-            'deleted'     => $cProperties['deleted'],
+            'total' => ++$cProperties['total'],
+            'deleted' => $cProperties['deleted'],
             'unconfirmed' => $cProperties['unconfirmed'] > 0 ? --$cProperties['unconfirmed'] : 0
         ), 'comments', false);
 
         $q = $this->modx->newQuery('modxTalksPost', array(
             'conversationId' => $this->conversationId
         ));
-        $q->sortby('idx','DESC');
+        $q->sortby('idx', 'DESC');
 
         $idx = 0;
 
@@ -40,18 +44,17 @@ class modxTalksTempPostApproveProcessor extends modObjectRemoveProcessor
         $this->comment = $this->modx->newObject('modxTalksPost');
         $time = time();
         $commentParams = array(
-            'idx'            => ++$idx,
+            'idx' => ++$idx,
             'conversationId' => $this->conversationId,
-            'time'           => $time,
-            'date'           => strftime('%Y%m', $time),
-            'content'        => $this->object->content,
-            'ip'             => $this->object->ip,
+            'time' => $time,
+            'date' => strftime('%Y%m', $time),
+            'content' => $this->object->content,
+            'ip' => $this->object->ip,
         );
 
         if ($this->object->userId > 0) {
             $commentParams['userId'] = $this->object->userId;
-        }
-        else {
+        } else {
             $commentParams['username'] = $this->object->username;
             $commentParams['useremail'] = $this->object->useremail;
         }
@@ -65,6 +68,13 @@ class modxTalksTempPostApproveProcessor extends modObjectRemoveProcessor
         if ($this->conversation->save() !== true) {
             return $this->modx->lexicon('modxtalks.error');
         }
+
+        $this->modx->invokeEvent('OnModxTalksCommentAfterAdd', array(
+            'mode' => modSystemEvent::MODE_NEW,
+            $this->comment->getPK() => $this->comment->getPrimaryKey(),
+            'modxtalks.post' => &$this->comment,
+            'object' => &$this->comment,
+        ));
 
         return parent::beforeRemove();
     }
