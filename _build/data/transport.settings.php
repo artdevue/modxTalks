@@ -117,6 +117,15 @@ $settings['modxtalks.revers']->fromArray(array(
     'area'      => 'settings',
 ), '', true, true);
 
+$settings['modxtalks.scrubber'] = $modx->newObject('modSystemSetting');
+$settings['modxtalks.scrubber']->fromArray(array(
+    'key'       => 'modxtalks.scrubber',
+    'value'     => true,
+    'xtype'     => 'combo-boolean',
+    'namespace' => 'modxtalks',
+    'area'      => 'settings',
+), '', true, true);
+
 $settings['modxtalks.scrubberTop'] = $modx->newObject('modSystemSetting');
 $settings['modxtalks.scrubberTop']->fromArray(array(
     'key'       => 'modxtalks.scrubberTop',
