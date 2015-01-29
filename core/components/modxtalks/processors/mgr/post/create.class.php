@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Create Post
  *
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalkCreateProcessor extends modObjectCreateProcessor
-{
+class modxTalkCreateProcessor extends modObjectCreateProcessor {
     public $classKey = 'Post';
     public $languageTopics = array('modxtalks:default');
     // public $objectType = 'modxtalks.modxtalk';

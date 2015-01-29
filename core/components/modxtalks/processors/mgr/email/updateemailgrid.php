@@ -20,7 +20,7 @@ if (empty($_DATA['id'])) {
     return $modx->error->failure($modx->lexicon('modxtalks.post_err_ns'));
 }
 
-if (!$email = $modx->getObject('modxTalksEmailBlock',$_DATA['id'])) {
+if (!$email = $modx->getObject('modxTalksEmailBlock', $_DATA['id'])) {
     return $modx->error->failure($modx->lexicon('modxtalks.post_err_nf'));
 }
 
@@ -30,4 +30,4 @@ if ($email->save() === false) {
     return $modx->error->failure($modx->lexicon('modxtalks.post_err_save'));
 }
 
-return $modx->error->success('',$email);
+return $modx->error->success('', $email);

@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Remove Conversation
  *
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalksRemoveConversation extends modObjectRemoveProcessor
-{
+class modxTalksRemoveConversation extends modObjectRemoveProcessor {
     public $classKey = 'modxTalksConversation';
     public $objectType = 'modxtalks.conversation';
     public $languageTopics = array('modxtalks:default');
@@ -23,11 +23,13 @@ class modxTalksRemoveConversation extends modObjectRemoveProcessor
             'conversationId' => $this->conversationId
         ));
         $this->success($this->modx->lexicon('modxtalks.conversation_removed'));
+
         return true;
     }
 
     public function beforeRemove() {
         $this->conversationId = $this->object->get('id');
+
         return parent::beforeRemove();
     }
 

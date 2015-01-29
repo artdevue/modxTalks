@@ -49,7 +49,7 @@ $_lang['modxtalks.confirm_email'] = 'Do you really want to block the Email addre
 
 $_lang['modxtalks.default_desc'] = 'Leave blank if you want to use the default settings.';
 $_lang['modxtalks.default'] = 'default';
-$_lang['modxtalks.delet'] = 'Delete';
+$_lang['modxtalks.delete'] = 'Delete';
 $_lang['modxtalks.delet_comment'] = 'Delete comment';
 $_lang['modxtalks.delet_conversation'] = 'Delete topic.';
 $_lang['modxtalks.delet_conversation_desc'] = '<strong>NOTE!</strong> When you delete topics, all comments will be deleted. <br /><strong>Delete this topic?</strong>';
@@ -58,9 +58,9 @@ $_lang['modxtalks.demo'] = 'Demo site';
 $_lang['modxtalks.demo_desc'] = 'Demo site comments MODXTalks.';
 $_lang['modxtalks.description'] = 'Description';
 $_lang['modxtalks.desc_titl'] = 'Comment settings for your resource. <br/>You can change the default values ​​that are specified in the system settings comments for each resource by its. <br /><strong class="alert-mt">NOTE.</strong> You can view the documentation in a <a class="link-mt helpmodxtalks" href="#settings:modxtalks-settings" onClick="javascript:modxTalks.loadHelpPaneMT(\'en/help.html\');">popup window</a>, or <a class="link-mt" target="_blank" href="http://modxtalks.artdevue.com/en/help.html">open in new windows</a>.';
-$_lang['modxtalks.deleteTime'] = 'Delete date';
-$_lang['modxtalks.delete'] = 'deleted';
-$_lang['modxtalks.default_template'] = 'default template';
+$_lang['modxtalks.deleteTime'] = 'Delete Date';
+$_lang['modxtalks.deleted'] = 'Deleted';
+$_lang['modxtalks.default_template'] = 'Default Template';
 $_lang['modxtalks.deleteUserId'] = 'Removed';
 $_lang['modxtalks.date_create'] = 'Date';
 
@@ -112,7 +112,7 @@ $_lang['modxtalks.new_comment'] = 'New comment';
 $_lang['modxtalks.not_confirmed'] = 'not confirmed';
 $_lang['modxtalks.no_login'] = 'Login to your account to reply.';
 
-$_lang['modxtalks.opcions'] = 'Options';
+$_lang['modxtalks.options'] = 'Options';
 
 $_lang['modxtalks.post_err_nfs'] = 'Comment with ID does not exist!';
 $_lang['modxtalks.post'] = 'Comment';
@@ -132,7 +132,7 @@ $_lang['modxtalks.preview_checkbox'] = 'Preview';
 $_lang['modxtalks.quote'] = 'Quote';
 $_lang['modxtalks.quote_text'] = 'Comment';
 
-$_lang['modxtalks.resources_no'] = 'Resource not found';
+$_lang['modxtalks.resource_not_found'] = 'Resource not found';
 $_lang['modxtalks.resource_comments'] = 'Resource with comments';
 $_lang['modxtalks.resource_comments_here'] = 'Child resource with comments';
 
@@ -202,6 +202,7 @@ $_lang['setting_modxtalks.dateFormat'] = 'Date Format';
 $_lang['setting_modxtalks.dateFormat_desc'] = 'Date format. displayed in comments.';
 $_lang['setting_modxtalks.revers'] = 'Reverse';
 $_lang['setting_modxtalks.revers_desc'] = 'Displaying Comments top new ones if select NO, the new comments are below.';
+$_lang['setting_modxtalks.scrubber'] = 'Scrubber';
 $_lang['setting_modxtalks.scrubberTop'] = 'Scrubber in top';
 $_lang['setting_modxtalks.scrubberTop_desc'] = 'Scrubber display for easy navigation of the comments in the top position?. Yes / No';
 $_lang['setting_modxtalks.scrubberOffsetTop'] = 'Scrubber Offset';
@@ -291,7 +292,7 @@ $_lang['modxtalks.bad_name_length'] = 'The name can not be less than [[+length]]
 $_lang['modxtalks.comment_premoderate'] = 'Your comment has been sent successfully to why you\'re making to be approved as soon as it is published!';
 $_lang['modxtalks.delete_timeout'] = 'Time to delete them has expired!';
 $_lang['modxtalks.delete_permission'] = 'You do not have permission to delete this comment!';
-$_lang['modxtalks.delet_comment_desc'] = 'Do you really want to delete this comment?';
+$_lang['modxtalks.delete_comment_desc'] = 'Do you really want to delete this comment?';
 $_lang['modxtalks.delete_error'] = 'Can not delete the comment!';
 $_lang['modxtalks.empty_name'] = 'The name can not be empty!';
 $_lang['modxtalks.edit_timeout'] = 'Time to edit a log ([[+seconds]] seconds.) Expired!';
@@ -333,3 +334,4 @@ $_lang['modxtalks.already_voted'] = 'Вы уже голосовали за эт�
 $_lang['modxtalks.you_like'] = 'Do you like this comment';
 $_lang['modxtalks.i_like'] = 'Like';
 $_lang['modxtalks.not_like'] = 'Dislike';
+$_lang['modxtalks.edit'] = 'Edit';

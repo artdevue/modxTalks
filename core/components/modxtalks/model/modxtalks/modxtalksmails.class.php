@@ -1,2 +1,4 @@
 <?php
-class modxTalksMails extends xPDOSimpleObject {}
+
+class modxTalksMails extends xPDOSimpleObject {
+}

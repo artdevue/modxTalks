@@ -4,14 +4,14 @@ define('MODX_API_MODE', true);
 require dirname(dirname(dirname(dirname(__FILE__)))) . '/index.php';
 
 // Включаем обработку ошибок
-$modx->getService('error','error.modError');
+$modx->getService('error', 'error.modError');
 $modx->setLogLevel(modX::LOG_LEVEL_INFO);
 $modx->setLogTarget('FILE');
 
 /**
  * Initialize modxTalks
  */
-$path = $modx->getOption('modxtalks.core_path', null, $modx->getOption('core_path').'components/modxtalks/');
+$path = $modx->getOption('modxtalks.core_path', null, $modx->getOption('core_path') . 'components/modxtalks/');
 
 $modx->modxtalks = $modx->getService('modxtalks', 'modxTalks', $modx->getOption($path, null, $modx->getOption('core_path') . 'components/modxtalks/') . 'model/modxtalks/', array());
 if (!$modx->modxtalks instanceof modxTalks) {

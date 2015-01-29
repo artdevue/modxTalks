@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Remove selected IP addresses
  *
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalksIpBlockMultipleProcessor extends modObjectProcessor
-{
+class modxTalksIpBlockMultipleProcessor extends modObjectProcessor {
     public $classKey = 'modxTalksIpBlock';
     public $languageTopics = array('modxtalks:default');
 

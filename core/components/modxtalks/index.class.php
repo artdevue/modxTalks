@@ -5,8 +5,7 @@
  */
 require_once dirname(__FILE__) . '/model/modxtalks/modxtalks.class.php';
 
-abstract class modxTalksManagerController extends modExtraManagerController
-{
+abstract class modxTalksManagerController extends modExtraManagerController {
     /** @var modxTalks $modxtalks */
     public $modxtalks;
 
@@ -20,6 +19,7 @@ abstract class modxTalksManagerController extends modExtraManagerController
             modxTalks.config = ' . $this->modx->toJSON($this->modxtalks->config) . ';
         });
         </script>');
+
         return parent::initialize();
     }
 
@@ -31,12 +31,12 @@ abstract class modxTalksManagerController extends modExtraManagerController
         return true;
     }
 }
+
 /**
  * @package modxtalks
  * @subpackage controllers
  */
-class IndexManagerController extends modxTalksManagerController
-{
+class IndexManagerController extends modxTalksManagerController {
     public static function getDefaultController() {
         return 'home';
     }

@@ -1513,33 +1513,38 @@ var MTConversation = {
 
     // Toggle preview on an editing area.
     togglePreview: function (id, preview) {
+        var $content = jQuery('#' + id + ' textarea').first(),
+            $preview = jQuery('#' + id + '-preview').first(),
+            $buttons = jQuery('#' + id + ' .mt_formattingButtons').first();
+
+        if (!$content[0]) $content = jQuery('#mt_' + id + ' textarea').first();
+        if (!$preview[0]) $preview = jQuery('#mt_' + id + '-preview').first();
+        if (!$buttons[0]) $buttons = jQuery('#mt_' + id + ' .mt_formattingButtons').first();
 
         // If the preview box is checked...
         if (preview) {
-
             // Hide the formatting buttons.
-            jQuery("#" + id + " .mt_formattingButtons").hide();
-            jQuery("#" + id + "-preview").html("");
+            $buttons.hide();
+            $preview.html('');
 
             // Get the formatted post and show it.
             jQuery.MTAjax({
-                type: "post",
+                type: 'post',
                 headers: {
                     Action: 'preview'
                 },
                 data: {
-                    content: jQuery("#" + id + " textarea").val(),
-                    name: jQuery("#mt_reply .mt_saveName").val(),
-                    email: jQuery("#mt_reply .mt_saveEmail").val(),
+                    content: $content.val(),
+                    name: jQuery('#mt_reply .mt_saveName').val(),
+                    email: jQuery('#mt_reply .mt_saveEmail').val(),
                     conversation: MT.conversation,
                     ctx: MT.ctx
                 },
                 success: function (data) {
-
                     if (data.success != true) {
-                        jQuery("#mt_reply .mt_postReply, #mt_reply .mt_saveDraft").enable();
-                        jQuery('#reply-previewCheckbox').attr('checked', false);
-                        jQuery('.mt_formattingButtons').show('slow');
+                        jQuery('#mt_reply .mt_postReply, #mt_reply .mt_saveDraft').enable();
+                        jQuery("#reply-previewCheckbox").attr('checked', false);
+                        $buttons.show('slow');
                         jQuery.each(data.data, function (i, item) {
                             MTMessages.showMessage(item.msg, 'mt_msg-' + item.id);
                         });
@@ -1547,37 +1552,33 @@ var MTConversation = {
                     }
 
                     // Keep the minimum height.
-                    jQuery("#" + id + "-preview").css("min-height", jQuery("#" + id + "-textarea").innerHeight());
+                    $preview.css('min-height', jQuery('#' + id + '-textarea').innerHeight());
 
                     // Hide the textarea, and show the preview.
-                    jQuery("#" + id + " textarea").hide();
-                    jQuery("#" + id + "-bg").hide();
-                    jQuery("#" + id + "-preview").show()
-                    jQuery("#" + id + "-preview").html(data.message.content);
+                    $content.hide();
+                    jQuery('#' + id + '-bg').hide();
+                    $preview.show();
+                    $preview.html(data.message.content);
                     jQuery('pre').each(function (i, e) {
                         hljs.highlightBlock(e)
                     });
-                    // setTimeout(function () { jQuery('a.time').timeago() }, 5000);
                 }
             });
         }
-
         // The preview box isn't checked...
         else {
             // Show the formatting buttons and the textarea; hide the preview area.
-            jQuery("#" + id + " .mt_formattingButtons").show();
-            jQuery("#" + id + " textarea").show();
+            $buttons.show();
+            $content.show();
             jQuery("#" + id + "-bg").show();
-            jQuery("#" + id + "-preview").hide();
-            // setTimeout(function () { jQuery('a.time').timeago() }, 5000);
+            $preview.hide();
         }
-
     }
-
 };
+
 jQuery(function () {
-    jQuery("body").prepend('<div id="mt_messages"></div>'); //
-    jQuery("#mt_reply.mt_post").addClass("mt_replyPlaceholder");
+    jQuery('body').prepend('<div id="mt_messages"></div>'); //
+    jQuery('#mt_reply.mt_post').addClass("mt_replyPlaceholder");
     MTConversation.init();
 });
 

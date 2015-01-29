@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Get Conversations
  *
  * @package modxtalks
  * @subpackage processors
  */
-class getConversationsListProcessor extends modObjectGetListProcessor
-{
+class getConversationsListProcessor extends modObjectGetListProcessor {
     public $classKey = 'modxTalksConversation';
     public $defaultSortField = 'id';
     public $languageTopics = array('modxtalks:default');
@@ -18,6 +18,7 @@ class getConversationsListProcessor extends modObjectGetListProcessor
                 'conversation:LIKE' => "%{$query}%"
             ));
         }
+
         return $c;
     }
 
@@ -25,6 +26,7 @@ class getConversationsListProcessor extends modObjectGetListProcessor
      * Iterate across the data
      *
      * @param array $data
+     *
      * @return array
      */
     public function iterate(array $data) {
@@ -45,13 +47,14 @@ class getConversationsListProcessor extends modObjectGetListProcessor
 
                 $objectArray['link'] = 0;
                 if ($this->modx->getCount('modResource', $id)) {
-                    $objectArray['link'] = $this->modx->makeUrl($id,'','',$scheme = 'full');
+                    $objectArray['link'] = $this->modx->makeUrl($id, '', '', $scheme = 'full');
                 }
                 $list[] = array_merge($objectArray, $properties);
                 $this->currentIndex++;
             }
         }
         $list = $this->afterIteration($list);
+
         return $list;
     }
 

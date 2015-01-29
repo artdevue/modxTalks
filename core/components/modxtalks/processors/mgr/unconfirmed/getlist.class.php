@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Get a list of unconfirmed posts
  *
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor
-{
+class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor {
     public $classKey = 'modxTalksTempPost';
     public $languageTopics = array('modxtalks:default');
     public $defaultSortField = 'id';
@@ -15,6 +15,7 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor
      * Iterate across the data
      *
      * @param array $data
+     *
      * @return array
      */
     public function iterate(array $data) {
@@ -51,7 +52,7 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor
                     $url = $this->modx->makeUrl($properties['id']);
                     $conversations[$c['id']] = array(
                         'name' => $c['conversation'],
-                        'url'  => $url,
+                        'url' => $url,
                     );
                 }
             }
@@ -69,7 +70,7 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor
                 $tmp = $q->stmt->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($tmp as $a) {
                     $users[$a['id']] = array(
-                        'name'  => $a['fullname'] ? $a['fullname'] : $a['username'],
+                        'name' => $a['fullname'] ? $a['fullname'] : $a['username'],
                         'email' => $a['email'],
                     );
                 }
@@ -78,7 +79,8 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor
 
         $this->modx->modxtalks->config['videoSize'] = array(300, 250);
         foreach ($data['results'] as $object) {
-            if ($this->checkListPermission && $object instanceof modAccessibleObject && !$object->checkPolicy('list')) continue;
+            if ($this->checkListPermission && $object instanceof modAccessibleObject && !$object->checkPolicy('list'))
+                continue;
             /** @var array $c Comment Object to Array */
             $c = $this->prepareRow($object);
             if (!empty($c) && is_array($c)) {
@@ -100,12 +102,13 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor
                     $c['conversationUrl'] = $conversations[$c['conversationId']]['url'];
                 }
 
-                unset($c['token'],$c['hash']);
+                unset($c['token'], $c['hash']);
                 $list[] = $c;
                 $this->currentIndex++;
             }
         }
         $list = $this->afterIteration($list);
+
         return $list;
     }
 }

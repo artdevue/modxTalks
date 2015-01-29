@@ -7,8 +7,7 @@
  */
 require_once dirname(__FILE__) . '/update.class.php';
 
-class modxTalkUpdateFromGridProcessor extends modxTalkUpdateProcessor
-{
+class modxTalkUpdateFromGridProcessor extends modxTalkUpdateProcessor {
     public function initialize() {
         $data = $this->getProperty('data');
         if (empty($data)) {

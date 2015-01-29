@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Remove unconfirmed comment
  *
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalksTempPostRemoveProcessor extends modObjectRemoveProcessor
-{
+class modxTalksTempPostRemoveProcessor extends modObjectRemoveProcessor {
     public $classKey = 'modxTalksTempPost';
     public $objectType = 'modxtalks.temppost';
     public $languageTopics = array('modxtalks:default');

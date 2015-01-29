@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Get list of blocked IP addresses
  *
  * @package modxtalks
  * @subpackage processors
  */
-class getIpBlockListProcessor extends modObjectGetListProcessor
-{
+class getIpBlockListProcessor extends modObjectGetListProcessor {
     public $classKey = 'modxTalksIpBlock';
     public $defaultSortField = 'id';
     public $languageTopics = array('modxtalks:default');
@@ -15,19 +15,22 @@ class getIpBlockListProcessor extends modObjectGetListProcessor
      * Can be used to adjust the query prior to the COUNT statement
      *
      * @param xPDOQuery $c
+     *
      * @return xPDOQuery
      */
     public function prepareQueryBeforeCount(xPDOQuery $c) {
         if ($query = $this->getProperty('query', null)) {
             $c->where(array(
-                'ip:LIKE' => '%'.$query.'%'
+                'ip:LIKE' => '%' . $query . '%'
             ));
         }
+
         return $c;
     }
 
-     /**
+    /**
      * @param xPDOObject|R $object
+     *
      * @return array
      */
     public function prepareRow(xPDOObject $object) {

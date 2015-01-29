@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package modxtalks
  * @subpackage processors
@@ -15,6 +16,7 @@ class getVotesInfo extends modObjectGetProcessor {
          */
         if (!$this->modx->modxtalks->config['voting']) {
             $this->failure($this->modx->lexicon('modxtalks.voting_disabled'));
+
             return false;
         }
         /**
@@ -23,12 +25,14 @@ class getVotesInfo extends modObjectGetProcessor {
         $this->context = trim($this->getProperty('ctx'));
         if (empty($this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.empty_context'));
+
             return false;
-        }
-        elseif (!$this->modx->getCount('modContext',$this->context)) {
+        } elseif (!$this->modx->getCount('modContext', $this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.bad_context'));
+
             return false;
         }
+
         return parent::initialize();
     }
 
@@ -43,12 +47,13 @@ class getVotesInfo extends modObjectGetProcessor {
         $users = $this->modx->modxtalks->getUsers($votes['users']);
         foreach ($users as $k => & $user) {
             $users[$k] = array(
-                    'name' => $user['fullname'] ? $user['fullname'] : $user['username'],
-                    'avatar' => $this->modx->modxtalks->getAvatar($user['email'],50),
+                'name' => $user['fullname'] ? $user['fullname'] : $user['username'],
+                'avatar' => $this->modx->modxtalks->getAvatar($user['email'], 50),
             );
         }
 
-        return $this->success('',array('users' => $users));
+        return $this->success('', array('users' => $users));
     }
 }
+
 return 'getVotesInfo';

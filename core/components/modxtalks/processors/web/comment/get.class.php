@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package modxtalks
  * @subpackage processors
@@ -16,12 +17,14 @@ class modxTalksPostGetProcessor extends modObjectGetProcessor {
         $this->context = trim($this->getProperty('ctx'));
         if (empty($this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.empty_context'));
+
             return false;
-        }
-        elseif (!$this->modx->getCount('modContext',$this->context)) {
+        } elseif (!$this->modx->getCount('modContext', $this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.bad_context'));
+
             return false;
         }
+
         return parent::initialize();
     }
 
@@ -30,6 +33,7 @@ class modxTalksPostGetProcessor extends modObjectGetProcessor {
         if ($canGet !== true) {
             return $canGet;
         }
+
         return $this->cleanup();
     }
 
@@ -53,22 +57,22 @@ class modxTalksPostGetProcessor extends modObjectGetProcessor {
         }
         // Check time for edit comment
         if ((time() - $this->object->time) > $this->modx->getOption('modxtalks.edit_time')) {
-            return $this->failure($this->modx->lexicon('modxtalks.edit_timeout',array('seconds' => $this->modx->getOption('modxtalks.edit_time'))));
+            return $this->failure($this->modx->lexicon('modxtalks.edit_timeout', array('seconds' => $this->modx->getOption('modxtalks.edit_time'))));
         }
 
         return true;
     }
 
     public function cleanup() {
-        $tags = array('&#091;&#091;','&#093;&#093;');
-        $rTags = array('[_[',']_]');
+        $tags = array('&#091;&#091;', '&#093;&#093;');
+        $rTags = array('[_[', ']_]');
 
         $content = str_replace($rTags, $tags, $this->object->content);
         $output = array(
-            'html' => $this->modx->modxtalks->_getEditForm($this->object->id,$content,$this->context),
+            'html' => $this->modx->modxtalks->getEditForm($this->object->id, $content, $this->context),
         );
 
-        return $this->success('',$output);
+        return $this->success('', $output);
     }
 
 }

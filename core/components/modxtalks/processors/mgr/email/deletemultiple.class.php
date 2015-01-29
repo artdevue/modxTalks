@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Remove selected Email addresses from Block List
  *
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalksEmailBlockMultipleProcessor extends modObjectProcessor
-{
+class modxTalksEmailBlockMultipleProcessor extends modObjectProcessor {
     public $classKey = 'modxTalksEmailBlock';
     public $languageTopics = array('modxtalks:default');
 

@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Update blocked Email address
  *
  * @package modxTalks
  * @subpackage processors
  */
-class modxTalksEmailBlockUpdateProcessor extends modObjectUpdateProcessor
-{
+class modxTalksEmailBlockUpdateProcessor extends modObjectUpdateProcessor {
     public $classKey = 'modxTalksEmailBlock';
     public $languageTopics = array('modxtalks:default');
     public $objectType = 'modxtalks.email';
@@ -16,6 +16,7 @@ class modxTalksEmailBlockUpdateProcessor extends modObjectUpdateProcessor
         if ($data = $this->modx->fromJSON($data)) {
             $this->properties = $data;
         }
+
         return parent::initialize();
     }
 
@@ -24,6 +25,7 @@ class modxTalksEmailBlockUpdateProcessor extends modObjectUpdateProcessor
             'email' => $this->getProperty('email'),
             'intro' => $this->getProperty('intro'),
         );
+
         return parent::beforeSave();
     }
 }

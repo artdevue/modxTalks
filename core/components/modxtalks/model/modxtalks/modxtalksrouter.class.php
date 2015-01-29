@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of modxTalks, a simple commenting component for MODx Revolution.
  *
@@ -8,7 +9,6 @@
  * @package   modxtalks
  *
  */
-
 class modxTalksRouter {
     /** @var modX $modx */
     public $modx;
@@ -64,6 +64,7 @@ class modxTalksRouter {
             ));
 
         }
+
         return $map;
     }
 
@@ -89,6 +90,7 @@ class modxTalksRouter {
             if (array_key_exists($id, $map)) {
                 return true;
             }
+
             return false;
         } elseif ($this->modx->getCount('modxTalksConversation', array('rid' => $id))) {
             /**

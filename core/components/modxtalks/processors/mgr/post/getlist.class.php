@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Get a list of posts
  *
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalkGetListProcessor extends modObjectGetListProcessor
-{
+class modxTalkGetListProcessor extends modObjectGetListProcessor {
     public $classKey = 'Post';
     public $languageTopics = array('modxtalks:default');
     public $defaultSortField = 'id';
@@ -16,10 +16,11 @@ class modxTalkGetListProcessor extends modObjectGetListProcessor
         $query = $this->getProperty('query');
         if (!empty($query)) {
             $c->where(array(
-                'title:LIKE'             => '%'.$query.'%',
-                'OR:conversationId:LIKE' => '%'.$query.'%',
+                'title:LIKE' => '%' . $query . '%',
+                'OR:conversationId:LIKE' => '%' . $query . '%',
             ));
         }
+
         return $c;
     }
 }

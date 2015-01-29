@@ -1,2 +1,4 @@
 <?php
-class modxTalksIpBlock extends xPDOSimpleObject {}
+
+class modxTalksIpBlock extends xPDOSimpleObject {
+}

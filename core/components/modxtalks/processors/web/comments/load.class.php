@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Get Comments list
  *
  * @package modxtalks
  * @subpackage processors
  */
-class getCommentsListProcessor extends modObjectGetListProcessor
-{
+class getCommentsListProcessor extends modObjectGetListProcessor {
     public $classKey = 'modxTalksPost';
     public $languageTopics = array('modxtalks:default');
     public $limit = 20;
@@ -30,7 +30,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor
             $list = $this->iterate($data);
         }
 
-        return $this->outputArray($list,$data['total']);
+        return $this->outputArray($list, $data['total']);
     }
 
     public function beforeQuery() {
@@ -60,7 +60,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor
 
     public function getData() {
         $data = array(
-            'total'   => 0,
+            'total' => 0,
             'results' => array()
         );
 
@@ -79,27 +79,22 @@ class getCommentsListProcessor extends modObjectGetListProcessor
             $idx = $this->modx->modxtalks->getDateIndex($this->conversationId, date('Y-m', strtotime($this->start)));
             if (!$this->revers) {
                 $range = range($idx, $idx + $this->limit);
-            }
-            else {
+            } else {
                 $last = ($idx - $this->limit) <= 0 ? 1 : $idx - $this->limit;
                 $range = range($idx, $last);
                 unset($last);
             }
-        }
-        else {
+        } else {
             $this->start = (int) $this->start;
             if (!$this->revers) {
                 $range = range($this->start, $this->start + $this->limit - 1);
-            }
-            else {
+            } else {
                 $start = $this->start - $this->limit + 1;
                 if ($this->start <= $count) {
                     $range = range($start, $this->start);
-                }
-                elseif (($this->start - $this->limit) < $count) {
+                } elseif (($this->start - $this->limit) < $count) {
                     $range = range($start, $count);
-                }
-                else {
+                } else {
                     return $data;
                 }
             }
@@ -113,7 +108,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor
             $authUsers = $this->modx->modxtalks->getUsers($usersIds);
             foreach ($authUsers as $a) {
                 $users[$a['id']] = array(
-                    'name'  => $a['fullname'] ? $a['fullname'] : $a['username'],
+                    'name' => $a['fullname'] ? $a['fullname'] : $a['username'],
                     'email' => $a['email'],
                 );
             }
@@ -125,11 +120,11 @@ class getCommentsListProcessor extends modObjectGetListProcessor
         return $data;
     }
 
-
     /**
      * Iterate across the data
      *
      * @param array $data
+     *
      * @return array
      */
     public function iterate(array $data) {
@@ -163,23 +158,22 @@ class getCommentsListProcessor extends modObjectGetListProcessor
 
         foreach ($data['results'] as $k => $comment) {
             $funny_date = $this->modx->modxtalks->date_format($comment['time']);
-            $index = date('Ym',$comment['time']);
-            $date = date($date_format.' O', $comment['time']);
+            $index = date('Ym', $comment['time']);
+            $date = date($date_format . ' O', $comment['time']);
             $timeMarker = '';
             if ($comment['userId'] > 0) {
                 $name = $users[$comment['userId']]['name'];
                 $email = $users[$comment['userId']]['email'];
-            }
-            else {
+            } else {
                 $name = $comment['username'] ? $comment['username'] : $guest_name;
                 $email = $comment['useremail'] ? $comment['useremail'] : 'anonym@anonym.com';
             }
 
-            $userId = md5($comment['userId'].$email);
+            $userId = md5($comment['userId'] . $email);
 
             $relativeTimeComment = $this->modx->modxtalks->date_format($comment['time'], true);
             if ($relativeTime != $relativeTimeComment) {
-                $timeMarker = '<div class="mt_timeMarker" data-now="1">'.$relativeTimeComment.'</div>';
+                $timeMarker = '<div class="mt_timeMarker" data-now="1">' . $relativeTimeComment . '</div>';
                 $relativeTime = $relativeTimeComment;
             }
             /**
@@ -191,54 +185,53 @@ class getCommentsListProcessor extends modObjectGetListProcessor
              */
             if ($comment['deleteTime'] > 0 && $comment['deleteUserId'] > 0) {
                 $tmp = array(
-                    'deleteUser'        => $users[$comment['deleteUserId']]['name'],
-                    'delete_date'       => date($date_format.' O', $comment['deleteTime']),
+                    'deleteUser' => $users[$comment['deleteUserId']]['name'],
+                    'delete_date' => date($date_format . ' O', $comment['deleteTime']),
                     'funny_delete_date' => $this->modx->modxtalks->date_format($comment['deleteTime']),
-                    'name'              => $name,
-                    'index'             => $index,
-                    'date'              => $date,
-                    'funny_date'        => $funny_date,
-                    'id'                => $comment['id'],
-                    'idx'               => $comment['idx'],
-                    'timeMarker'        => $timeMarker,
-                    'userId'            => $userId,
-                    'timeago'           => $timeago,
-                    'deleted_by'        => $del_by,
-                    'restore'           => '',
-                    'link'              => $this->modx->modxtalks->getLink($comment['idx']),
+                    'name' => $name,
+                    'index' => $index,
+                    'date' => $date,
+                    'funny_date' => $funny_date,
+                    'id' => $comment['id'],
+                    'idx' => $comment['idx'],
+                    'timeMarker' => $timeMarker,
+                    'userId' => $userId,
+                    'timeago' => $timeago,
+                    'deleted_by' => $del_by,
+                    'restore' => '',
+                    'link' => $this->modx->modxtalks->getLink($comment['idx']),
                 );
                 if ($isAuthenticated && ($isModerator === true || $comment['deleteUserId'] === $userID)) {
-                    $tmp['restore'] = '<a href="'.$this->modx->modxtalks->getLink('restore-'.$comment['idx']).'" title="'.$restore.'" class="mt_control-restore">'.$restore.'</a>';
+                    $tmp['restore'] = '<a href="' . $this->modx->modxtalks->getLink('restore-' . $comment['idx']) . '" title="' . $restore . '" class="mt_control-restore">' . $restore . '</a>';
                 }
-            }
-            /**
+            } /**
              * Prepare data for published comment
              */
             else {
                 $tmp = array(
-                    'avatar'     => $this->modx->modxtalks->getAvatar($email),
+                    'avatar' => $this->modx->modxtalks->getAvatar($email),
                     'hideAvatar' => ' style="display:none"',
-                    'name'       => $name,
-                    'content'    => $comment['content'],
-                    'index'      => $index,
-                    'date'       => $date,
+                    'name' => $name,
+                    'content' => $comment['content'],
+                    'index' => $index,
+                    'date' => $date,
                     'funny_date' => $funny_date,
-                    'link_reply' => $this->modx->modxtalks->getLink('mt_reply-'.$comment['idx']),
-                    'id'         => $comment['id'],
-                    'idx'        => $comment['idx'],
-                    'userId'     => $userId,
-                    'quote'      => $quote_text,
-                    'user'       => $this->modx->modxtalks->userButtons($comment['userId'],$comment['time']),
+                    'link_reply' => $this->modx->modxtalks->getLink('mt_reply-' . $comment['idx']),
+                    'id' => $comment['id'],
+                    'idx' => $comment['idx'],
+                    'userId' => $userId,
+                    'quote' => $quote_text,
+                    'user' => $this->modx->modxtalks->userButtons($comment['userId'], $comment['time']),
                     'timeMarker' => $timeMarker,
-                    'link'       => $this->modx->modxtalks->getLink($comment['idx']),
+                    'link' => $this->modx->modxtalks->getLink($comment['idx']),
                     'funny_edit_date' => '',
-                    'edit_name'  => '',
-                    'timeago'    => $timeago,
-                    'user_info'  => '',
+                    'edit_name' => '',
+                    'timeago' => $timeago,
+                    'user_info' => '',
                     'like_block' => '',
                 );
                 if ($isModerator === true) {
-                    $tmp['user_info'] = $this->modx->modxtalks->_parseTpl($userInfoTpl, array(
+                    $tmp['user_info'] = $this->modx->modxtalks->parseTpl($userInfoTpl, array(
                         'email' => $email,
                         'ip' => $comment['ip']
                     ), true);
@@ -252,27 +245,24 @@ class getCommentsListProcessor extends modObjectGetListProcessor
                      */
                     $likes = '';
                     $btn = $btn_like;
-                    if ($votes = json_decode($comment['votes'],true)) {
+                    if ($votes = json_decode($comment['votes'], true)) {
                         if ($isAuthenticated === true && in_array($this->modx->user->id, $votes['users'])) {
                             $btn = $btn_unlike;
                             $total = count($votes['users']) - 1;
                             if ($total > 0) {
-                                $likes = $this->modx->modxtalks->decliner($total,$this->modx->lexicon('modxtalks.people_like_and_you', array('total' => $total)));
-                            }
-                            else {
+                                $likes = $this->modx->modxtalks->decliner($total, $this->modx->lexicon('modxtalks.people_like_and_you', array('total' => $total)));
+                            } else {
                                 $likes = $this->modx->lexicon('modxtalks.you_like');
                             }
-                        }
-                        elseif ($votes['votes'] > 0) {
-                            $likes = $this->modx->modxtalks->decliner($votes['votes'],$this->modx->lexicon('modxtalks.people_like', array('total' => $votes['votes'])));
+                        } elseif ($votes['votes'] > 0) {
+                            $likes = $this->modx->modxtalks->decliner($votes['votes'], $this->modx->lexicon('modxtalks.people_like', array('total' => $votes['votes'])));
                         }
                     }
                     if ($isAuthenticated === false && (!isset($votes['votes']) || $votes['votes'] == 0)) {
                         $tmp['like_block'] = '';
-                    }
-                    else {
-                        $btn = $isAuthenticated === true ? '<a href="#" class="mt_like-btn">'.$btn.'</a>' : '';
-                        $tmp['like_block'] = '<div class="mt_like_block">'.$btn.'<span class="mt_likes">'.$likes.'</span></div>';
+                    } else {
+                        $btn = $isAuthenticated === true ? '<a href="#" class="mt_like-btn">' . $btn . '</a>' : '';
+                        $tmp['like_block'] = '<div class="mt_like_block">' . $btn . '<span class="mt_likes">' . $likes . '</span></div>';
                     }
                 }
 
@@ -282,8 +272,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor
                 }
                 if ($comment['editTime'] && $comment['editUserId'] && !$comment['deleteTime']) {
                     $tmp['funny_edit_date'] = $this->modx->modxtalks->date_format($comment['editTime']);
-                    $tmp['edit_name'] = $this->modx->lexicon('modxtalks.edited_by',array('name' => $users[$comment['editUserId']]['name']));
-                    ;
+                    $tmp['edit_name'] = $this->modx->lexicon('modxtalks.edited_by', array('name' => $users[$comment['editUserId']]['name']));;
                 }
             }
 

@@ -1,18 +1,19 @@
 <?php
 
-require_once MODX_CORE_PATH.'model/modx/modprocessor.class.php';
-require_once MODX_CORE_PATH.'model/modx/processors/resource/update.class.php';
+require_once MODX_CORE_PATH . 'model/modx/modprocessor.class.php';
+require_once MODX_CORE_PATH . 'model/modx/processors/resource/update.class.php';
 
 class CommentsModxTalks extends modResource {
     public $showInContextMenu = true;
     public $allowListingInClassKeyDropdown = true;
+
     function __construct(xPDO & $xpdo) {
         parent::__construct($xpdo);
         /*
         require_once MODX_CORE_PATH.'components/modxtalks/model/modxtalks/modxtalks.class.php';
         $this->modxtalks = new modxTalks($xpdo);
         */
-        $this->set('class_key','CommentsModxTalks');
+        $this->set('class_key', 'CommentsModxTalks');
     }
 
     /**
@@ -20,7 +21,7 @@ class CommentsModxTalks extends modResource {
      * @return mixed
      */
     public static function getControllerPath(xPDO &$modx) {
-        return $modx->getOption('modxtalks.core_path',null,$modx->getOption('core_path').'components/modxtalks/').'controllers/comments/';
+        return $modx->getOption('modxtalks.core_path', null, $modx->getOption('core_path') . 'components/modxtalks/') . 'controllers/comments/';
     }
 
     /**
@@ -29,6 +30,7 @@ class CommentsModxTalks extends modResource {
      */
     public function getContextMenuText() {
         $this->xpdo->lexicon->load('modxtalks:default');
+
         return array(
             'text_create' => $this->xpdo->lexicon('modxtalks.resource_comments'),
             'text_create_here' => $this->xpdo->lexicon('modxtalks.resource_comments_here')
@@ -41,12 +43,13 @@ class CommentsModxTalks extends modResource {
      */
     public function getResourceTypeName() {
         $this->xpdo->lexicon->load('modxtalks:default');
+
         return $this->xpdo->lexicon('modxtalks.resource_comments');
     }
 
     public function getContent(array $options = array()) {
-        $content = '<div class="postBody">'.parent::getContent($options).'</div>';
-        $conversation = $this->class_key.'-'.$this->id;
+        $content = '<div class="postBody">' . parent::getContent($options) . '</div>';
+        $conversation = $this->class_key . '-' . $this->id;
         $properties = $this->getProperties('modxtalks');
         $properties = array_merge(array('conversation' => $conversation), $properties);
 
@@ -54,7 +57,8 @@ class CommentsModxTalks extends modResource {
         foreach ($properties as $key => $property) {
             $out .= "&{$key}=`{$property}`";
         }
-        $content .= '[[$chankModxTalksStreak]][[!modxTalks?'.$out.']]';
+        $content .= '[[$chankModxTalksStreak]][[!modxTalks?' . $out . ']]';
+
         return $content;
     }
 }
@@ -69,7 +73,7 @@ class CommentsModxTalksUpdateProcessor extends modResourceUpdateProcessor {
         $properties = $this->getProperties();
         if (isset($properties['modxtalks'])) {
             $settings = $this->cleanArray($properties['modxtalks']);
-            $this->object->setProperties($settings,'modxtalks',false);
+            $this->object->setProperties($settings, 'modxtalks', false);
         }
 
         return parent::beforeSave();
@@ -78,8 +82,10 @@ class CommentsModxTalksUpdateProcessor extends modResourceUpdateProcessor {
     private function cleanArray(array $array) {
         foreach ($array as $key => $value) {
             $value = trim($value);
-            if ($value === '' || $value === $this->defaultText) unset($array[$key]);
+            if ($value === '' || $value === $this->defaultText)
+                unset($array[$key]);
         }
+
         return $array;
     }
 }

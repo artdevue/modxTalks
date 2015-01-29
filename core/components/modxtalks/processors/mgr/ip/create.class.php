@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Add IP address to Block List
  *
  * @package modxTalks
  * @subpackage processors
  */
-class modxTalksIpBlockCreateProcessor extends modObjectCreateProcessor
-{
+class modxTalksIpBlockCreateProcessor extends modObjectCreateProcessor {
     public $classKey = 'modxTalksIpBlock';
     public $languageTopics = array('modxtalks:default');
     public $objectType = 'modxtalks.ip';
@@ -17,13 +17,12 @@ class modxTalksIpBlockCreateProcessor extends modObjectCreateProcessor
 
         if ($this->doesAlreadyExist(array('ip' => $ip))) {
             $this->addFieldError('ip', $this->modx->lexicon('modxtalks.ip_already_banned'));
-        }
-        elseif (!preg_match("@^[0-9\.*]{3,15}$@", $ip)) {
+        } elseif (!preg_match("@^[0-9\.*]{3,15}$@", $ip)) {
             $this->addFieldError('ip', $this->modx->lexicon('modxtalks.err_ip_adress'));
         }
 
         $this->properties = array(
-            'ip'   => $ip,
+            'ip' => $ip,
             'date' => time(),
         );
 

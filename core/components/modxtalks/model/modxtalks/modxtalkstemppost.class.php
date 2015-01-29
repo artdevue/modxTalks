@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of modxTalks, a simple commenting component for MODx Revolution.
  *
@@ -8,11 +9,9 @@
  * @package modxtalks
  *
  */
-
-class modxTalksTempPost extends xPDOSimpleObject
-{
+class modxTalksTempPost extends xPDOSimpleObject {
     public function __construct(& $xpdo) {
-        parent :: __construct($xpdo);
+        parent:: __construct($xpdo);
     }
 
     /**
@@ -27,7 +26,7 @@ class modxTalksTempPost extends xPDOSimpleObject
          * If this is registered user
          */
         if ($this->userId > 0) {
-            if ($user = $this->xpdo->getObject('modUser',$this->userId)) {
+            if ($user = $this->xpdo->getObject('modUser', $this->userId)) {
                 $profile = $user->getOne('Profile');
                 $name = $user->get('username');
                 if ($profile) {

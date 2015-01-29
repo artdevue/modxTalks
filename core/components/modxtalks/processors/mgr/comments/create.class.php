@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create a comment
  *
@@ -9,4 +10,5 @@ class modxTalkPostCreateProcessor extends modObjectCreateProcessor {
     public $classKey = 'modxTalksPost';
     public $languageTopics = array('modxtalks:default');
 }
+
 return 'modxTalkPostCreateProcessor';

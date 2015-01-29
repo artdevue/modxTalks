@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of modxTalks, a simple commenting component for MODx Revolution.
  *
@@ -8,7 +9,6 @@
  * @package modxtalks
  *
  */
-
 class modxTalksPost extends xPDOSimpleObject {
     public function __construct(& $xpdo) {
         parent::__construct($xpdo);
@@ -29,9 +29,11 @@ class modxTalksPost extends xPDOSimpleObject {
      * @return object
      **/
     public function getResourceTitle(modxTalksConversation & $conversation, $type = 'pagetitle') {
-        if (!$conversation instanceof modxTalksConversation) return false;
+        if (!$conversation instanceof modxTalksConversation)
+            return false;
         $resource = $this->xpdo->getObject('modResource', $conversation->rid);
         $title = $type === 'longtitle' ? $type : 'pagetitle';
+
         return $resource->{$title};
     }
 
@@ -48,7 +50,7 @@ class modxTalksPost extends xPDOSimpleObject {
          * If this is registered user
          */
         if ($this->userId > 0) {
-            if ($user = $this->xpdo->getObject('modUser',$this->userId)) {
+            if ($user = $this->xpdo->getObject('modUser', $this->userId)) {
                 $profile = $user->getOne('Profile');
                 $name = $user->get('username');
                 if ($profile) {
@@ -62,12 +64,13 @@ class modxTalksPost extends xPDOSimpleObject {
         return array('name' => $name, 'email' => $email);
     }
 
-
     /**
      * Validate Email address
      *
      * @access public
+     *
      * @param string $email Email Address
+     *
      * @return boolean True if Email Address is correct
      */
     public function validateEmail($email) {
@@ -76,7 +79,7 @@ class modxTalksPost extends xPDOSimpleObject {
         if (is_bool($atIndex) && !$atIndex) {
             $isValid = false;
         } else {
-            $domain = substr($email, $atIndex+1);
+            $domain = substr($email, $atIndex + 1);
             $local = substr($email, 0, $atIndex);
             $localLen = strlen($local);
             $domainLen = strlen($domain);
@@ -86,7 +89,7 @@ class modxTalksPost extends xPDOSimpleObject {
             } else if ($domainLen < 1 || $domainLen > 255) {
                 // domain part length exceeded
                 $isValid = false;
-            } else if ($local[0] == '.' || $local[$localLen-1] == '.') {
+            } else if ($local[0] == '.' || $local[$localLen - 1] == '.') {
                 // local part starts or ends with '.'
                 $isValid = false;
             } else if (preg_match('/\\.\\./', $local)) {
@@ -98,10 +101,10 @@ class modxTalksPost extends xPDOSimpleObject {
             } else if (preg_match('/\\.\\./', $domain)) {
                 // domain part has two consecutive dots
                 $isValid = false;
-            } else if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\","",$local))) {
+            } else if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\", "", $local))) {
                 // character not valid in local part unless
                 // local part is quoted
-                if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\","",$local))) {
+                if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\", "", $local))) {
                     $isValid = false;
                 }
             }
@@ -112,71 +115,88 @@ class modxTalksPost extends xPDOSimpleObject {
             if (in_array($domain, $spamDomain)) {
                 $isValid = false;
             }
-            if ($isValid && !(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A"))) {
+            if ($isValid && !(checkdnsrr($domain, "MX") || checkdnsrr($domain, "A"))) {
                 // domain not found in DNS
                 $isValid = false;
             }
         }
+
         return $isValid;
     }
 
     /**
      * Get a namespaced property for the Comment
+     *
      * @param string $key
      * @param string $namespace
-     * @param null $default
+     * @param null   $default
+     *
      * @return null
      */
     public function getProperty($key, $namespace = 'value', $default = null) {
         $properties = $this->get('properties');
         $properties = !empty($properties) ? $properties : array();
-        return array_key_exists($namespace,$properties) && array_key_exists($key,$properties[$namespace]) ? $properties[$namespace][$key] : $default;
+
+        return array_key_exists($namespace, $properties) && array_key_exists($key, $properties[$namespace]) ? $properties[$namespace][$key] : $default;
     }
 
     /**
      * Get the properties for the specific namespace for the Comment
+     *
      * @param string $namespace
+     *
      * @return array
      */
     public function getProperties($namespace = 'value') {
         $properties = $this->get('properties');
         $properties = !empty($properties) ? $properties : array();
+
         return array_key_exists($namespace, $properties) ? $properties[$namespace] : array();
     }
 
     /**
      * Set a namespaced property for the Comment
+     *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      * @param string $namespace
+     *
      * @return bool
      */
     public function setProperty($key, $value, $namespace = 'value') {
         $properties = $this->get('properties');
         $properties = !empty($properties) ? $properties : array();
-        if (!array_key_exists($namespace, $properties)) $properties[$namespace] = array();
+        if (!array_key_exists($namespace, $properties))
+            $properties[$namespace] = array();
         $properties[$namespace][$key] = $value;
+
         return $this->set('properties', $properties);
     }
 
     /**
      * Set properties for a namespace on the Comment, optionally merging them with existing ones.
-     * @param array $newProperties
+     *
+     * @param array  $newProperties
      * @param string $namespace
-     * @param bool $merge
+     * @param bool   $merge
+     *
      * @return boolean
      */
     public function setProperties(array $newProperties, $namespace = 'value', $merge = true) {
         $properties = $this->get('properties');
         $properties = !empty($properties) ? $properties : array();
-        if (!array_key_exists($namespace, $properties)) $properties[$namespace] = array();
+        if (!array_key_exists($namespace, $properties))
+            $properties[$namespace] = array();
         $properties[$namespace] = $merge ? array_merge($properties[$namespace], $newProperties) : $newProperties;
+
         return $this->set('properties', $properties);
     }
 
     /**
      * Add vote to Comment
+     *
      * @param mixed $value
+     *
      * @return bool
      */
     public function addVote($userId) {
@@ -184,15 +204,19 @@ class modxTalksPost extends xPDOSimpleObject {
         $total = 'votes';
         $votes = $this->get('votes');
         $votes = !empty($votes) ? $votes : array($users => array(), $total => 0);
-        if (!array_key_exists($users, $votes)) $votes[$users] = array();
+        if (!array_key_exists($users, $votes))
+            $votes[$users] = array();
         $votes[$users][] = (int) $userId;
         $votes[$total] = count($votes[$users]);
+
         return $this->set('votes', $votes);
     }
 
     /**
      * Remove vote from Comment
+     *
      * @param mixed $value
+     *
      * @return bool
      */
     public function removeVote($userId) {
@@ -200,12 +224,14 @@ class modxTalksPost extends xPDOSimpleObject {
         $total = 'votes';
         $votes = $this->get('votes');
         $votes = !empty($votes) ? $votes : array($users => array(), $total => 0);
-        if (!array_key_exists($users, $votes)) $votes[$users] = array();
+        if (!array_key_exists($users, $votes))
+            $votes[$users] = array();
         if (in_array($userId, $votes[$users])) {
             $key = array_search($userId, $votes[$users]);
             unset($votes[$users][$key]);
         }
         $votes[$total] = count($votes[$users]);
+
         return $this->set('votes', $votes);
     }
 
@@ -218,7 +244,9 @@ class modxTalksPost extends xPDOSimpleObject {
         $total = 'votes';
         $votes = $this->get('votes');
         $votes = !empty($votes) ? $votes : array($users => array(), $total => 0);
-        if (!array_key_exists($users, $votes)) $votes[$users] = array();
+        if (!array_key_exists($users, $votes))
+            $votes[$users] = array();
+
         return $votes;
     }
 

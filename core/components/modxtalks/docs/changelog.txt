@@ -1,5 +1,9 @@
 Changelog file for modxTalks component.
 
+modxTalks 1.0.4 pl
+======================================
+- New. Setting to turn off scrubber
+
 modxTalks 1.0.2 beta
 ======================================
 - New. Full remove comment from database with recalculate other comments indexes

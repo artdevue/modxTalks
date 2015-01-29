@@ -1,5 +1,6 @@
 <?php
 require_once MODX_CORE_PATH . 'model/modx/modrequest.class.php';
+
 /**
  * Encapsulates the interaction of MODx manager with an HTTP request.
  *
@@ -14,7 +15,7 @@ class modxtalksControllerRequest extends modRequest {
     public $defaultAction = 'index';
 
     function __construct(modxTalks &$modxtalks) {
-        parent :: __construct($modxtalks->modx);
+        parent:: __construct($modxtalks->modx);
         $this->modxtalks =& $modxtalks;
     }
 
@@ -32,15 +33,15 @@ class modxtalksControllerRequest extends modRequest {
 
         $modx =& $this->modx;
         $modxtalks =& $this->modxtalks;
-        $viewHeader = include $this->modxtalks->config['corePath'].'controllers/mgr/header.php';
+        $viewHeader = include $this->modxtalks->config['corePath'] . 'controllers/mgr/header.php';
 
-        $f = $this->modxtalks->config['corePath'].'controllers/mgr/'.$this->action.'.php';
+        $f = $this->modxtalks->config['corePath'] . 'controllers/mgr/' . $this->action . '.php';
         if (file_exists($f)) {
             $viewOutput = include $f;
         } else {
-            $viewOutput = 'Controller not found: '.$f;
+            $viewOutput = 'Controller not found: ' . $f;
         }
 
-        return $viewHeader.$viewOutput;
+        return $viewHeader . $viewOutput;
     }
 }

@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Get Latest Comments
  *
  * @package modxtalks
  * @subpackage processors
  */
-class getLatestCommentsListProcessor extends modObjectGetListProcessor
-{
+class getLatestCommentsListProcessor extends modObjectGetListProcessor {
     public $classKey = 'modxTalksLatestPost';
     public $languageTopics = array('modxtalks:default');
     public $objectType = 'modxtalks.latestpost';
@@ -24,8 +24,9 @@ class getLatestCommentsListProcessor extends modObjectGetListProcessor
         if ($this->action === 'latest') {
             $output = array();
             foreach ($data['results'] as $r) {
-                $output[$r['cid']] = $this->modx->modxtalks->_parseTpl($this->modx->modxtalks->config['commentLatestTpl'], $r, true);
+                $output[$r['cid']] = $this->modx->modxtalks->parseTpl($this->modx->modxtalks->config['commentLatestTpl'], $r, true);
             }
+
             return $this->outputArray($output, $data['total']);
         }
 
@@ -67,19 +68,19 @@ class getLatestCommentsListProcessor extends modObjectGetListProcessor
              */
             $comment['content'] = $this->modx->stripTags($comment['content']);
             $list[] = array(
-                'name'       => $comment['name'],
-                'avatar'     => $this->modx->modxtalks->getAvatar($comment['email']),
-                'date'       => date($date_format.' O', $comment['time']),
+                'name' => $comment['name'],
+                'avatar' => $this->modx->modxtalks->getAvatar($comment['email']),
+                'date' => date($date_format . ' O', $comment['time']),
                 'funny_date' => $this->modx->modxtalks->date_format($comment['time']),
-                'id'         => $comment['pid'],
-                'cid'        => $comment['cid'],
-                'idx'        => $comment['idx'],
-                'link'       => $comment['link'],
-                'timeago'    => date('c',$comment['time']),
-                'time'       => $comment['time'],
-                'content'    => $this->modx->modxtalks->slice($comment['content']),
-                'total'      => $comment['total'],
-                'title'      => $comment['title'],
+                'id' => $comment['pid'],
+                'cid' => $comment['cid'],
+                'idx' => $comment['idx'],
+                'link' => $comment['link'],
+                'timeago' => date('c', $comment['time']),
+                'time' => $comment['time'],
+                'content' => $this->modx->modxtalks->slice($comment['content']),
+                'total' => $comment['total'],
+                'title' => $comment['title'],
             );
         }
 

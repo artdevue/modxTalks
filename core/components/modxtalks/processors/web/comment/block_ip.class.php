@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package modxTalks
  * @subpackage processors
@@ -18,13 +19,15 @@ class blockUserIpProcessor extends modObjectCreateProcessor {
          */
         if (!$id) {
             $this->failure($this->modx->lexicon('modxtalks.post_err_ns'));
+
             return false;
         }
         /**
          * Check for comment presents
          */
-        if (!$comment = $this->modx->getObject('modxTalksPost',array('id' => $id))) {
+        if (!$comment = $this->modx->getObject('modxTalksPost', array('id' => $id))) {
             $this->failure($this->modx->lexicon('modxtalks.post_err_nf'));
+
             return false;
         }
         /**
@@ -40,15 +43,17 @@ class blockUserIpProcessor extends modObjectCreateProcessor {
          */
         if (empty($this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.empty_context'));
+
             return false;
-        }
-        elseif (!$this->modx->getCount('modContext',$this->context)) {
+        } elseif (!$this->modx->getCount('modContext', $this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.bad_context'));
+
             return false;
         }
 
         if (!$this->modx->modxtalks->isModerator()) {
             $this->failure($this->modx->lexicon('modxtalks.edit_permission'));
+
             return false;
         }
         /**
@@ -56,6 +61,7 @@ class blockUserIpProcessor extends modObjectCreateProcessor {
          */
         if ($this->doesAlreadyExist(array('ip' => $ip))) {
             $this->failure($this->modx->lexicon('modxtalks.ip_already_banned'));
+
             return false;
         }
 

@@ -13,17 +13,21 @@ class makeQuoteProcessor extends modObjectGetProcessor {
         // Check Context
         if (empty($this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.empty_context'));
+
             return false;
-        }
-        elseif (!$this->modx->getCount('modContext',$this->context)) {
+        } elseif (!$this->modx->getCount('modContext', $this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.bad_context'));
+
             return false;
         }
         if ($this->modx->modxtalks->config['onlyAuthUsers'] && !$this->modx->user->isAuthenticated($this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.no_login'));
+
             return false;
         }
+
         return parent::initialize();
+
         return true;
     }
 
@@ -34,9 +38,10 @@ class makeQuoteProcessor extends modObjectGetProcessor {
     public function process() {
         if ($this->object->deleteTime || $this->object->deleteUser) {
             $this->failure($this->modx->lexicon('modxtalks.unknown_error'));
+
             return false;
         }
-        
+
         return $this->cleanup();
     }
 
@@ -44,23 +49,22 @@ class makeQuoteProcessor extends modObjectGetProcessor {
         $content = $this->removeQuotes($this->object->content);
         $name = $this->modx->lexicon('modxtalks.guest');
         if ($userId = $this->object->userId) {
-            $profile = $this->modx->getObject('modUserProfile',$userId);
+            $profile = $this->modx->getObject('modUserProfile', $userId);
             if (!$name = $profile->get('fullname')) {
-                $user = $this->modx->getObject('modUser',$userId);
+                $user = $this->modx->getObject('modUser', $userId);
                 $name = $user->get('username');
             }
-        }
-        else {
+        } else {
             $name = $this->object->username;
         }
 
         $output = array(
             'content' => $content,
-            'id'      => $this->object->id,
-            'user'    => '"'.$name.'"'
+            'id' => $this->object->id,
+            'user' => '"' . $name . '"'
         );
 
-        return $this->success('',$output);
+        return $this->success('', $output);
     }
 
     /**
@@ -68,6 +72,7 @@ class makeQuoteProcessor extends modObjectGetProcessor {
      * This can be used to prevent nested quotes and videos when quoting a post.
      *
      * @param string $content Raw content
+     *
      * @return string $content
      */
     public function removeQuotes($content) {

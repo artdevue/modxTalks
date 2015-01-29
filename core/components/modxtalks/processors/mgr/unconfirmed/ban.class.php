@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Ban IP address from unconfirmed comment
  *
  * @package modxtalks
  * @subpackage processors
  */
-class modxTalksTempPostBanProcessor extends modObjectRemoveProcessor
-{
+class modxTalksTempPostBanProcessor extends modObjectRemoveProcessor {
     public $classKey = 'modxTalksTempPost';
     public $objectType = 'modxtalks.temppost';
     public $languageTopics = array('modxtalks:default');
@@ -31,9 +31,9 @@ class modxTalksTempPostBanProcessor extends modObjectRemoveProcessor
             return $this->modx->lexicon('modxtalks.ip_blocked');
         }
 
-        $ip = $this->modx->newObject('modxTalksIpBlock',array(
-            'ip'    => $this->object->ip,
-            'date'  => time(),
+        $ip = $this->modx->newObject('modxTalksIpBlock', array(
+            'ip' => $this->object->ip,
+            'date' => time(),
             'intro' => '',
         ));
 
@@ -60,4 +60,5 @@ class modxTalksTempPostBanProcessor extends modObjectRemoveProcessor
     }
 
 }
+
 return 'modxTalksTempPostBanProcessor';

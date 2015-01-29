@@ -1,12 +1,12 @@
 <?php
+
 /**
  * Add Email to Block List
  *
  * @package modxTalks
  * @subpackage processors
  */
-class modxTalksEmailBlockCreateProcessor extends modObjectCreateProcessor
-{
+class modxTalksEmailBlockCreateProcessor extends modObjectCreateProcessor {
     public $classKey = 'modxTalksEmailBlock';
     public $languageTopics = array('modxtalks:default');
     public $objectType = 'modxtalks.email';
@@ -27,7 +27,7 @@ class modxTalksEmailBlockCreateProcessor extends modObjectCreateProcessor
 
         $this->properties = array(
             'email' => $email,
-            'date'  => time(),
+            'date' => time(),
         );
 
         if (!empty($intro)) {
@@ -38,4 +38,5 @@ class modxTalksEmailBlockCreateProcessor extends modObjectCreateProcessor
     }
 
 }
+
 return 'modxTalksEmailBlockCreateProcessor';
