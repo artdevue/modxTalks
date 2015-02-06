@@ -374,7 +374,6 @@ class modxTalksPostCreateProcessor extends modObjectCreateProcessor {
 
         return $data;
     }
-
 }
 
 return 'modxTalksPostCreateProcessor';

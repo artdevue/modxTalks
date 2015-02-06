@@ -9,6 +9,7 @@ class makeQuoteProcessor extends modObjectGetProcessor {
         if ($this->modx->modxtalks->isModerator()) {
             return parent::initialize();
         }
+
         $this->context = trim($this->getProperty('ctx'));
         // Check Context
         if (empty($this->context)) {
@@ -20,6 +21,7 @@ class makeQuoteProcessor extends modObjectGetProcessor {
 
             return false;
         }
+
         if ($this->modx->modxtalks->config['onlyAuthUsers'] && !$this->modx->user->isAuthenticated($this->context)) {
             $this->failure($this->modx->lexicon('modxtalks.no_login'));
 
@@ -27,8 +29,6 @@ class makeQuoteProcessor extends modObjectGetProcessor {
         }
 
         return parent::initialize();
-
-        return true;
     }
 
     /**

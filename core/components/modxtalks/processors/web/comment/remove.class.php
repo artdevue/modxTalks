@@ -11,7 +11,10 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
     public $afterSaveEvent = 'OnModxTalksCommentAfterRemove';
     public $beforeSaveEvent = 'OnModxTalksCommentBeforeRemove';
     public $context = '';
-    protected $theme;
+    /**
+     * @var modxTalksConversation
+     */
+    protected $conversation;
     protected $defaultProprties = array(
         'total' => 0,
         'deleted' => 0,
@@ -41,11 +44,11 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
     }
 
     public function beforeSet() {
-        $this->theme = $this->modx->getObject('modxTalksConversation', array(
+        $this->conversation = $this->modx->getObject('modxTalksConversation', array(
             'id' => $this->object->conversationId
         ));
 
-        if (!$this->theme) {
+        if (!$this->conversation) {
             return false;
         }
 
@@ -79,12 +82,14 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
 
             return false;
         }
+
         // Check comment owner
         if ($this->modx->user->id != $userId) {
             $this->failure($this->modx->lexicon('modxtalks.delete_permission'));
 
             return false;
         }
+
         // Check time for delete comment
         if ((time() - $this->object->time) > $this->modx->modxtalks->config['edit_time']) {
             $this->failure($this->modx->lexicon('modxtalks.delete_timeout'));
@@ -102,12 +107,13 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
             return false;
         }
 
-        if (!$this->theme->getProperties('comments')) {
-            $this->theme->setProperties($this->defaultProprties, 'comments', false);
+        if (!$this->conversation->getProperties('comments')) {
+            $this->conversation->setProperties($this->defaultProprties, 'comments', false);
         }
-        $deleted = $this->theme->getProperty('deleted', 'comments', 0);
-        $this->theme->setProperty('deleted', ++$deleted, 'comments');
-        $this->theme->save();
+
+        $deleted = $this->conversation->getProperty('deleted', 'comments', 0);
+        $this->conversation->setProperty('deleted', ++$deleted, 'comments');
+        $this->conversation->save();
 
         return parent::beforeSave();
     }
@@ -123,8 +129,9 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
             if (!$this->modx->modxtalks->cacheComment($this->object)) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error cache the comment with ID ' . $this->object->id);
             }
-            if (!$this->modx->modxtalks->cacheConversation($this->theme)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error cache the conversation with ID ' . $this->theme->id);
+
+            if (!$this->modx->modxtalks->cacheConversation($this->conversation)) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error cache the conversation with ID ' . $this->conversation->id);
             }
         }
 
@@ -175,7 +182,7 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
             'id' => (int) $this->object->id,
             'idx' => (int) $idx,
             'userId' => md5($this->object->userId . $email),
-            'restore' => '<a href="' . $this->modx->modxtalks->getLink('restore-' . $idx) . '" title="' . $restore . '" class="mt_control-restore">' . $restore . '</a>',
+            'restore' => '<a href="' . $this->modx->modxtalks->getLink('restore-' . $idx) . '" title="' . $restore . '" class="mt_icon mt_icon-undo">' . $restore . '</a>',
             'timeago' => date('c', $this->object->time),
             'link' => $this->modx->modxtalks->getLink($idx),
         );
@@ -191,16 +198,16 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
         }
 
         if ($this->modx->modxtalks->config['fullDeleteComment'] === true) {
-            if (!$this->theme->getProperties('comments')) {
-                $this->theme->setProperties($this->defaultProprties, 'comments', false);
+            if (!$this->conversation->getProperties('comments')) {
+                $this->conversation->setProperties($this->defaultProprties, 'comments', false);
             }
 
-            $total = $this->theme->getProperty('total', 'comments', 0);
-            $this->theme->setProperty('total', ($total - 1), 'comments');
-            $this->theme->save();
+            $total = $this->conversation->getProperty('total', 'comments', 0);
+            $this->conversation->setProperty('total', ($total - 1), 'comments');
+            $this->conversation->save();
 
-            if (!$this->modx->modxtalks->cacheConversation($this->theme)) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error cache the conversation with ID ' . $this->theme->id);
+            if (!$this->modx->modxtalks->cacheConversation($this->conversation)) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error cache the conversation with ID ' . $this->conversation->id);
             }
 
             $idx = $this->object->idx;
@@ -209,11 +216,11 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
                 return $this->failure('Error delete the post');
             }
 
-            $this->modx->modxtalks->deleteAllCommentsCache($this->theme->id);
+            $this->modx->modxtalks->deleteAllCommentsCache($this->conversation->id);
 
-            $recalculated = $this->theme->recalculateIndexes($idx);
+            $recalculated = $this->conversation->recalculateIndexes($idx);
             if ($recalculated !== true) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error recalculate comments indexes ' . $this->theme->id);
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/remove] Error recalculate comments indexes ' . $this->conversation->id);
             }
 
             return $this->success($this->modx->lexicon('modxtalks.successfully_deleted'));
@@ -253,7 +260,6 @@ class commentRemoveProcessor extends modObjectUpdateProcessor {
 
         return $this->cleanup();
     }
-
 }
 
 return 'commentRemoveProcessor';

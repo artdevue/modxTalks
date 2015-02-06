@@ -25,6 +25,7 @@ class postAddVoteProcessor extends modObjectUpdateProcessor {
 
             return false;
         }
+
         /**
          * Check Context
          */
@@ -107,6 +108,7 @@ class postAddVoteProcessor extends modObjectUpdateProcessor {
             'html' => '',
             'btn' => $this->modx->lexicon('modxtalks.i_like'),
         );
+
         if (in_array($this->userId, $this->votes['users'])) {
             $total = count($this->votes['users']) - 1;
             $data['btn'] = $this->modx->lexicon('modxtalks.not_like');
@@ -121,7 +123,6 @@ class postAddVoteProcessor extends modObjectUpdateProcessor {
 
         return $data;
     }
-
 }
 
 return 'postAddVoteProcessor';

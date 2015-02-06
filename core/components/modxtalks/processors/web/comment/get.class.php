@@ -74,7 +74,6 @@ class modxTalksPostGetProcessor extends modObjectGetProcessor {
 
         return $this->success('', $output);
     }
-
 }
 
 return 'modxTalksPostGetProcessor';

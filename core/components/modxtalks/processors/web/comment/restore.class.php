@@ -62,10 +62,12 @@ class commentUpdateProcessor extends modObjectUpdateProcessor {
 
             return false;
         }
+
         if ($this->theme = $this->modx->getObject('modxTalksConversation', array('id' => $this->object->conversationId))) {
             if (!$this->theme->getProperties('comments')) {
                 $this->theme->setProperties($this->defaultProprties, 'comments', false);
             }
+
             if ($deleted = $this->theme->getProperty('deleted', 'comments', 0)) {
                 $this->theme->setProperty('deleted', --$deleted, 'comments');
                 $this->theme->save();
@@ -86,6 +88,7 @@ class commentUpdateProcessor extends modObjectUpdateProcessor {
             if (!$this->modx->modxtalks->cacheComment($this->object)) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/restore] Cache comment error, ID ' . $this->object->id);
             }
+
             if (!$this->modx->modxtalks->cacheConversation($this->theme)) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[modxTalks web/comment/restore] Cache conversation error, ID ' . $this->theme->id);
             }
@@ -119,8 +122,9 @@ class commentUpdateProcessor extends modObjectUpdateProcessor {
         if ($this->object->userId !== $this->object->editUserId) {
             if ($edit_user = $this->modx->getObjectGraph('modUser', '{"Profile":{}}', $this->object->editUserId, true)) {
                 $profile = $edit_user->getOne('Profile');
-                if (!$edit_name = $profile->get('fullname'))
+                if (!$edit_name = $profile->get('fullname')) {
                     $edit_name = $user->get('username');
+                }
             }
         }
 
@@ -145,6 +149,7 @@ class commentUpdateProcessor extends modObjectUpdateProcessor {
             'user_info' => '',
             'like_block' => '',
         );
+
         if ($this->modx->modxtalks->isModerator() === true) {
             $data['user_info'] = $this->modx->modxtalks->parseTpl($this->modx->modxtalks->config['user_info'], array(
                 'email' => $email,
@@ -154,7 +159,6 @@ class commentUpdateProcessor extends modObjectUpdateProcessor {
 
         return $data;
     }
-
 }
 
 return 'commentUpdateProcessor';

@@ -10,31 +10,13 @@ class blockUserEmailProcessor extends modObjectCreateProcessor {
     public $objectType = 'modxtalks.email';
 
     public function beforeSet() {
-        /**
-         * @var integer Comment ID
-         */
-        $id = (int) $this->getProperty('id');
-        /**
-         * Check comment ID
-         */
-        if (!$id) {
-            $this->failure($this->modx->lexicon('modxtalks.post_err_ns'));
+        $value = (string) $this->getProperty('value');
+        if (!$value) {
+            $this->failure($this->modx->lexicon('modxtalks.error_try_again'));
 
             return false;
         }
-        /**
-         * Check for comment presents
-         */
-        if (!$comment = $this->modx->getObject('modxTalksPost', array('id' => $id))) {
-            $this->failure($this->modx->lexicon('modxtalks.post_err_nf'));
 
-            return false;
-        }
-        $userInfo = $comment->getUserData();
-        /**
-         * Email Address
-         */
-        $email = $userInfo['email'];
         /**
          * @var string Context key
          */
@@ -60,14 +42,14 @@ class blockUserEmailProcessor extends modObjectCreateProcessor {
         /**
          * If Email Address already banned
          */
-        if ($this->doesAlreadyExist(array('email' => $email))) {
+        if ($this->doesAlreadyExist(array('email' => $value))) {
             $this->failure($this->modx->lexicon('modxtalks.email_already_banned'));
 
             return false;
         }
 
         $this->properties = array(
-            'email' => $email,
+            'email' => $value,
             'date' => time(),
         );
 
@@ -81,7 +63,6 @@ class blockUserEmailProcessor extends modObjectCreateProcessor {
     public function cleanup() {
         return $this->success($this->modx->lexicon('modxtalks.email_ban_success'));
     }
-
 }
 
 return 'blockUserEmailProcessor';

@@ -10,30 +10,13 @@ class blockUserIpProcessor extends modObjectCreateProcessor {
     public $objectType = 'modxtalks.ip';
 
     public function beforeSet() {
-        /**
-         * @var integer Comment ID
-         */
-        $id = (int) $this->getProperty('id');
-        /**
-         * Check comment ID
-         */
-        if (!$id) {
-            $this->failure($this->modx->lexicon('modxtalks.post_err_ns'));
+        $value = (string) $this->getProperty('value');
+        if (!$value) {
+            $this->failure($this->modx->lexicon('modxtalks.error_try_again'));
 
             return false;
         }
-        /**
-         * Check for comment presents
-         */
-        if (!$comment = $this->modx->getObject('modxTalksPost', array('id' => $id))) {
-            $this->failure($this->modx->lexicon('modxtalks.post_err_nf'));
 
-            return false;
-        }
-        /**
-         * IP Address
-         */
-        $ip = $comment->ip;
         /**
          * @var string Context key
          */
@@ -56,17 +39,18 @@ class blockUserIpProcessor extends modObjectCreateProcessor {
 
             return false;
         }
+
         /**
          * If IP Address already banned
          */
-        if ($this->doesAlreadyExist(array('ip' => $ip))) {
+        if ($this->doesAlreadyExist(array('ip' => $value))) {
             $this->failure($this->modx->lexicon('modxtalks.ip_already_banned'));
 
             return false;
         }
 
         $this->properties = array(
-            'ip' => $ip,
+            'ip' => $value,
             'date' => time(),
         );
 
@@ -80,7 +64,6 @@ class blockUserIpProcessor extends modObjectCreateProcessor {
     public function cleanup() {
         return $this->success($this->modx->lexicon('modxtalks.ip_ban_success'));
     }
-
 }
 
 return 'blockUserIpProcessor';

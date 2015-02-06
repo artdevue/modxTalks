@@ -24,6 +24,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
         if ($beforeQuery !== true) {
             return $this->failure($beforeQuery);
         }
+
         $data = $this->getData();
         $list = array();
         if ($data['results']) {
@@ -201,6 +202,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
                     'restore' => '',
                     'link' => $this->modx->modxtalks->getLink($comment['idx']),
                 );
+
                 if ($isAuthenticated && ($isModerator === true || $comment['deleteUserId'] === $userID)) {
                     $tmp['restore'] = '<a href="' . $this->modx->modxtalks->getLink('restore-' . $comment['idx']) . '" title="' . $restore . '" class="mt_control-restore">' . $restore . '</a>';
                 }
@@ -216,7 +218,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
                     'index' => $index,
                     'date' => $date,
                     'funny_date' => $funny_date,
-                    'link_reply' => $this->modx->modxtalks->getLink('mt_reply-' . $comment['idx']),
+                    'link_reply' => $this->modx->modxtalks->getLink('mt_replay-' . $comment['idx']),
                     'id' => $comment['id'],
                     'idx' => $comment['idx'],
                     'userId' => $userId,
@@ -230,6 +232,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
                     'user_info' => '',
                     'like_block' => '',
                 );
+
                 if ($isModerator === true) {
                     $tmp['user_info'] = $this->modx->modxtalks->parseTpl($userInfoTpl, array(
                         'email' => $email,
@@ -258,6 +261,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
                             $likes = $this->modx->modxtalks->decliner($votes['votes'], $this->modx->lexicon('modxtalks.people_like', array('total' => $votes['votes'])));
                         }
                     }
+
                     if ($isAuthenticated === false && (!isset($votes['votes']) || $votes['votes'] == 0)) {
                         $tmp['like_block'] = '';
                     } else {
@@ -270,6 +274,7 @@ class getCommentsListProcessor extends modObjectGetListProcessor {
                     $tmp['hideAvatar'] = '';
                     $hideAvatarEmail = $email;
                 }
+
                 if ($comment['editTime'] && $comment['editUserId'] && !$comment['deleteTime']) {
                     $tmp['funny_edit_date'] = $this->modx->modxtalks->date_format($comment['editTime']);
                     $tmp['edit_name'] = $this->modx->lexicon('modxtalks.edited_by', array('name' => $users[$comment['editUserId']]['name']));;

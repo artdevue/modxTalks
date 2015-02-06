@@ -68,12 +68,14 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
 
             return false;
         }
+
         // Check comment owner
         if ($this->modx->user->id != $userId) {
             $this->failure($this->modx->lexicon('modxtalks.edit_permission'));
 
             return false;
         }
+
         // Check time for edit comment
         if ((time() - $this->object->time) > $this->modx->modxtalks->config['edit_time']) {
             $this->failure($this->modx->lexicon('modxtalks.edit_timeout', array('seconds' => $this->modx->getOption('modxtalks.edit_time'))));
@@ -117,18 +119,21 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
         if ($user = $this->modx->getObjectGraph('modUser', '{"Profile":{}}', $this->object->userId, true)) {
             $profile = $user->getOne('Profile');
             $email = $profile->get('email');
-            if (!$name = $profile->get('fullname'))
+            if (!$name = $profile->get('fullname')) {
                 $name = $user->get('username');
+            }
         } else {
             $name = $this->object->username;
             $email = $this->object->useremail;
         }
+
         $edit_name = $name;
         if ($this->object->userId !== $this->object->editUserId) {
             if ($edit_user = $this->modx->getObjectGraph('modUser', '{"Profile":{}}', $this->object->editUserId, true)) {
                 $profile = $edit_user->getOne('Profile');
-                if (!$edit_name = $profile->get('fullname'))
+                if (!$edit_name = $profile->get('fullname')) {
                     $edit_name = $user->get('username');
+                }
             }
         }
         $data = array(
@@ -151,6 +156,7 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
             'user_info' => '',
             'like_block' => '',
         );
+
         if ($this->modx->modxtalks->isModerator() === true) {
             $data['user_info'] = $this->modx->modxtalks->parseTpl($this->modx->modxtalks->config['user_info'], array(
                 'email' => $email,
@@ -160,7 +166,6 @@ class postUpdateProcessor extends modObjectUpdateProcessor {
 
         return $data;
     }
-
 }
 
 return 'postUpdateProcessor';
