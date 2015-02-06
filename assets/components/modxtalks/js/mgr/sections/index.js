@@ -1,4 +1,4 @@
-modxTalks.page.Home = function(config) {
+modxTalks.page.Home = function (config) {
     config = config || {};
     Ext.applyIf(config, {
         components: [{
