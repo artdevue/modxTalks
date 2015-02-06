@@ -1,131 +1,187 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model package="modxTalks" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" version="1.1">	
-	<object class="ModxtalksConversation" table="modxtalks_conversation" extends="xPDOSimpleObject">
-		<field key="conversation" dbtype="varchar" precision="63" phptype="string" null="false" index="unique" />
-		<field key="rid" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
-		<field key="properties" dbtype="mediumtext" phptype="string" null="true" />
+<model package="modxtalks" baseClass="xPDOOSimpleObject" platform="mysql" defaultEngine="MyISAM" version="1.1">
+	<object class="modxTalksConversation" table="modxtalks_conversation" extends="xPDOOSimpleObject">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" generated="native"/>
+		<field key="conversation" dbtype="varchar" precision="63" phptype="string" null="false" index="unique"/>
+		<field key="rid" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" index="index"/>
+		<field key="properties" dbtype="mediumtext" phptype="string" null="true"/>
 
-		<index alias="conversation" name="conversation" primary="false" unique="true" type="BTREE" >
-			<column key="conversation" length="" collation="A" null="false" />
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
+			<column key="id" length="" collation="A" null="false"/>
 		</index>
-		<index alias="rid" name="rid" primary="false" unique="false" type="BTREE" >
-			<column key="rid" length="" collation="A" null="false" />
+		<index alias="conversation" name="conversation" primary="false" unique="true" type="BTREE">
+			<column key="conversation" length="" collation="A" null="false"/>
+		</index>
+		<index alias="rid" name="rid" primary="false" unique="false" type="BTREE">
+			<column key="rid" length="" collation="A" null="false"/>
+		</index>
+
+		<composite alias="Posts" class="modxTalksPost" local="id" foreign="conversationId" cardinality="many" owner="local" />
+		<composite alias="LatestPosts" class="modxTalksLatestPost" local="id" foreign="cid" cardinality="many" owner="local" />
+		<composite alias="Subscribers" class="modxTalksSubscribers" local="id" foreign="conversationId" cardinality="many" owner="local" />
+	</object>
+
+	<object class="modxTalksEmailBlock" table="modxtalks_email_block" extends="xPDOOSimpleObject">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" generated="native"/>
+		<field key="email" dbtype="varchar" precision="63" phptype="string" null="false" index="unique"/>
+		<field key="date" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index"/>
+		<field key="intro" dbtype="text" phptype="string" null="true"/>
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
+			<column key="id" length="" collation="A" null="false"/>
+		</index>
+		<index alias="email" name="email" primary="false" unique="true" type="BTREE">
+			<column key="email" length="" collation="A" null="false"/>
+		</index>
+		<index alias="date" name="date" primary="false" unique="false" type="BTREE">
+			<column key="date" length="" collation="A" null="false"/>
 		</index>
 	</object>
-	<object class="ModxtalksIpBlock" table="modxtalks_ip_block" extends="xPDOSimpleObject">
-		<field key="ip" dbtype="varchar" precision="16" phptype="string" null="false" index="index" />
-		<field key="date" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
-		<field key="intro" dbtype="text" phptype="string" null="true" />
 
-		<index alias="ip" name="ip" primary="false" unique="false" type="BTREE" >
-			<column key="ip" length="" collation="A" null="false" />
+	<object class="modxTalksIpBlock" table="modxtalks_ip_block" extends="xPDOOSimpleObject">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" generated="native"/>
+		<field key="ip" dbtype="varchar" precision="255" phptype="string" null="false" index="index"/>
+		<field key="date" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index"/>
+		<field key="intro" dbtype="text" phptype="string" null="true"/>
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
+			<column key="id" length="" collation="A" null="false"/>
 		</index>
-		<index alias="date" name="date" primary="false" unique="false" type="BTREE" >
-			<column key="date" length="" collation="A" null="false" />
+		<index alias="ip" name="ip" primary="false" unique="false" type="BTREE">
+			<column key="ip" length="" collation="A" null="false"/>
+		</index>
+		<index alias="date" name="date" primary="false" unique="false" type="BTREE">
+			<column key="date" length="" collation="A" null="false"/>
 		</index>
 	</object>
-	<object class="ModxtalksLike" table="modxtalks_like" extends="xPDOObject">
-		<field key="id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
-		<field key="postId" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
-		<field key="userId" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
 
-		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
-			<column key="postId" length="" collation="A" null="false" />
-			<column key="userId" length="" collation="A" null="false" />
-			<column key="id" length="" collation="A" null="false" />
+	<object class="modxTalksLatestPost" table="modxtalks_latest_post" extends="xPDOOObject">
+		<field key="cid" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" generated="native"/>
+		<field key="pid" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0"/>
+		<field key="idx" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0"/>
+		<field key="userId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0"/>
+		<field key="time" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false"/>
+		<field key="content" dbtype="text" phptype="string" null="false"/>
+		<field key="link" dbtype="text" phptype="string" null="false"/>
+		<field key="name" dbtype="varchar" precision="63" phptype="string" null="true"/>
+		<field key="email" dbtype="varchar" precision="63" phptype="string" null="true"/>
+		<field key="total" dbtype="int" precision="3" attributes="unsigned" phptype="integer" null="false"/>
+		<field key="title" dbtype="varchar" precision="255" phptype="string" null="false"/>
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
+			<column key="cid" length="" collation="A" null="false"/>
 		</index>
+
+		<aggregate alias="Conversation" class="modxTalksConversation" local="cid" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="User" class="modUser" local="userId" foreign="id" cardinality="one" owner="foreign" />
 	</object>
-	<object class="ModxtalksMemberconversation" table="modxtalks_memberconversation" extends="xPDOObject">
-		<field key="conversationId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
-		<field key="type" dbtype="enum" precision="'member','group'" phptype="string" null="false" default="member" index="pk" />
-		<field key="id" dbtype="int" precision="11" phptype="integer" null="false" index="pk" />
-		<field key="allowed" dbtype="tinyint" precision="1" phptype="integer" null="true" default="0" />
-		<field key="starred" dbtype="tinyint" precision="1" phptype="integer" null="true" default="0" />
-		<field key="lastRead" dbtype="smallint" precision="5" phptype="integer" null="true" default="0" />
-		<field key="draft" dbtype="text" phptype="string" null="true" />
-		<field key="muted" dbtype="tinyint" precision="1" phptype="integer" null="true" default="0" />
 
-		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
-			<column key="conversationId" length="" collation="A" null="false" />
-			<column key="type" length="" collation="A" null="false" />
-			<column key="id" length="" collation="A" null="false" />
+	<object class="modxTalksLike" table="modxtalks_like" extends="xPDOOSimpleObject">
+		<field key="id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"/>
+		<field key="postId" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index"/>
+		<field key="memberId" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index"/>
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
+			<column key="id" length="" collation="A" null="false"/>
 		</index>
-		<index alias="member_conversation_type_id" name="member_conversation_type_id" primary="false" unique="false" type="BTREE" >
-			<column key="type" length="" collation="A" null="false" />
-			<column key="id" length="" collation="A" null="false" />
+		<index alias="postId" name="postId" primary="false" unique="true" type="BTREE">
+			<column key="postId" length="" collation="A" null="false"/>
+			<column key="memberId" length="" collation="A" null="false"/>
 		</index>
+
+		<aggregate alias="Post" class="modxTalksPost" local="postId" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="User" class="modUser" local="memberId" foreign="id" cardinality="one" owner="foreign" />
 	</object>
-	<object class="ModxtalksPost" table="modxtalks_post" extends="xPDOSimpleObject">
-		<field key="conversationId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
-		<field key="idx" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
-		<field key="userId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
-		<field key="time" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" />
-		<field key="date" dbtype="int" precision="6" attributes="unsigned" phptype="integer" null="false" index="index" />
-		<field key="editUserId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
-		<field key="editTime" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
-		<field key="deleteUserId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
-		<field key="deleteTime" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" />
-		<field key="hash" dbtype="varchar" precision="32" phptype="string" null="false" />
-		<field key="content" dbtype="text" phptype="string" null="false" />
-		<field key="username" dbtype="varchar" precision="63" phptype="string" null="true" />
-		<field key="useremail" dbtype="varchar" precision="63" phptype="string" null="true" />
-		<field key="ip" dbtype="varchar" precision="16" phptype="string" null="false" default="0.0.0.0" />
-		<field key="votes" dbtype="mediumtext" phptype="string" null="true" />
-		<field key="properties" dbtype="mediumtext" phptype="string" null="true" />
 
-		<index alias="conversation" name="conversation" primary="false" unique="false" type="BTREE" >
-			<column key="conversationId" length="" collation="A" null="false" />
+	<object class="modxTalksMails" table="modxtalks_mails" extends="xPDOOSimpleObject">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" generated="native"/>
+		<field key="post_id" dbtype="int" precision="11" phptype="integer" null="false"/>
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
+			<column key="id" length="" collation="A" null="false"/>
 		</index>
-		<index alias="date" name="date" primary="false" unique="false" type="BTREE" >
-			<column key="date" length="" collation="A" null="false" />
-		</index>
-		<index alias="userId" name="userId" primary="false" unique="false" type="BTREE" >
-			<column key="userId" length="" collation="A" null="false" />
-		</index>
-		<index alias="idx" name="idx" primary="false" unique="false" type="BTREE" >
-			<column key="idx" length="" collation="A" null="false" />
-		</index>
+
+		<aggregate alias="Post" class="modxTalksPost" local="post_id" foreign="id" cardinality="one" owner="foreign" />
 	</object>
-	<object class="ModxtalksSubscribers" table="modxtalks_subscribers" extends="xPDOSimpleObject">
-		<field key="conversationId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
-		<field key="email" dbtype="varchar" precision="63" phptype="string" null="false" />
-		<field key="properties" dbtype="mediumtext" phptype="string" null="true" />
 
-		<index alias="conversationId" name="conversationId" primary="false" unique="false" type="BTREE" >
-			<column key="conversationId" length="" collation="A" null="false" />
-			<column key="email" length="" collation="A" null="false" />
+	<object class="modxTalksPost" table="modxtalks_post" extends="xPDOOSimpleObject">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" generated="native"/>
+		<field key="conversationId" dbtype="int" precision="11" phptype="integer" null="false" index="index"/>
+		<field key="idx" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index"/>
+		<field key="userId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0"/>
+		<field key="time" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false"/>
+		<field key="date" dbtype="int" precision="6" attributes="unsigned" phptype="integer" null="false" index="index"/>
+		<field key="editUserId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true"/>
+		<field key="editTime" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true"/>
+		<field key="deleteUserId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true"/>
+		<field key="deleteTime" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true"/>
+		<field key="hash" dbtype="varchar" precision="32" phptype="string" null="false"/>
+		<field key="content" dbtype="text" phptype="string" null="false"/>
+		<field key="username" dbtype="varchar" precision="63" phptype="string" null="true"/>
+		<field key="useremail" dbtype="varchar" precision="63" phptype="string" null="true"/>
+		<field key="ip" dbtype="varchar" precision="16" phptype="string" null="false"/>
+		<field key="votes" dbtype="mediumtext" phptype="string" null="true"/>
+		<field key="properties" dbtype="mediumtext" phptype="string" null="true"/>
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
+			<column key="id" length="" collation="A" null="false"/>
 		</index>
+		<index alias="conversationId" name="conversationId" primary="false" unique="false" type="BTREE">
+			<column key="conversationId" length="" collation="A" null="false"/>
+		</index>
+		<index alias="date" name="date" primary="false" unique="false" type="BTREE">
+			<column key="date" length="" collation="A" null="false"/>
+		</index>
+		<index alias="idx" name="idx" primary="false" unique="false" type="BTREE">
+			<column key="idx" length="" collation="A" null="false"/>
+		</index>
+
+		<composite alias="Likes" class="modxTalksLike" local="id" foreign="postId" cardinality="many" owner="local" />
+		<aggregate alias="Conversation" class="modxTalksConversation" local="conversationId" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="User" class="modUser" local="userId" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="Editor" class="modUser" local="editUserId" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="Remover" class="modUser" local="deleteUserId" foreign="id" cardinality="one" owner="foreign" />
 	</object>
-	<object class="ModxtalksTempPost" table="modxtalks_temp_post" extends="xPDOSimpleObject">
-		<field key="content" dbtype="text" phptype="string" null="false" />
-		<field key="time" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" />
-		<field key="userId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
-		<field key="hash" dbtype="varchar" precision="32" phptype="string" null="true" />
-		<field key="token" dbtype="varchar" precision="32" phptype="string" null="false" />
-		<field key="username" dbtype="varchar" precision="63" phptype="string" null="false" />
-		<field key="useremail" dbtype="varchar" precision="63" phptype="string" null="false" />
-		<field key="conversationId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
-		<field key="ip" dbtype="varchar" precision="16" phptype="string" null="false" default="0.0.0.0" />
 
-		<index alias="conversationId" name="conversationId" primary="false" unique="false" type="BTREE" >
-			<column key="conversationId" length="" collation="A" null="false" />
+	<object class="modxTalksSubscribers" table="modxtalks_subscribers" extends="xPDOOSimpleObject">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" generated="native"/>
+		<field key="conversationId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index"/>
+		<field key="email" dbtype="varchar" precision="63" phptype="string" null="false" index="index"/>
+		<field key="properties" dbtype="mediumtext" phptype="string" null="true"/>
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
+			<column key="id" length="" collation="A" null="false"/>
 		</index>
-		<index alias="userId" name="userId" primary="false" unique="false" type="BTREE" >
-			<column key="userId" length="" collation="A" null="false" />
+		<index alias="email" name="email" primary="false" unique="false" type="BTREE">
+			<column key="email" length="" collation="A" null="false"/>
 		</index>
+		<index alias="conversationId" name="conversationId" primary="false" unique="false" type="BTREE">
+			<column key="conversationId" length="" collation="A" null="false"/>
+		</index>
+
+		<aggregate alias="Conversation" class="modxTalksConversation" local="conversationId" foreign="id" cardinality="one" owner="foreign" />
 	</object>
-	<object class="ModxtalksUsers" table="modxtalks_users" extends="xPDOSimpleObject">
-		<field key="name" dbtype="varchar" precision="63" phptype="string" null="false" />
-		<field key="email" dbtype="varchar" precision="63" phptype="string" null="false" index="index" />
-		<field key="post_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
-		<field key="ip" dbtype="varchar" precision="16" phptype="string" null="false" default="0.0.0.0" />
-		<field key="properties" dbtype="mediumtext" phptype="string" null="true" />
 
-		<index alias="email" name="email" primary="false" unique="false" type="BTREE" >
-			<column key="email" length="" collation="A" null="false" />
+	<object class="modxTalksTempPost" table="modxtalks_temp_post" extends="xPDOOSimpleObject">
+		<field key="id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" generated="native"/>
+		<field key="content" dbtype="text" phptype="string" null="false"/>
+		<field key="time" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false"/>
+		<field key="userId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0"/>
+		<field key="hash" dbtype="varchar" precision="32" phptype="string" null="true"/>
+		<field key="token" dbtype="varchar" precision="32" phptype="string" null="false"/>
+		<field key="username" dbtype="varchar" precision="63" phptype="string" null="false"/>
+		<field key="useremail" dbtype="varchar" precision="63" phptype="string" null="false"/>
+		<field key="conversationId" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index"/>
+		<field key="ip" dbtype="varchar" precision="16" phptype="string" null="false" default="0.0.0.0"/>
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE">
+			<column key="id" length="" collation="A" null="false"/>
 		</index>
-		<index alias="post_id" name="post_id" primary="false" unique="false" type="BTREE" >
-			<column key="post_id" length="" collation="A" null="false" />
+		<index alias="conversationId" name="conversationId" primary="false" unique="false" type="BTREE">
+			<column key="conversationId" length="" collation="A" null="false"/>
 		</index>
+
+		<aggregate alias="Conversation" class="modxTalksConversation" local="conversationId" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="User" class="modUser" local="userId" foreign="id" cardinality="one" owner="foreign" />
 	</object>
 </model>
