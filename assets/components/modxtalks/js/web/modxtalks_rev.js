@@ -458,8 +458,8 @@ var MTConversation = {
                 var idxNod = parNod.parents(".mt_mtComment").data("idx") || null;
                 var nameNode = parNod.find('.mt_info h3').text() || null;
                 if(nameNode) nameNode = '"' + nameNode + '"';
-                MTConversation.quote("mt_reply", $txt, nameNode, idNod, null, true, idxNod);
-                jQuery("#mt_jumpToReply").click(); 
+                MTConversation.quote("mt_replay", $txt, nameNode, idNod, null, true, idxNod);
+                jQuery("#mt_jumpToReply").click();
                 MTConversation.scrollTo(MTScrubber.converReply.offset().top - 10);
                 //MTConversation.scrollElem(MTScrubber.converReply.offset().top - 20);
             });
@@ -559,11 +559,11 @@ var MTConversation = {
             });
 
             jQuery(document).click(function (e) {
-                MTConversation.hideReply();                
+                MTConversation.hideReply();
             });
 
             // If there's a reply box, initilize it.
-            if (jQuery("#mt_reply").length) MTConversation.initReply();
+            if (jQuery("#mt_replay").length) MTConversation.initReply();
 
             // Start the automatic reload timeout.
             this.updateInterval = new MTIntervalCallback(this.update, MT.conversation.updateInterval);
@@ -574,7 +574,7 @@ var MTConversation = {
                 MTConversation.replyShowing = false;
                 jQuery('.mt_scrubber-now a').click();
                 setTimeout(function () {
-                    jQuery('#mt_reply textarea').click();
+                    jQuery('#mt_replay textarea').click();
                 }, 1);
                 MTScrubber.converReply.show();
                 e.preventDefault();
@@ -608,7 +608,7 @@ var MTConversation = {
                     // Highlight comment
                     MTConversation.highlightPost(comment);
                     e.preventDefault();
-                };                
+                };
             });
 
             jQuery('.mt_button.mt_bc').click(function (e) {
@@ -690,7 +690,7 @@ var MTConversation = {
     // Initialize the reply section: disable/enable buttons, add click events, etc.
     initReply: function () {
 
-        var textarea = jQuery("#mt_reply textarea");
+        var textarea = jQuery("#mt_replay textarea");
         MTConversation.editingReply = false;
 
         //if (MT.mentions) new MTAutoCompletePopup(jQuery("#reply textarea"), "@");
@@ -698,46 +698,46 @@ var MTConversation = {
         // Auto resize our reply textareas
         textarea.TextAreaExpander(200, 700);
         // Disable the "post reply" button if there's not a draft. Disable the save draft button regardless.
-        if (!textarea.val()) jQuery("#mt_reply .mt_postReply, #mt_reply .mt_discardDraft").disable();
-        jQuery("#mt_reply .mt_saveDraft").disable();
+        if (!textarea.val()) jQuery("#mt_replay .mt_postReply, #mt_replay .mt_discardDraft").disable();
+        jQuery("#mt_replay .mt_saveDraft").disable();
 
         // Add event handlers on the textarea to enable/disable buttons.
         textarea.keyup(function (e) {
             if (e.ctrlKey) return;
-            jQuery("#mt_reply .mt_postReply, #mt_reply .mt_saveDraft")[jQuery(this).val() ? "enable" : "disable"]();
+            jQuery("#mt_replay .mt_postReply, #mt_replay .mt_saveDraft")[jQuery(this).val() ? "enable" : "disable"]();
             MTConversation.editingReply = jQuery(this).val() ? true : false;
         });
 
         // Add click events to the buttons.
-        jQuery("#mt_reply .mt_postReply").click(function (e) {
+        jQuery("#mt_replay .mt_postReply").click(function (e) {
             if (MT.conversation) MTConversation.addReply();
             //else MTConversation.startConversation();
             e.preventDefault();
         });
 
-        jQuery("#mt_reply").click(function (e) {
+        jQuery("#mt_replay").click(function (e) {
             if (!MTConversation.replyShowing) {
 
                 jQuery(this).trigger("change");
 
                 // Save the scroll position and then focus on the textarea.
                 var scrollTop = jQuery(document).scrollTop();
-                jQuery("#mt_reply textarea").focus();
+                jQuery("#mt_replay textarea").focus();
                 jQuery.scrollTo(scrollTop);
 
                 // Scroll to the bottom of the reply area.
                 //jQuery.scrollTo("#reply", "slow");
                 if (!MT.revers) {
-                    MTConversation.scrollTo(jQuery('#mt_reply').offset().top - 10);
+                    MTConversation.scrollTo(jQuery('#mt_replay').offset().top - 10);
                 }
             }
             e.stopPropagation();
         });
 
-        jQuery("#mt_reply").change(function (e) {
+        jQuery("#mt_replay").change(function (e) {
             if (!MTConversation.replyShowing) {
                 MTConversation.replyShowing = true;
-                jQuery("#mt_reply").removeClass("mt_replyPlaceholder");
+                jQuery("#mt_replay").removeClass("mt_replayPlaceholder");
 
                 // Put the cursor at the end of the textarea.
                 var pos = textarea.val().length;
@@ -752,15 +752,15 @@ var MTConversation = {
     },
     // Condense the reply box back into a placeholder.
     hideReply: function () {
-        if (!MTConversation.replyShowing || jQuery("#mt_reply textarea").val()) return;
+        if (!MTConversation.replyShowing || jQuery("#mt_replay textarea").val()) return;
         // Save the scroll top and height.
         var scrollTop = jQuery(document).scrollTop();
-        var oldHeight = jQuery("#mt_reply .mt_postContent").height();
+        var oldHeight = jQuery("#mt_replay .mt_postContent").height();
         MTConversation.replyShowing = false;
         MTScrubber.converReply.hide('slow');
-        jQuery("#mt_reply").addClass("mt_replyPlaceholder");        
-        var newHeight = jQuery("#mt_reply .mt_postContent").height();
-        jQuery("#mt_reply .mt_postContent").height(oldHeight).animate({
+        jQuery("#mt_replay").addClass("mt_replayPlaceholder");
+        var newHeight = jQuery("#mt_replay .mt_postContent").height();
+        jQuery("#mt_replay .mt_postContent").height(oldHeight).animate({
             height: newHeight
         }, "fast", function () {
             jQuery(this).height("");
@@ -768,12 +768,12 @@ var MTConversation = {
     },
     // Add a reply.
     addReply: function () {
-        var content = jQuery("#mt_reply textarea").val();
-        var saveemail = jQuery("#mt_reply .mt_saveEmail").val();
-        var savename = jQuery("#mt_reply .mt_saveName").val();
+        var content = jQuery("#mt_replay textarea").val();
+        var saveemail = jQuery("#mt_replay .mt_saveEmail").val();
+        var savename = jQuery("#mt_replay .mt_saveName").val();
 
         // Disable the reply/draft buttons.
-        jQuery("#mt_reply .mt_postReply, #mt_reply .mt_saveDraft").disable();
+        jQuery("#mt_replay .mt_postReply, #mt_replay .mt_saveDraft").disable();
 
         // Make the ajax request.
         jQuery.MTAjax({
@@ -790,12 +790,12 @@ var MTConversation = {
             success: function (data) {
 
                 if (data.success != true) {
-                    jQuery("#mt_reply .mt_postReply, #mt_reply .mt_saveDraft").enable();
+                    jQuery("#mt_replay .mt_postReply, #mt_replay .mt_saveDraft").enable();
                     if (data.message && data.message.length > 0) {
                         MTMessages.showMessage(data.message, 'mt_msg-error');
                         if (data.premoderated === true) {
-                            jQuery("#mt_reply textarea").val("");
-                            MTConversation.togglePreview("mt_reply", false);
+                            jQuery("#mt_replay textarea").val("");
+                            MTConversation.togglePreview("mt_replay", false);
                             MTConversation.hideReply();
                         }
                     }
@@ -812,8 +812,8 @@ var MTConversation = {
                 MTMessages.hideMessage("mt_emptyPost");
 
                 jQuery("#mt_conversationHeader .mt_labels .mt_label-draft").remove();
-                jQuery("#mt_reply textarea").val("");
-                MTConversation.togglePreview("mt_reply", false);
+                jQuery("#mt_replay textarea").val("");
+                MTConversation.togglePreview("mt_replay", false);
                 MTConversation.hideReply();
 
                 MTConversation.postCount++;
@@ -842,7 +842,7 @@ var MTConversation = {
 
             },
             beforeSend: function () {
-                createLoadingOverlay("reply", "mt_reply");
+                createLoadingOverlay("reply", "mt_replay");
             },
             complete: function () {
                 hideLoadingOverlay("reply", false);
@@ -936,15 +936,15 @@ var MTConversation = {
                 },
                 data: {
                     content: jQuery("#" + id + " textarea").val(),
-                    name: jQuery("#mt_reply .mt_saveName").val(),
-                    email: jQuery("#mt_reply .mt_saveEmail").val(),
+                    name: jQuery("#mt_replay .mt_saveName").val(),
+                    email: jQuery("#mt_replay .mt_saveEmail").val(),
                     conversation: MT.conversation,
                     ctx: MT.ctx
                 },
                 success: function (data) {
 
                     if (data.success != true) {
-                        jQuery("#mt_reply .mt_postReply, #mt_reply .mt_saveDraft").enable();
+                        jQuery("#mt_replay .mt_postReply, #mt_replay .mt_saveDraft").enable();
                         jQuery('#reply-previewCheckbox').attr('checked', false);
                         jQuery('.mt_formattingButtons').show('slow');
                         jQuery.each(data.data, function (i, item) {
@@ -1349,7 +1349,7 @@ var MTConversation = {
 
     // Quote a post.
     quotePost: function (postId, member, content, multi, idx) {
-        var selection = "" + jQuery.getSelection();        
+        var selection = "" + jQuery.getSelection();
         jQuery.MTAjax({
             headers: {
                 Action: 'quote'
@@ -1362,14 +1362,14 @@ var MTConversation = {
                 if (data.success === false && data.total == 0) {
                     MTMessages.showMessage(data.message, 'mt_msg-error');
                     return;
-                }                
+                }
                 var top = jQuery(document).scrollTop();
-                MTConversation.quote("mt_reply", selection ? selection : data.object.content, data.object.user, data.object.id, null, true, idx);                
+                MTConversation.quote("mt_replay", selection ? selection : data.object.content, data.object.user, data.object.id, null, true, idx);
                 // If we're "multi" quoting (i.e. shift is being held down), keep our scroll position static.
-                // Otherwise, scroll down to the reply area.                
+                // Otherwise, scroll down to the reply area.
                 MTScrubber.converReply.show();
-                jQuery("#mt_reply").change();
-                MTScrubber.scrollTo(MTScrubber.converReply.offset().top - 10);               
+                jQuery("#mt_replay").change();
+                MTScrubber.scrollTo(MTScrubber.converReply.offset().top - 10);
             },
             global: true
         });
@@ -1379,9 +1379,9 @@ var MTConversation = {
 
 jQuery(document).ready(function () {
     jQuery("body").prepend('<div id="mt_messages"></div>'); //
-    jQuery("#mt_reply.mt_post").addClass("mt_replyPlaceholder");      
+    jQuery("#mt_replay.mt_post").addClass("mt_replayPlaceholder");
     MTConversation.init();
-    MTMessages.init(); 
+    MTMessages.init();
     jQuery('a.mt_time').timeago();
 
     var url = MT.assetsPath + 'connectors/connector.php';
@@ -1549,7 +1549,7 @@ var MTScrubber = {
             var moreItem = jQuery(this).parent();
             var backwards, // Whether or not to load items that are at the start or the end of this "more" block.
             position; // The position to load items from.
-            // If this is the "previous page" block...      
+            // If this is the "previous page" block...
             if (moreItem.is(".mt_scrubberPrevious")) {
                 backwards = true;
                 position = parseInt(jQuery('.mt_mtComment').first().data('idx')) + MTScrubber.perPage;
@@ -1580,8 +1580,8 @@ var MTScrubber = {
 
             });
 
-        });    
-        
+        });
+
     },
     // Scroll to a specific position, applying an animation and taking the fixed header into account.
     scrollTo: function (position) {
@@ -1663,8 +1663,8 @@ var MTScrubber = {
             for (var i = startFrom - 1; i > 0; i--) {
                 if (MTScrubber.loadedItems.indexOf(i) != -1) break;
             }
-        }      
-        
+        }
+
 
         //if (animate) items.hide().fadeIn("slow");
 

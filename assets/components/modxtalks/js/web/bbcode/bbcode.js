@@ -1,29 +1,32 @@
 var BBCode = {
-    bold: function(id) {
-        MTConversation.wrapText($("#"+id+" textarea"), "[b]", "[/b]");
+    bold: function (btn) {
+        MTConversation.wrapText(BBCode.textarea(btn), "[b]", "[/b]");
     },
-    video: function(id) {
-        MTConversation.wrapText($("#"+id+" textarea"), "[video]", "[/video]");
+    video: function (btn) {
+        MTConversation.wrapText(BBCode.textarea(btn), "[video]", "[/video]");
     },
-    quote: function(id) {
-        MTConversation.wrapText($("#"+id+" textarea"), "[quote]", "[/quote]");
+    quote: function (btn) {
+        MTConversation.wrapText(BBCode.textarea(btn), "[quote]", "[/quote]");
     },
-    italic: function(id) {
-        MTConversation.wrapText($("#"+id+" textarea"), "[i]", "[/i]");
+    italic: function (btn) {
+        MTConversation.wrapText(BBCode.textarea(btn), "[i]", "[/i]");
     },
-    strikethrough: function(id) {
-        MTConversation.wrapText($("#"+id+" textarea"), "[s]", "[/s]");
+    strike: function (btn) {
+        MTConversation.wrapText(BBCode.textarea(btn), "[s]", "[/s]");
     },
-    header: function(id) {
-        MTConversation.wrapText($("#"+id+" textarea"), "[h]", "[/h]");},
-    link: function(id) {
-        MTConversation.wrapText($("#"+id+" textarea"), "[url=http://example.com]", "[/url]", "http://example.com", "link text");
+    header: function (btn) {
+        MTConversation.wrapText(BBCode.textarea(btn), "[h]", "[/h]");
     },
-    image: function(id) {
-        MTConversation.wrapText($("#"+id+" textarea"), "[img]", "[/img]", "", "http://example.com/image.jpg");
+    link: function (btn) {
+        MTConversation.wrapText(BBCode.textarea(btn), "[url=http://example.com]", "[/url]", "http://example.com", "link text");
     },
-    fixed: function(id) {
-        MTConversation.wrapText($("#"+id+" textarea"), "[code]", "[/code]");
+    image: function (btn) {
+        MTConversation.wrapText(BBCode.textarea(btn), "[img]", "[/img]", "", "http://example.com/image.jpg");
     },
-
+    code: function (btn) {
+        MTConversation.wrapText(BBCode.textarea(btn), "[code]", "[/code]");
+    },
+    textarea: function (btn) {
+        return $(btn).closest('.mt_thing').find('textarea');
+    }
 };

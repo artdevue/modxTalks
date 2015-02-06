@@ -27,7 +27,7 @@ function MTIntervalCallbackComments(callback, interval) {
     ic.reset = function (interval) {
         if (interval > 0) ic.interval = interval;
         ic.setTimeout();
-    }
+    };
 
     // When the window gains focus, if we're "holding", stop holding. Otherwise, run the callback.
     $(window).focus(function (e) {
@@ -36,11 +36,11 @@ function MTIntervalCallbackComments(callback, interval) {
         else ic.runCallback();
     })
 
-    // When the window loses focus, start "holding".
-    .blur(function (e) {
-        if (e.target != window) return;
-        ic.hold = true;
-    });
+        // When the window loses focus, start "holding".
+        .blur(function (e) {
+            if (e.target != window) return;
+            ic.hold = true;
+        });
 
     // Set the initial timeout.
     ic.setTimeout();
@@ -89,7 +89,7 @@ var MTLatestComment = {
                             elem.remove();
                         } else if (jQuery('.mt_latcomment_item').length < MTL.limit) {
                             jQuery('.mt_latcomment_item:last').remove();
-                        };
+                        }
                         mtCL.prepend(item);
                         MTLatestComment.highlightComment(jQuery('*[data-cid-latest="' + key + '"]'));
                         if (typeof jQuery.timeago === 'function') jQuery(".mt_time").timeago();
@@ -99,7 +99,8 @@ var MTLatestComment = {
         });
 
     }
-}
+};
+
 jQuery(document).ready(function () {
     if (typeof jQuery.timeago === 'function') {
         jQuery.timeago.settings.allowFuture = true;

@@ -1,7 +1,3 @@
-// Scrubber JavaScript
-// A scrubber is a list of "sections" that allow you to quickly navigate through a large collection of items.
-// By default, a scrubber is used in the conversation view (the timeline scrubber) and on the member list (as
-// a letter scrubber.)
 var MTScrubber = {
 
     // These variables refer to various elements of the page.
@@ -25,18 +21,15 @@ var MTScrubber = {
 
     // Initialize the scrubber.
     init: function () {
+        var i = 0,
+            count = Math.min(this.startFrom + this.perPage, this.count + 1);
 
-        // Go through the currently displaying item range and add the positions to the loadedItems array.
-        var count = Math.min(this.startFrom + this.perPage, this.count + 1);
-        for (var i = this.startFrom; i < count; i++)
-        this.loadedItems.push(i);
+        for (i = this.startFrom; i < count; i++) {
+            this.loadedItems.push(i);
+        }
 
-        // Make the header and the scrubber's position fixed when we scroll down the page.
-        // Get the normal top position of the header and of the scrubber. If the scrollTop is greater than
-        // this, we know we'll need to make it fixed.
         var headerTop = this.header.offset().top;
         var headerWidth = this.header.width();
-        //var scrubberTop = this.scrubber.length && (this.scrubber.offset().top - this.header.outerHeight() - 10);
         var scrubberTop = this.scrubber.length && (MTScrubber.body.offset().top - 10);
 
         // Whenever the user scrolls within the window...
@@ -54,16 +47,14 @@ var MTScrubber = {
                     zIndex: 110
                 });
                 MTScrubber.items.addClass("scrubtop");
-            }
-            // Otherwise, put it back to normal.
-            else {
+            } else {
                 MTScrubber.body.css({
                     paddingTop: 0
                 });
                 MTScrubber.header.removeClass("floating").css({
-                    position: "",
-                    top: "",
-                    width: ""
+                    position: '',
+                    top: '',
+                    width: ''
                 });
                 MTScrubber.items.removeClass("scrubtop");
                 headerWidth = MTScrubber.header.width();
@@ -82,12 +73,10 @@ var MTScrubber = {
                     zIndex: 100
                 });
                 MTScrubber.items.addClass("mt_scrubtop");
-            }
-            // Otherwise, put it back to normal.
-            else {
+            } else {
                 MTScrubber.scrubber.removeClass("mt_floating").css({
-                    position: "",
-                    top: ""
+                    position: '',
+                    top: ''
                 });
                 MTScrubber.items.removeClass("mt_scrubtop");
             }
@@ -98,16 +87,13 @@ var MTScrubber = {
                 var item = jQuery(this);
 
                 // If we've scrolled past this item, continue in the loop.
-                if (y > item.offset().top + item.outerHeight() - MTScrubber.header.outerHeight()) return true;
-                else {
-
-                    // This must be the first item within our viewport. Get the index of it and highlight
-                    // it that index in the scrubber, then break out of the loop.
+                if (y > item.offset().top + item.outerHeight() - MTScrubber.header.outerHeight()) {
+                    return true;
+                } else {
                     jQuery(".mt_scrubber li").removeClass("selected");
                     var index = item.data("index");
                     jQuery(".mt_scrubber-" + index, MTScrubber.scrubber).addClass("selected").parents("li").addClass("selected");
                     return false;
-
                 }
             });
 
@@ -125,29 +111,22 @@ var MTScrubber = {
             jQuery(this).parent().addClass("mt_loading");
             var moreItem = jQuery(this).parent();
 
-            var backwards, // Whether or not to load items that are at the start or the end of this "more" block.
-            position; // The position to load items from.
-            // If this is the "previous page" block...		
+            var backwards,
+                position;
+            // If this is the "previous page" block...
             if (moreItem.is(".mt_scrubberPrevious")) {
                 backwards = true;
                 position = Math.min.apply(Math, MTScrubber.loadedItems) - MTScrubber.perPage;
                 if (position <= 0) position = 1;
-            }
-
-            // If this is the "next page" block...
-            else if (moreItem.is(".mt_scrubberNext")) {
+            } else if (moreItem.is(".mt_scrubberNext")) {
                 backwards = false;
                 position = Math.max.apply(Math, MTScrubber.loadedItems) + 1;
-            }
-
-            // If this is a "load more" block...
-            else {
+            } else {
                 backwards = moreItem.offset().top - jQuery(document).scrollTop() < 250;
                 position = backwards ? jQuery(this).parent().data("positionEnd") - MTScrubber.perPage + 1 : jQuery(this).parent().data("positionStart");
             }
+
             MTScrubber.loadItemsCallback(position, function (addIt) {
-                // If we are loading items that are above where we are, save the scroll position relative
-                // to the first post after the "more" block.
                 if (backwards) {
                     var firstItem = moreItem.next();
                     var scrollOffset = firstItem.offset().top - jQuery(document).scrollTop();
@@ -155,14 +134,10 @@ var MTScrubber = {
 
                 MTScrubber.addItems(addIt.startFrom, addIt.view, moreItem);
 
-                // Restore the scroll position.
                 if (backwards) jQuery.scrollTo(firstItem.offset().top - scrollOffset);
-
             });
-
         });
 
-        // Finally, we need to make the indexes in the scrubber clickable.
         jQuery(".mt_scrubber a", MTScrubber.body).click(function (e) {
             e.preventDefault();
 
@@ -171,8 +146,6 @@ var MTScrubber = {
             if (index == "last") index = Infinity;
             else if (index == "first") index = 1;
 
-            // Now let's scroll to the first item with the same index. If one wasn't found, we might need
-            // to make an AJAX request to load some more items.
             var found = MTScrubber.scrollToIndex(index);
 
             if (!found) {
@@ -262,15 +235,14 @@ var MTScrubber = {
         moreItem.removeClass("mt_loading");
 
         // Get all of the <li>s in the item HTML provided.
-        var view = jQuery(items);
-        view = view.filter(".mt_mtComment");
-
-        // Now we're going to loop through the range of items (startFrom -> startFrom + itemsPerPage) and make
-        // a nice array of item objects, making sure we only add items that we don't already have. This means that
-        // if we already have items 1-10 and 15-25, and we load items 11-20, this array will only contain 11-14.
-        var items = [],
+        var view = jQuery(items),
+            i = 0,
             newStartFrom = startFrom;
-        for (var i = 0; i < MTScrubber.perPage; i++) {
+
+        view = view.filter(".mt_mtComment");
+        items = [];
+
+        for (i = 0; i < MTScrubber.perPage; i++) {
             if (startFrom + i - 1 >= MTScrubber.count) break;
             if (MTScrubber.loadedItems.indexOf(startFrom + i) != -1) {
                 if (items.length) break;
@@ -282,12 +254,6 @@ var MTScrubber = {
         startFrom = newStartFrom;
         // Now that we have an array of items, convert it to a jQuery collection.
         items = jQuery(items);
-        // If we already have a "Just now" time marker anywhere in our posts, remove any "Just now" time markers
-        // from these new posts.
-        if (jQuery("div.mt_timeMarker[data-now]", MTScrubber.body).length) {
-            //items.find("div.timeMarker[data-now]").remove();
-        }
-
         // Add the items to the page before/after/replacing the "more" block, depending on the type of "more" block.
         if (moreItem.is(".mt_scrubberPrevious")) moreItem.after(items);
         else if (moreItem.is(".mt_scrubberNext")) moreItem.before(items);
@@ -302,7 +268,7 @@ var MTScrubber = {
             items.first().before(scrubberMore);
             // Work out the range of items that this "more" block covers. We know where it ends, so loop backwards
             // from there and find the start.
-            for (var i = startFrom - 1; i > 0; i--) {
+            for (i = startFrom - 1; i > 0; i--) {
                 if (MTScrubber.loadedItems.indexOf(i) != -1) break;
             }
             scrubberMore.data("positionStart", i + 1);
@@ -316,7 +282,7 @@ var MTScrubber = {
             items.last().after(scrubberMore);
             // Work out the range of items that this "more" block covers. We know where it starts, so loop forwards
             // from there and find the end.
-            for (var i = startFrom + items.length; i < MTScrubber.count; i++) {
+            for (i = startFrom + items.length; i < MTScrubber.count; i++) {
                 if (MTScrubber.loadedItems.indexOf(i) != -1) break;
             }
             scrubberMore.data("positionStart", startFrom + items.length);
@@ -326,7 +292,7 @@ var MTScrubber = {
         //if (animate) items.hide().fadeIn("slow");
 
         // Update the loadedItems index with the new item positions we have loaded.
-        for (var i = startFrom; i < startFrom + items.length; i++) {
+        for (i = startFrom; i < startFrom + items.length; i++) {
             if (MTScrubber.loadedItems.indexOf(i) == -1) MTScrubber.loadedItems.push(i);
         }
 
@@ -345,5 +311,4 @@ var MTScrubber = {
 
         MTConversation.figures();
     }
-
 };
