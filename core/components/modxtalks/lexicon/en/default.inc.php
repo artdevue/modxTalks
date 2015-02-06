@@ -29,7 +29,8 @@ $_lang['modxtalks.blocking_ip'] = 'Blocking IP Addresses';
 $_lang['modxtalks.blocking_email'] = 'Block Email Addresses';
 
 $_lang['modxtalks.content'] = 'Сomment';
-$_lang['modxtalks.confirm_delete'] = 'Delete a comment, forever?';
+$_lang['modxtalks.confirm_delete'] = 'Delete a comment?';
+$_lang['modxtalks.confirm_restore'] = 'Restore a comment?';
 $_lang['modxtalks.comments'] = 'comments';
 $_lang['modxtalks.comments_menu'] = 'Comments';
 $_lang['modxtalks.comments_setting'] = 'Comment settings';
@@ -49,10 +50,11 @@ $_lang['modxtalks.confirm_email'] = 'Do you really want to block the Email addre
 
 $_lang['modxtalks.default_desc'] = 'Leave blank if you want to use the default settings.';
 $_lang['modxtalks.default'] = 'default';
+$_lang['modxtalks.edit'] = 'Edit';
 $_lang['modxtalks.delete'] = 'Delete';
-$_lang['modxtalks.delet_comment'] = 'Delete comment';
-$_lang['modxtalks.delet_conversation'] = 'Delete topic.';
-$_lang['modxtalks.delet_conversation_desc'] = '<strong>NOTE!</strong> When you delete topics, all comments will be deleted. <br /><strong>Delete this topic?</strong>';
+$_lang['modxtalks.delete_comment'] = 'Delete comment';
+$_lang['modxtalks.delete_conversation'] = 'Delete topic.';
+$_lang['modxtalks.delete_conversation_desc'] = '<strong>NOTE!</strong> When you delete topics, all comments will be deleted. <br /><strong>Delete this topic?</strong>';
 $_lang['modxtalks.desc'] = 'Manage your modxtalks here.';
 $_lang['modxtalks.demo'] = 'Demo site';
 $_lang['modxtalks.demo_desc'] = 'Demo site comments MODXTalks.';
@@ -161,7 +163,7 @@ $_lang['modxtalks.voting_disabled'] = 'Voting closed!';
 
 // BBCode
 $_lang['modxtalks.bold'] = 'Bold';
-$_lang['modxtalks.fixed'] = 'Code';
+$_lang['modxtalks.code'] = 'Code';
 $_lang['modxtalks.header'] = 'Title';
 $_lang['modxtalks.image'] = 'Image';
 $_lang['modxtalks.italic'] = 'Italic';
@@ -334,4 +336,3 @@ $_lang['modxtalks.already_voted'] = 'Вы уже голосовали за эт�
 $_lang['modxtalks.you_like'] = 'Do you like this comment';
 $_lang['modxtalks.i_like'] = 'Like';
 $_lang['modxtalks.not_like'] = 'Dislike';
-$_lang['modxtalks.edit'] = 'Edit';

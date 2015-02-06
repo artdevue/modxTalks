@@ -29,7 +29,9 @@ $_lang['modxtalks.blocking_ip'] = 'Блокування IP адреси';
 $_lang['modxtalks.blocking_email'] = 'Блокування Email адреси';
 
 $_lang['modxtalks.content'] = 'Коментар';
-$_lang['modxtalks.confirm_delete'] = 'Видалити коментар назавжди?';
+$_lang['modxtalks.edit'] = 'Редагувати';
+$_lang['modxtalks.confirm_delete'] = 'Видалити коментар?';
+$_lang['modxtalks.confirm_restore'] = 'Відновити коментар?';
 $_lang['modxtalks.comments'] = 'коментарів';
 $_lang['modxtalks.comments_menu'] = 'Коментарі';
 $_lang['modxtalks.comments_setting'] = 'Налаштування коментарів';
@@ -50,9 +52,9 @@ $_lang['modxtalks.confirm_email'] = 'Ви дійсно хочете заблок
 $_lang['modxtalks.default_desc'] = 'Залиште не заповненим, якщо хочете використовувати налаштування за замовчуванням.';
 $_lang['modxtalks.default'] = 'за замовчуванням';
 $_lang['modxtalks.delete'] = 'Видалити';
-$_lang['modxtalks.delet_comment'] = 'Видалити коментар';
-$_lang['modxtalks.delet_conversation'] = 'Видалити тему.';
-$_lang['modxtalks.delet_conversation_desc'] = '<strong>ВНИМАНИЕ!</strong> При видаленні теми, всі коментарі будуть видалені. <br /><strong>Удалить эту тему?</strong>';
+$_lang['modxtalks.delete_comment'] = 'Видалити коментар';
+$_lang['modxtalks.delete_conversation'] = 'Видалити тему.';
+$_lang['modxtalks.delete_conversation_desc'] = '<strong>ВНИМАНИЕ!</strong> При видаленні теми, всі коментарі будуть видалені. <br /><strong>Удалить эту тему?</strong>';
 $_lang['modxtalks.desc'] = 'Управління MODXTalks.';
 $_lang['modxtalks.demo'] = 'Демо сайт';
 $_lang['modxtalks.demo_desc'] = 'Демо сайт коментарів MODXTalks.';
@@ -156,7 +158,7 @@ $_lang['modxtalks.voting_disabled'] = 'Голосування закрито!';
 
 // BBCode
 $_lang['modxtalks.bold'] = 'Жирний';
-$_lang['modxtalks.fixed'] = 'Код';
+$_lang['modxtalks.code'] = 'Код';
 $_lang['modxtalks.header'] = 'Тема';
 $_lang['modxtalks.image'] = 'Зображення';
 $_lang['modxtalks.italic'] = 'Курсив';
