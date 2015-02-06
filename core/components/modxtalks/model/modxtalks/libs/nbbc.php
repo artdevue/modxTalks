@@ -782,32 +782,33 @@ class BBCodeLibrary {
         ),
     );
 
-    function DoURL($bbcode, $action, $name, $default, $params, $content) {
-        if ($action == BBCODE_CHECK)
+    function DoURL(BBCode $bbcode, $action, $name, $default, $params, $content) {
+        if ($action == BBCODE_CHECK) {
             return true;
+        }
+
         $url = is_string($default) ? $default : $bbcode->UnHTMLEncode(strip_tags($content));
         if ($bbcode->IsValidURL($url)) {
-            if ($bbcode->debug)
+            if ($bbcode->debug) {
                 print "ISVALIDURL<br />";
+            }
 
-            /*if ($bbcode->url_targetable !== false && isset($params['target']))
-            $target = " target=\"" . htmlspecialchars($params['target']) . "\"";
-            else $target = "";
-            if ($bbcode->url_target !== false)
-            if (!($bbcode->url_targetable == 'override' && isset($params['target'])))
-            $target = " target=\"" . htmlspecialchars($bbcode->url_target) . "\"";*/
-
-            return '<a target="_blank" rel="nofollow" href="' . htmlspecialchars($url) . '" class="bbcode_url"' . $target . '>' . $content . '</a>';
-        } else return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
+            return '<a target="_blank" rel="nofollow" href="' . htmlspecialchars($url) . '" class="bbcode_url">' . $content . '</a>';
+        } else {
+            return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
+        }
     }
 
-    function DoEmail($bbcode, $action, $name, $default, $params, $content) {
-        if ($action == BBCODE_CHECK)
+    function DoEmail(BBCode $bbcode, $action, $name, $default, $params, $content) {
+        if ($action == BBCODE_CHECK) {
             return true;
+        }
         $email = is_string($default) ? $default : $bbcode->UnHTMLEncode(strip_tags($content));
-        if ($bbcode->IsValidEmail($email))
+        if ($bbcode->IsValidEmail($email)) {
             return '<a href="mailto:' . htmlspecialchars($email) . '" class="bbcode_email">' . $content . '</a>';
-        else return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
+        } else {
+            return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
+        }
     }
 
     function DoSize($bbcode, $action, $name, $default, $params, $content) {
@@ -843,8 +844,8 @@ class BBCodeLibrary {
     }
 
     function DoFont($bbcode, $action, $name, $default, $params, $content) {
-        $fonts = explode(",", $default);
-        $result = "";
+        $fonts = explode(',', $default);
+        $result = '';
         $special_fonts = Array(
             'serif' => 'serif',
             'sans-serif' => 'sans-serif',
@@ -856,15 +857,18 @@ class BBCodeLibrary {
             'monospace' => 'monospace',
             'mono' => 'monospace',
         );
+
         foreach ($fonts as $font) {
             $font = trim($font);
             if (isset($special_fonts[$font])) {
-                if (strlen($result) > 0)
+                if (strlen($result) > 0) {
                     $result .= ",";
+                }
                 $result .= $special_fonts[$font];
-            } else if (strlen($font) > 0) {
-                if (strlen($result) > 0)
+            } elseif (strlen($font) > 0) {
+                if (strlen($result) > 0) {
                     $result .= ",";
+                }
                 $result .= "'$font'";
             }
         }
@@ -872,21 +876,24 @@ class BBCodeLibrary {
         return "<span style=\"font-family:$result\">$content</span>";
     }
 
-    function DoWiki($bbcode, $action, $name, $default, $params, $content) {
+    function DoWiki(BBCode $bbcode, $action, $name, $default, $params, $content) {
         $name = $bbcode->Wikify($default);
-        if ($action == BBCODE_CHECK)
+        if ($action == BBCODE_CHECK) {
             return strlen($name) > 0;
+        }
         $title = trim(@$params['title']);
-        if (strlen($title) <= 0)
+        if (strlen($title) <= 0) {
             $title = trim($default);
+        }
 
         return "<a href=\"{$bbcode->wiki_url}$name\" class=\"bbcode_wiki\">"
         . htmlspecialchars($title) . "</a>";
     }
 
-    function DoImage($bbcode, $action, $name, $default, $params, $content) {
-        if ($action == BBCODE_CHECK)
+    function DoImage(BBCode $bbcode, $action, $name, $default, $params, $content) {
+        if ($action == BBCODE_CHECK) {
             return true;
+        }
         $content = trim($bbcode->UnHTMLEncode(strip_tags($content)));
         if (preg_match("/\\.(?:gif|jpeg|jpg|jpe|png)$/", $content)) {
             if (preg_match("/^[a-zA-Z0-9_][^:]+$/", $content)) {
@@ -900,7 +907,7 @@ class BBCodeLibrary {
                         . htmlspecialchars($info[1]) . "\" class=\"bbcode_img\" />";
                     }
                 }
-            } else if ($bbcode->IsValidURL($content, false)) {
+            } elseif ($bbcode->IsValidURL($content, false)) {
                 return "<img src=\"" . htmlspecialchars($content) . "\" alt=\""
                 . htmlspecialchars(basename($content)) . "\" class=\"bbcode_img\" />";
             }
@@ -909,10 +916,12 @@ class BBCodeLibrary {
         return htmlspecialchars($params['_tag']) . htmlspecialchars($content) . htmlspecialchars($params['_endtag']);
     }
 
-    function DoRule($bbcode, $action, $name, $default, $params, $content) {
-        if ($action == BBCODE_CHECK)
+    function DoRule(BBCode $bbcode, $action, $name, $default, $params, $content) {
+        if ($action == BBCODE_CHECK) {
             return true;
-        else return $bbcode->rule_html;
+        } else {
+            return $bbcode->rule_html;
+        }
     }
 
     function DoQuote($bbcode, $action, $name, $default, $params, $content) {
@@ -1144,7 +1153,7 @@ class BBCode {
     public $debug;
     public $modx;
 
-    function BBCode() {
+    function __construct() {
         $this->defaults = new BBCodeLibrary;
         $this->tag_rules = $this->defaults->default_tag_rules;
         $this->smileys = $this->defaults->default_smileys;
@@ -1181,16 +1190,16 @@ class BBCode {
         $this->videoHeight = $this->GetDefaultVideoHeight();
     }
 
-    function SetModx(modX &$modx) {
+    function setModx(modX &$modx) {
         $this->modx =& $modx;
         $this->modx->lexicon->load('modxtalks:default');
     }
 
-    function SetSlug($slug) {
+    function setSlug($slug) {
         $this->slug = (string) $slug;
     }
 
-    function GetSlug() {
+    function getSlug() {
         return $this->slug;
     }
 
@@ -1580,32 +1589,6 @@ $/Dx", $string))
         $validator = new BBCodeEmailAddressValidator;
 
         return $validator->check_email_address($string);
-        /*
-        return preg_match("/^
-        (?:
-        [a-z0-9\\!\\#\\\$\\%\\&\\'\\*\\+\\/=\\?\\^_`\\{\\|\\}~-]+
-        (?:\.[a-z0-9\\!\\#\\\$\\%\\&\\'\\*\\+\\/=\\?\\^_`\\{\\|\\}~-]+)*
-        |
-        \"(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]
-        |\\\\[\\x01-\\x09\\x0B\\x0C\\x0E-\\x7F])*\"
-        )
-        @
-        (?:
-        (?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+
-        [a-z0-9]
-        (?:[a-z0-9-]*[a-z0-9])?
-        |
-        \\[
-        (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}
-        (?:
-        25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:
-        (?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21-\\x5A\\x53-\\x7F]
-        |\\\\[\\x01-\\x09\\x0B\\x0C\\x0E-\\x7F])+
-        )
-        \\]
-        )
-        $/Dx", $string);
-        */
     }
 
     function HTMLEncode($string) {
