@@ -29,7 +29,7 @@ class getEmailBlockListProcessor extends modObjectGetListProcessor {
     }
 
     /**
-     * @param xPDOObject|R $object
+     * @param xPDOObject $object
      *
      * @return array
      */
@@ -50,7 +50,6 @@ class getEmailBlockListProcessor extends modObjectGetListProcessor {
 
         return $email;
     }
-
 }
 
 return 'getEmailBlockListProcessor';

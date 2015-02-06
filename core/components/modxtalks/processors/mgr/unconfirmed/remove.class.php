@@ -14,9 +14,9 @@ class modxTalksTempPostRemoveProcessor extends modObjectRemoveProcessor {
     public $afterRemoveEvent = '';
 
     public function beforeRemove() {
-        $this->conversationId = $this->object->conversationId;
+        $conversationId = $this->object->conversationId;
 
-        if (!$conversation = $this->modx->getObject('modxTalksConversation', $this->conversationId)) {
+        if (!$conversation = $this->modx->getObject('modxTalksConversation', $conversationId)) {
             return $this->modx->lexicon('modxtalks.empty_conversation');
         }
 

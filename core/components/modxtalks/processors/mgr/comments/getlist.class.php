@@ -22,10 +22,11 @@ class modxTalkCommentsGetListProcessor extends modObjectGetListProcessor {
             'unconfirmed' => 0,
         );
 
-        if ($conversation = $this->modx->getObject($this->classKey, array(
+        $conversation = $this->modx->getObject($this->classKey, array(
             'conversation' => $cid
-        ))
-        ) {
+        ));
+
+        if ($conversation) {
             $data = $conversation->getProperties('comments');
         }
 

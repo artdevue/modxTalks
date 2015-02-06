@@ -29,7 +29,7 @@ class getIpBlockListProcessor extends modObjectGetListProcessor {
     }
 
     /**
-     * @param xPDOObject|R $object
+     * @param xPDOObject $object
      *
      * @return array
      */

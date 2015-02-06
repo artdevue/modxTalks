@@ -36,7 +36,6 @@ class modxTalksEmailBlockCreateProcessor extends modObjectCreateProcessor {
 
         return parent::beforeSet();
     }
-
 }
 
 return 'modxTalksEmailBlockCreateProcessor';

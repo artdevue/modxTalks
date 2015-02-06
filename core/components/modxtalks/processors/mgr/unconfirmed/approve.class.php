@@ -15,6 +15,10 @@ class modxTalksTempPostApproveProcessor extends modObjectRemoveProcessor {
      * @var modxTalksPost
      */
     private $comment;
+    /**
+     * @var modxTalksConversation
+     */
+    private $conversation;
 
     public function beforeRemove() {
         $this->conversationId = $this->object->conversationId;
@@ -93,7 +97,8 @@ class modxTalksTempPostApproveProcessor extends modObjectRemoveProcessor {
         }
 
         /**
-         * Отправляем уведомление о подтверждении комментария пользователю оставившему комментарий
+         * Отправляем уведомление о подтверждении комментария пользователю
+         * оставившему комментарий
          */
         if (!$this->modx->modxtalks->notifyUser($this->comment)) {
             return $this->modx->lexicon('modxtalks.error');

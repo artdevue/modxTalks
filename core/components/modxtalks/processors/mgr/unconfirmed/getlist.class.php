@@ -79,8 +79,10 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor {
 
         $this->modx->modxtalks->config['videoSize'] = array(300, 250);
         foreach ($data['results'] as $object) {
-            if ($this->checkListPermission && $object instanceof modAccessibleObject && !$object->checkPolicy('list'))
+            if ($this->checkListPermission && $object instanceof modAccessibleObject && !$object->checkPolicy('list')) {
                 continue;
+            }
+
             /** @var array $c Comment Object to Array */
             $c = $this->prepareRow($object);
             if (!empty($c) && is_array($c)) {
@@ -107,6 +109,7 @@ class modxTalksTempPostGetListProcessor extends modObjectGetListProcessor {
                 $this->currentIndex++;
             }
         }
+
         $list = $this->afterIteration($list);
 
         return $list;

@@ -58,7 +58,6 @@ class modxTalksTempPostBanProcessor extends modObjectRemoveProcessor {
 
         return parent::afterRemove();
     }
-
 }
 
 return 'modxTalksTempPostBanProcessor';
