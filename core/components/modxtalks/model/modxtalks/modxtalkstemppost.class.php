@@ -3,14 +3,14 @@
 /**
  * This file is part of modxTalks, a simple commenting component for MODx Revolution.
  *
- * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
- * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
- * @license http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
- * @package modxtalks
- *
+ * @copyright Copyright (C) 2013-2015, Artdevue Ltd, <info@artdevue.com>
+ * @author    Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
+ * @package   modxtalks
  */
 class modxTalksTempPost extends xPDOSimpleObject {
-    public function __construct(& $xpdo) {
+
+    public function __construct(xPDO & $xpdo) {
         parent:: __construct($xpdo);
     }
 
@@ -29,6 +29,7 @@ class modxTalksTempPost extends xPDOSimpleObject {
             if ($user = $this->xpdo->getObject('modUser', $this->userId)) {
                 $profile = $user->getOne('Profile');
                 $name = $user->get('username');
+
                 if ($profile) {
                     $fullname = $profile->get('fullname');
                     $email = $profile->get('email');

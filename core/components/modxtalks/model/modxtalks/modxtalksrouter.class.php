@@ -3,21 +3,29 @@
 /**
  * This file is part of modxTalks, a simple commenting component for MODx Revolution.
  *
- * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
+ * @copyright Copyright (C) 2013-2015, Artdevue Ltd, <info@artdevue.com>
  * @author    Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
  * @package   modxtalks
- *
  */
 class modxTalksRouter {
-    /** @var modX $modx */
+
+    /**
+     * @var modX
+     */
     public $modx;
-    /** @var array $config */
+
+    /**
+     * @var array
+     */
     public $config = array();
-    /** @var array $config */
+
+    /**
+     * @var array
+     */
     public $aliasMap;
 
-    function __construct(modX &$modx, array $config = array()) {
+    function __construct(modX & $modx, array $config = array()) {
         $this->modx =& $modx;
         $this->aliasMap =& $this->modx->aliasMap;
         $this->config = array_merge(array(
@@ -40,7 +48,10 @@ class modxTalksRouter {
         /**
          * If a map is present in the cache, then just return it
          */
-        $map = $this->modx->cacheManager->get('conversations_map', array(xPDO::OPT_CACHE_KEY => 'modxtalks'));
+        $map = $this->modx->cacheManager->get('conversations_map', array(
+            xPDO::OPT_CACHE_KEY => 'modxtalks'
+        ));
+
         if ($map) {
             return $map;
         }
@@ -54,11 +65,14 @@ class modxTalksRouter {
             'rid',
             'conversation'
         ));
+
         if ($c->prepare() && $c->stmt->execute()) {
             $conversations = $c->stmt->fetchAll(PDO::FETCH_ASSOC);
+
             foreach ($conversations as $c) {
                 $map[$c['rid']][$c['id']] = $c['conversation'];
             }
+
             $this->modx->cacheManager->set('conversations_map', $map, 0, array(
                 xPDO::OPT_CACHE_KEY => 'modxtalks'
             ));

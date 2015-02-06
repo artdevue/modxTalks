@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of modxTalks, a simple commenting component for MODx Revolution.
+ *
+ * @copyright Copyright (C) 2013-2015, Artdevue Ltd, <info@artdevue.com>
+ * @author    Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
+ * @package   modxtalks
+ */
+
 require_once MODX_CORE_PATH . 'model/modx/modprocessor.class.php';
 require_once MODX_CORE_PATH . 'model/modx/processors/resource/update.class.php';
 
@@ -9,10 +18,7 @@ class CommentsModxTalks extends modResource {
 
     function __construct(xPDO & $xpdo) {
         parent::__construct($xpdo);
-        /*
-        require_once MODX_CORE_PATH.'components/modxtalks/model/modxtalks/modxtalks.class.php';
-        $this->modxtalks = new modxTalks($xpdo);
-        */
+
         $this->set('class_key', 'CommentsModxTalks');
     }
 

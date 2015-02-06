@@ -3,19 +3,19 @@
 /**
  * This file is part of modxTalks, a simple commenting component for MODx Revolution.
  *
- * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
- * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
- * @license http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
- * @package modxtalks
- *
+ * @copyright Copyright (C) 2013-2015, Artdevue Ltd, <info@artdevue.com>
+ * @author    Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
+ * @package   modxtalks
  */
 class modxTalksConversation extends xPDOSimpleObject {
+
     /**
      * Get a namespaced property for the Conversation
      *
      * @param string $key
      * @param string $namespace
-     * @param null   $default
+     * @param mixed  $default
      *
      * @return null
      */
@@ -51,8 +51,11 @@ class modxTalksConversation extends xPDOSimpleObject {
     public function setSingleProperty($value, $key = 'id') {
         $properties = $this->get('properties');
         $properties = !empty($properties) ? $properties : array();
-        if (!array_key_exists($key, $properties))
+
+        if (!array_key_exists($key, $properties)) {
             $properties[$key] = '';
+        }
+
         $properties[$key] = $value;
 
         return $this->set('properties', $properties);
@@ -84,8 +87,11 @@ class modxTalksConversation extends xPDOSimpleObject {
     public function setProperty($key, $value, $namespace = 'comments') {
         $properties = $this->get('properties');
         $properties = !empty($properties) ? $properties : array();
-        if (!array_key_exists($namespace, $properties))
+
+        if (!array_key_exists($namespace, $properties)) {
             $properties[$namespace] = array();
+        }
+
         $properties[$namespace][$key] = $value;
 
         return $this->set('properties', $properties);
@@ -114,12 +120,14 @@ class modxTalksConversation extends xPDOSimpleObject {
      * Get All subscribers email addresses
      *
      * @return array $emails
-     **/
+     */
     public function getSubscribersEmails() {
         $emails = array();
+
         if (!$subscribers = $this->getMany('Subscribers')) {
             return $emails;
         }
+
         foreach ($subscribers as $subscriber) {
             $emails[] = $subscriber->get('email');
         }
@@ -130,13 +138,15 @@ class modxTalksConversation extends xPDOSimpleObject {
     /**
      * Get All comments of this conversation
      *
-     * @return array $commentsArr
-     **/
+     * @return array
+     */
     public function getComments() {
         $commentsArr = array();
+
         if (!$comments = $this->getMany('Comments')) {
             return $commentsArr;
         }
+
         foreach ($comments as $comment) {
             $commentsArr[] = $comment->toArray();
         }
@@ -147,13 +157,15 @@ class modxTalksConversation extends xPDOSimpleObject {
     /**
      * Get All unconfirmed comments of this conversation
      *
-     * @return array $commentsArr
-     **/
+     * @return array
+     */
     public function getUnconfirmedComments() {
         $commentsArr = array();
+
         if (!$comments = $this->getMany('UnconfirmedComments')) {
             return $commentsArr;
         }
+
         foreach ($comments as $comment) {
             $commentsArr[] = $comment->toArray();
         }
@@ -164,8 +176,8 @@ class modxTalksConversation extends xPDOSimpleObject {
     /**
      * Sync comments count: total, deleted, unconfirmed
      *
-     * @return array $commentsArr
-     **/
+     * @return bool
+     */
     public function syncCommentsCount() {
         $changed = false;
 
@@ -190,7 +202,7 @@ class modxTalksConversation extends xPDOSimpleObject {
      * Recalculate comments indexes
      *
      * @return boolean If success return True
-     **/
+     */
     public function recalculateIndexes($idx = 0) {
         $success = false;
         $q = $this->xpdo->newQuery('modxTalksPost');
@@ -212,9 +224,11 @@ class modxTalksConversation extends xPDOSimpleObject {
             return $success;
 
         $indexes = array();
+
         if (!$idx) {
             $idx = 1;
         }
+
         foreach ($result as $r) {
             $indexes[$r['id']] = $idx;
             $idx += 1;
@@ -223,9 +237,11 @@ class modxTalksConversation extends xPDOSimpleObject {
         $ids = implode(',', array_keys($indexes));
         $table = $this->xpdo->getTableName('modxTalksPost');
         $sql = "UPDATE {$table} SET idx = CASE id ";
+
         foreach ($indexes as $id => $new_idx) {
             $sql .= sprintf("WHEN %d THEN %d ", $id, $new_idx);
         }
+
         $sql .= "END WHERE id IN ($ids)";
 
         $sql = $this->xpdo->query($sql);

@@ -3,13 +3,13 @@
 /**
  * This file is part of modxTalks, a simple commenting component for MODx Revolution.
  *
- * @copyright Copyright (C) 2013, Artdevue Ltd, <info@artdevue.com>
- * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
- * @license http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
- * @package modxtalks
- *
+ * @copyright Copyright (C) 2013-2015, Artdevue Ltd, <info@artdevue.com>
+ * @author    Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
+ * @package   modxtalks
  */
 class modxTalksPost extends xPDOSimpleObject {
+
     public function __construct(& $xpdo) {
         parent::__construct($xpdo);
     }
@@ -26,11 +26,16 @@ class modxTalksPost extends xPDOSimpleObject {
     /**
      * Get resource pagetitle
      *
-     * @return object
-     **/
+     * @param modxTalksConversation $conversation
+     * @param string                $type
+     *
+     * @return string
+     */
     public function getResourceTitle(modxTalksConversation & $conversation, $type = 'pagetitle') {
-        if (!$conversation instanceof modxTalksConversation)
+        if (!$conversation instanceof modxTalksConversation) {
             return false;
+        }
+
         $resource = $this->xpdo->getObject('modResource', $conversation->rid);
         $title = $type === 'longtitle' ? $type : 'pagetitle';
 
@@ -40,7 +45,6 @@ class modxTalksPost extends xPDOSimpleObject {
     /**
      * Get user data
      *
-     * @access public
      * @return array User name and email
      */
     public function getUserData() {
@@ -53,6 +57,7 @@ class modxTalksPost extends xPDOSimpleObject {
             if ($user = $this->xpdo->getObject('modUser', $this->userId)) {
                 $profile = $user->getOne('Profile');
                 $name = $user->get('username');
+
                 if ($profile) {
                     $fullname = $profile->get('fullname');
                     $email = $profile->get('email');
@@ -66,8 +71,6 @@ class modxTalksPost extends xPDOSimpleObject {
 
     /**
      * Validate Email address
-     *
-     * @access public
      *
      * @param string $email Email Address
      *
@@ -131,7 +134,7 @@ class modxTalksPost extends xPDOSimpleObject {
      * @param string $namespace
      * @param null   $default
      *
-     * @return null
+     * @return mixed
      */
     public function getProperty($key, $namespace = 'value', $default = null) {
         $properties = $this->get('properties');
@@ -166,8 +169,10 @@ class modxTalksPost extends xPDOSimpleObject {
     public function setProperty($key, $value, $namespace = 'value') {
         $properties = $this->get('properties');
         $properties = !empty($properties) ? $properties : array();
-        if (!array_key_exists($namespace, $properties))
+        if (!array_key_exists($namespace, $properties)) {
             $properties[$namespace] = array();
+        }
+
         $properties[$namespace][$key] = $value;
 
         return $this->set('properties', $properties);
@@ -185,8 +190,10 @@ class modxTalksPost extends xPDOSimpleObject {
     public function setProperties(array $newProperties, $namespace = 'value', $merge = true) {
         $properties = $this->get('properties');
         $properties = !empty($properties) ? $properties : array();
-        if (!array_key_exists($namespace, $properties))
+        if (!array_key_exists($namespace, $properties)) {
             $properties[$namespace] = array();
+        }
+
         $properties[$namespace] = $merge ? array_merge($properties[$namespace], $newProperties) : $newProperties;
 
         return $this->set('properties', $properties);
@@ -195,7 +202,7 @@ class modxTalksPost extends xPDOSimpleObject {
     /**
      * Add vote to Comment
      *
-     * @param mixed $value
+     * @param int $userId
      *
      * @return bool
      */
@@ -215,7 +222,7 @@ class modxTalksPost extends xPDOSimpleObject {
     /**
      * Remove vote from Comment
      *
-     * @param mixed $value
+     * @param int $userId
      *
      * @return bool
      */
@@ -224,12 +231,15 @@ class modxTalksPost extends xPDOSimpleObject {
         $total = 'votes';
         $votes = $this->get('votes');
         $votes = !empty($votes) ? $votes : array($users => array(), $total => 0);
-        if (!array_key_exists($users, $votes))
+        if (!array_key_exists($users, $votes)) {
             $votes[$users] = array();
+        }
+
         if (in_array($userId, $votes[$users])) {
             $key = array_search($userId, $votes[$users]);
             unset($votes[$users][$key]);
         }
+
         $votes[$total] = count($votes[$users]);
 
         return $this->set('votes', $votes);
@@ -237,6 +247,7 @@ class modxTalksPost extends xPDOSimpleObject {
 
     /**
      * Get comment votes
+     *
      * @return array
      */
     public function getVotes() {
@@ -244,8 +255,10 @@ class modxTalksPost extends xPDOSimpleObject {
         $total = 'votes';
         $votes = $this->get('votes');
         $votes = !empty($votes) ? $votes : array($users => array(), $total => 0);
-        if (!array_key_exists($users, $votes))
+
+        if (!array_key_exists($users, $votes)) {
             $votes[$users] = array();
+        }
 
         return $votes;
     }

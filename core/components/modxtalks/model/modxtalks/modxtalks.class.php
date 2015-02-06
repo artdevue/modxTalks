@@ -1,13 +1,14 @@
 <?php
 
+require_once dirname(dirname(dirname(__FILE__))) . '/helpers.php';
+
 /**
- * This file is part of MODXTalks, a simple commenting component for MODx Revolution.
+ * This file is part of modxTalks, a simple commenting component for MODx Revolution.
  *
- * @copyright Copyright (C) 2015, Artdevue Ltd, <info@artdevue.com>
- * @author Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
- * @license http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
- * @package modxtalks
- *
+ * @copyright Copyright (C) 2013-2015, Artdevue Ltd, <info@artdevue.com>
+ * @author    Valentin Rasulov <info@artdevue.com> && Ivan Brezhnev <brezhnev.ivan@yahoo.com>
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU Public License v2
+ * @package   modxtalks
  */
 class modxTalks {
     /**
@@ -211,8 +212,8 @@ class modxTalks {
         if ($this->debug) {
             $time = microtime(true);
             $startMemory = memory_get_usage() / pow(1024, 2);
-            $this->pr(sprintf('Memory Before: %2.2f Mbytes', $startMemory));
-            $this->pr("Your IP: {$this->get_client_ip()}");
+            dump(sprintf('Memory Before: %2.2f Mbytes', $startMemory));
+            dump("Your IP: {$this->get_client_ip()}");
         }
 
         if (empty($this->config['conversation'])) {
@@ -278,8 +279,8 @@ class modxTalks {
         $this->cacheProperties($this->config['conversation'], $this->scriptProperties);
 
         if ($this->debug) {
-            $this->pr(sprintf('Time: %2.2f мс', (microtime(true) - $time) * 1000));
-            $this->pr(sprintf('Memory After: %2.2f Mbytes', memory_get_usage() / pow(1024, 2)));
+            dump(sprintf('Time: %2.2f мс', (microtime(true) - $time) * 1000));
+            dump(sprintf('Memory After: %2.2f Mbytes', memory_get_usage() / pow(1024, 2)));
         }
 
         // Conclusion placeholder count_talks. The total number of votes
@@ -288,14 +289,20 @@ class modxTalks {
         return $output;
     }
 
-    public function generateButtons($buttnons = array(), $id = 'mt_replay') {
-        if (!is_array($buttnons)) {
-            $buttnons = explode(',', $buttnons);
+    /**
+     * @param string|array $buttons
+     * @param string       $id
+     *
+     * @return string
+     */
+    public function generateButtons($buttons = array()) {
+        if (!is_array($buttons)) {
+            $buttons = explode(',', $buttons);
         }
 
         $result = '';
-        foreach ($buttnons as $btn) {
-            $result .= '<a href="javascript:BBCode.' . $btn . '(' . $id . ');void(0)" title="' . $this->modx->lexicon('modxtalks.' . $btn) . '" class="bbcode-' . $btn . '"><span>' . $this->modx->lexicon('modxtalks.' . $btn) . '</span></a>' . "\n";
+        foreach ($buttons as $btn) {
+            $result .= '<a href="#" onclick="BBCode.' . $btn . '(this);return false" title="' . $this->modx->lexicon('modxtalks.' . $btn) . '" class="mt_icon mt_icon-' . $btn . '"><span>' . $this->modx->lexicon('modxtalks.' . $btn) . '</span></a>' . "\n";
         }
 
         return $result;
@@ -310,33 +317,12 @@ class modxTalks {
      *
      * @return string $buttons
      */
-    protected function getEditControls($id = 'mt_reply') {
-        $editControls = array(
-            "fixed" => "<a href='javascript:BBCode.fixed(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.image') . "' class='bbcode-fixed'><span>" . $this->modx->lexicon('modxtalks.fixed') . "</span></a>",
-            "image" => "<a href='javascript:BBCode.image(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.image') . "' class='bbcode-img'><span>" . $this->modx->lexicon('modxtalks.image') . "</span></a>",
-            "link" => "<a href='javascript:BBCode.link(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.link') . "' class='bbcode-link'><span>" . $this->modx->lexicon('modxtalks.link') . "</span></a>",
-            "strike" => "<a href='javascript:BBCode.strikethrough(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.strike') . "' class='bbcode-s'><span>" . $this->modx->lexicon('modxtalks.strike') . "</span></a>",
-            "header" => "<a href='javascript:BBCode.header(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.header') . "' class='bbcode-h'><span>" . $this->modx->lexicon('modxtalks.header') . "</span></a>",
-            "italic" => "<a href='javascript:BBCode.italic(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.italic') . "' class='bbcode-i'><span>" . $this->modx->lexicon('modxtalks.italic') . "</span></a>",
-            "bold" => "<a href='javascript:BBCode.bold(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.bold') . "' class='bbcode-b'><span>" . $this->modx->lexicon('modxtalks.bold') . "</span></a>",
-            "video" => "<a href='javascript:BBCode.video(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.video') . "' class='bbcode-v'><span>" . $this->modx->lexicon('modxtalks.video') . "</span></a>",
-            "quote" => "<a href='javascript:BBCode.quote(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.quote') . "' class='bbcode-q'><span>" . $this->modx->lexicon('modxtalks.quote') . "</span></a>",
-        );
-
+    protected function getEditControls($id = 'mt_replay') {
         if (!$this->config['bbcode']) {
-            return $editControls['quote'];
+            return $this->generateButtons('quote');
         }
 
-        $editOptionsControls = $this->config['editOptionsControls'];
-        $editOptionsControlsArray = explode(',', $editOptionsControls);
-
-        $buttons = '';
-        foreach ($editOptionsControlsArray as $b) {
-            $b = trim($b);
-            if (array_key_exists($b, $editControls)) {
-                $buttons .= $editControls[$b];
-            }
-        }
+        $buttons = $this->generateButtons($this->config['editOptionsControls']);
 
         return $buttons;
     }
@@ -436,6 +422,7 @@ class modxTalks {
             "newComment": "' . $this->modx->lexicon('modxtalks.new_comment') . '",
             "moreText": "' . $this->modx->lexicon('modxtalks.more_text') . '",
             "message.confirmDelete": "' . $this->modx->lexicon('modxtalks.confirm_delete') . '",
+            "message.confirmRestore": "' . $this->modx->lexicon('modxtalks.confirm_restore') . '",
             "message.confirmLeave":"' . $this->modx->lexicon('modxtalks.confirmLeave') . '",
             "message.confirm_ip":"' . $this->modx->lexicon('modxtalks.confirm_ip') . '",
             "message.confirm_email":"' . $this->modx->lexicon('modxtalks.confirm_email') . '",
@@ -551,16 +538,16 @@ class modxTalks {
         $this->config['conversationId'] = $theme->get('id');
 
         if ($this->debug) {
-            $this->pr('ID темы: ' . $this->config['conversationId']);
+            dump('ID темы: ' . $this->config['conversationId']);
         }
 
         $this->config['commentsCount'] = 0;
 
-        $this->config['slug'] = $this->generateLink($this->config['conversationId'], null, 'abs');
+        $this->config['slug'] = $this->generateLink($this->config['conversationId']);
 
         if ($this->debug) {
-            $this->pr($this->generateLink($this->config['conversationId'], null, 'full'));
-            $this->pr($this->config['slug']);
+            dump($this->generateLink($this->config['conversationId']));
+            dump($this->config['slug']);
         }
 
         $count = $theme->getProperty('total', 'comments');
@@ -571,12 +558,13 @@ class modxTalks {
         /**
          * Get resource URL
          */
-        $link = $this->modx->getOption('site_url') . $this->modx->resource->uri;
+        //$link = $this->modx->getOption('site_url') . $this->modx->resource->uri;
+        $link = $this->modx->makeUrl($this->modx->resource->id, '', '', 'full');
 
         $page = 1;
         $totalPages = ceil($count / ($limit > 0 ? $limit : $count));
         if ($this->debug) {
-            $this->pr('Total pages: ' . $totalPages);
+            dump('Total pages: ' . $totalPages);
         }
 
         $offset = 0;
@@ -611,7 +599,7 @@ class modxTalks {
                 $range = range($idx, $last);
                 unset($last);
             }
-        } elseif (preg_match('@page_(\d{1,4})@', $id, $match)) {
+        } elseif (preg_match('/page_(\d{1,4})/', $id, $match)) {
             $page = (int) $match[1];
             if ($page === 1) {
                 $this->modx->sendRedirect($link);
@@ -638,7 +626,7 @@ class modxTalks {
 
         $comments = $this->getCommentsArray($range, $theme->get('id'));
 
-        if (!$comments[0] && $count > 0) {
+        if (!isset($comments[0]) && $count > 0) {
             $this->modx->sendRedirect($link);
         }
         /**
@@ -709,7 +697,10 @@ class modxTalks {
             $href = $page === 2 ? $link : $this->getLink('page_' . ($page - 1));
             $output .= '<div class="mt_scrubberMore mt_scrubberPrevious"><a href="' . $href . '">' . $this->modx->lexicon('modxtalks.more_text') . '</a></div>';
         } elseif (!$this->revers && $this->config['startFrom'] > 1) {
-            $linkPrev = $this->config['startFrom'] <= $this->config['commentsPerPage'] ? 1 : $this->config['startFrom'] - $this->config['commentsPerPage'];
+            $linkPrev = $this->config['startFrom'] <= $this->config['commentsPerPage']
+                ? 1
+                : $this->config['startFrom'] - $this->config['commentsPerPage'];
+
             $output .= '<div class="mt_scrubberMore mt_scrubberPrevious"><a href="' . $this->getLink($linkPrev) . '#mt_conversationPosts">' . $this->modx->lexicon('modxtalks.more_text') . '</a></div>';
         }
 
@@ -766,8 +757,9 @@ class modxTalks {
                     'restore' => '',
                     'link' => $this->getLink($comment['idx']),
                 );
+
                 if ($isAuthenticated && ($isModerator === true || $comment['deleteUserId'] === $userId)) {
-                    $tmp['restore'] = '<a href="' . $this->getLink('restore-' . $comment['idx']) . '" title="' . $restore . '" class="mt_control-restore">' . $restore . '</a>';
+                    $tmp['restore'] = '<a href="#" onclick="MTConversation.commentRestore(' . $comment['id'] . ', this);return false" title="' . $restore . '" class="mt_icon mt_icon-undo">' . $restore . '</a>';
                 }
             } else {
                 /**
@@ -793,22 +785,26 @@ class modxTalks {
                     'user_info' => '',
                     'like_block' => '',
                 );
+
                 if ($isModerator === true) {
                     $tmp['user_info'] = $this->parseTpl($userInfoTpl, array(
                         'email' => $email,
                         'ip' => $comment['ip']
                     ));
                 }
+
                 /**
                  * Comment Votes
                  */
                 if ($this->config['voting']) {
                     $likes = '';
                     $btn = $btn_like;
+
                     if ($votes = json_decode($comment['votes'], true)) {
                         if ($isAuthenticated && in_array($this->modx->user->id, $votes['users'])) {
                             $btn = $btn_unlike;
                             $total = count($votes['users']) - 1;
+
                             if ($total > 0) {
                                 $likes = $this->decliner($total, $this->modx->lexicon('modxtalks.people_like_and_you', array('total' => $total)));
                             } else {
@@ -1368,8 +1364,8 @@ class modxTalks {
         /**
          * If a registered user is a member of moderators, then give moderate comments.
          */
-        $buttons = '<a href="#" title="' . $this->modx->lexicon('modxtalks.edit') . '" class="mt_control-edit">' . $this->modx->lexicon('modxtalks.edit') . '</a>';
-        $buttons .= '<a href="#" title="' . $this->modx->lexicon('modxtalks.delete') . '" class="mt_control-delete">' . $this->modx->lexicon('modxtalks.delete') . '</a>';
+        $buttons = '<a href="#" title="' . $this->modx->lexicon('modxtalks.edit') . '" class="mt_icon mt_icon-pencil" onclick="MTConversation.commentEdit(this);return false;">' . $this->modx->lexicon('modxtalks.edit') . '</a>';
+        $buttons .= '<a href="#" title="' . $this->modx->lexicon('modxtalks.delete') . '" class="mt_icon mt_icon-bin" onclick="MTConversation.commentDelete(this);return false;">' . $this->modx->lexicon('modxtalks.delete') . '</a>';
 
         if ($this->isModerator()) {
             return $buttons;
@@ -1526,7 +1522,7 @@ class modxTalks {
         if ($comment instanceof modxTalksPost) {
             $cid = $comment->conversationId;
             $idx = $comment->idx;
-            $link = $this->generateLink($cid, $idx, 'full');
+            $link = $this->generateLink($cid, $idx);
             $subject = $this->modx->lexicon('modxtalks.email_new_comment');
             $text = $this->modx->lexicon('modxtalks.email_added_new_comment', array(
                 'link' => $link,
@@ -1594,7 +1590,7 @@ class modxTalks {
         $cid = $comment->conversationId;
         $idx = $comment->idx;
 
-        $link = $this->generateLink($cid, $idx, 'full');
+        $link = $this->generateLink($cid, $idx);
         $images_url = $this->modx->getOption('site_url') . substr($this->config['imgUrl'], 1);
 
         $subject = $this->modx->lexicon('modxtalks.email_comment_approved');
@@ -1712,6 +1708,7 @@ class modxTalks {
         if (!$keyConversation = $this->conversationHash($name)) {
             return false;
         }
+
         // If there is a cache, set the flag to TRUE ConversationCache, otherwise FALSE
         if ($this->mtCache && $cache) {
             if ($theme = $this->modx->cacheManager->get($keyConversation, array(
@@ -1791,6 +1788,7 @@ class modxTalks {
         if (empty($ids) || empty($conversationId)) {
             return false;
         }
+
         if (!is_array($ids)) {
             $ids = array($ids);
         }
@@ -1873,12 +1871,17 @@ class modxTalks {
          */
         $users = array();
         foreach ($comments as $c) {
-            if ($c['userId'])
+            if ($c['userId']) {
                 $users[] = $c['userId'];
-            if ($c['deleteUserId'])
+            }
+
+            if ($c['deleteUserId']) {
                 $users[] = $c['deleteUserId'];
-            if ($c['editUserId'])
+            }
+
+            if ($c['editUserId']) {
                 $users[] = $c['editUserId'];
+            }
         }
         $users = array_unique($users);
 
@@ -1896,8 +1899,6 @@ class modxTalks {
 
     /**
      * Cache the comment
-     *
-     * @access public
      *
      * @param object $comment Comment object
      *
@@ -1923,8 +1924,6 @@ class modxTalks {
     /**
      * Delete comment cache
      *
-     * @access public
-     *
      * @param object $comment Comment object
      *
      * @return bool
@@ -1945,8 +1944,6 @@ class modxTalks {
 
     /**
      * Delete all comments cache
-     *
-     * @access public
      *
      * @param int $id Conversation ID
      *
@@ -2344,29 +2341,15 @@ class modxTalks {
             $ctx = isset($config['context']) ? $config['context'] : $this->context;
         }
 
-        $url = $this->modx->makeUrl($rid, $ctx, '', $scheme);
-
-        if ($this->config['debug']) {
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Link to Resource: ' . $url);
-        }
-
-        $slug = 'comment-' . $this->config['slugReplace'] . '-mt';
-        $link = '';
-
-        $slarray = explode('/', $url);
-        if (count($slarray) > 1) {
-            $doturi = end($slarray);
-            $dotarray = explode('.', $doturi);
-            if (count($dotarray) > 1) {
-                $uriend = end($dotarray);
-                $link = str_replace('.' . $uriend, '/' . $slug, $url) . '.' . $uriend;
-            } else {
-                $sleh = substr($url, -1) == '/' ? true : false;
-                $link = $url . ($sleh ? '' : '/') . $slug . ($sleh ? '/' : '');
-            }
+        if ($this->modx->getOption('site_start') == $rid) {
+            $url = $scheme !== 'full' ? '/' : $this->modx->getOption('site_url');
         } else {
-            $link = $url . '/' . $slug;
+            $url = $this->modx->makeUrl($rid, $ctx, '', $scheme);
         }
+
+        $slug = '#comment-' . $this->config['slugReplace'];
+
+        $link = $url . $slug;
 
         if (intval($idx) > 0) {
             $link = str_replace($this->config['slugReplace'], $idx, $link);
@@ -2563,8 +2546,6 @@ class modxTalks {
     /**
      * Get Revers
      *
-     * @access public
-     *
      * @return bool
      */
     public function getRevers() {
@@ -2612,25 +2593,6 @@ class modxTalks {
     }
 
     /**
-     * Debug function for printing vars, arrays or objects
-     *
-     * @param mixed $var
-     *
-     * @return void
-     */
-    private function pr($var) {
-        if (is_object($var)) {
-            if (!method_exists($var, 'toArray'))
-                return;
-            $var = $var->toArray();
-        }
-
-        echo '<pre style="font:15px Consolas;padding:10px;border:1px solid #c2c2c2;border-radius:10px;background-color:f7f7f7;box-shadow:0 1px 2px #ccc;">';
-        print_r($var);
-        echo '</pre>';
-    }
-
-    /**
      * Check for function disabled or not
      *
      * @param $name
@@ -2648,5 +2610,4 @@ class modxTalks {
 
         return in_array($name, $disabledFunctions);
     }
-
 }
