@@ -1,5 +1,5 @@
 [class*=bbcode-] {margin:-6px -2px; display:inline-block}
-[class*=bbcode-] span {text-indent:-3999px; width:12px; height:12px; padding:6px; display:inline-block; background-image:url(formattingIcons.png)}
+[class*=bbcode-] span {text-indent:-3999px; width:12px; height:12px; padding:0 12px 0 12px; display:inline-block; background-image:url(formattingIcons.png)}
 .bbcode-b span {background-position:0 0}
 .bbcode-i span {background-position:-24px 0}
 .bbcode-h span {background-position:-48px 0}
