@@ -39,11 +39,11 @@ $_lang['modxtalks.comments_delete'] = 'Gelöschte Kommentare';
 $_lang['modxtalks.comments_unconfirmed'] = 'Nicht bestätigt';
 $_lang['modxtalks.comments_unconfirmed_desc'] = '<div id="comments_unconfirmed"><span></span></div>Kommentare nicht bestätigt';
 $_lang['modxtalks.comments_per_page'] = 'Kommentare pro Seite';
-$_lang['modxtalks.comments_per_page_desc'] = 'The maximum number of comments on the page to display when rendering the control page navigation.';
-$_lang['modxtalks.confirm_discard_reply'] = 'Comment has not yet been sent, discard all changes?';
-$_lang['modxtalks.confirmLeave'] = 'Woah, you haven\'t saved the stuff you are editing! If you leave this page, you\'ll lose any changes you\'ve made. Is this ok?';
-$_lang['modxtalks.conversation'] = 'Topic';
-$_lang['modxtalks.conversations'] = 'Topics';
+$_lang['modxtalks.comments_per_page_desc'] = 'Maximale Anzahl von Kommentaren die in der Seitennavigation angezeigt werden.';
+$_lang['modxtalks.confirm_discard_reply'] = 'Kommentar wurde noch nicht versendet, alle Änderungen verwerfen?';
+$_lang['modxtalks.confirmLeave'] = 'Änderung nicht gespeichert!!! Ist das OK?';
+$_lang['modxtalks.conversation'] = 'Thema';
+$_lang['modxtalks.conversations'] = 'Themen';
 $_lang['modxtalks.confirm_ip'] = 'Wirklich die IP-Adresse blockieren - ';
 $_lang['modxtalks.confirm_email'] = 'Wirklich die Email blockieren - ';
 
