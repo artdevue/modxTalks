@@ -312,7 +312,7 @@ class modxTalks {
      */
     protected function getEditControls($id = 'mt_reply') {
         $editControls = array(
-            "fixed" => "<a href='javascript:BBCode.fixed(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.image') . "' class='bbcode-fixed'><span>" . $this->modx->lexicon('modxtalks.fixed') . "</span></a>",
+            "fixed" => "<a href='javascript:BBCode.fixed(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.fixed') . "' class='bbcode-fixed'><span>" . $this->modx->lexicon('modxtalks.fixed') . "</span></a>",
             "image" => "<a href='javascript:BBCode.image(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.image') . "' class='bbcode-img'><span>" . $this->modx->lexicon('modxtalks.image') . "</span></a>",
             "link" => "<a href='javascript:BBCode.link(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.link') . "' class='bbcode-link'><span>" . $this->modx->lexicon('modxtalks.link') . "</span></a>",
             "strike" => "<a href='javascript:BBCode.strikethrough(\"$id\");void(0)' title='" . $this->modx->lexicon('modxtalks.strike') . "' class='bbcode-s'><span>" . $this->modx->lexicon('modxtalks.strike') . "</span></a>",
