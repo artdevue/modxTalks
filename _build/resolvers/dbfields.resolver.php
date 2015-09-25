@@ -45,7 +45,7 @@ if ($object->xpdo) {
             $manager->createObjectContainer('modxTalksPost');
             $manager->createObjectContainer('modxTalksSubscribers');
             $manager->createObjectContainer('modxTalksTempPost');
-
+            $manager->createObjectContainer('modxTalksMails');
             $manager->createObjectContainer('modxTalksEmailBlock');
             $manager->createObjectContainer('modxTalksLatestPost');
             //CommentsModxTalks
